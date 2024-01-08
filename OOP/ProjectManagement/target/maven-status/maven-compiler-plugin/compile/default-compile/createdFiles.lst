@@ -1,0 +1,4 @@
+com\oop\projectmanagement\controller\LoginController.class
+com\oop\projectmanagement\ProjectmanagementApplication.class
+com\oop\projectmanagement\config\FirebaseConfig.class
+com\oop\projectmanagement\controller\CustomErrorController.class

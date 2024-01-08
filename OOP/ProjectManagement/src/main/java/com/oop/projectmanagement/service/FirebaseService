@@ -1,0 +1,11 @@
+@Service
+public class FirebaseService {
+
+    private final FirebaseApp firebaseApp;
+
+    public YourFirebaseService(FirebaseApp firebaseApp) {
+        this.firebaseApp = firebaseApp;
+    }
+
+    // Now you can use firebaseApp to interact with Firebase services
+}

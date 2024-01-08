@@ -1,0 +1,11 @@
+import org.springframework.stereotype.Service;
+
+@Service
+public class LoginService {
+
+    public boolean authenticateUser(String username, String password) {
+        // Your authentication logic goes here
+        // You might check against a database or any other authentication provider
+        return "user".equals(username) && "password".equals(password);
+    }
+}
