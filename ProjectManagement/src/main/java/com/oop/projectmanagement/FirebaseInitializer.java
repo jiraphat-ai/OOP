@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
             }
         }
      public Firestore getDb() {
+            initialize();
         return FirestoreClient.getFirestore();}
 }
 

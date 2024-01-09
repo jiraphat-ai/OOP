@@ -18,7 +18,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        firebaseInitializer.initialize();
+
         Firestore db = firebaseInitializer.getDb();
         DocumentReference docRef = db.collection("testCollection").document("testDocument");
         DocumentSnapshot document;
