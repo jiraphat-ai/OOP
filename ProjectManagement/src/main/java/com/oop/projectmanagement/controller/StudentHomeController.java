@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
@@ -27,6 +29,12 @@ public class StudentHomeController {
 
         return "homestudent";
     }
+    
+    @GetMapping("/logout")
+        public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
+}
 
 
 
