@@ -204,7 +204,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary" onclick="addUserToFirestore()">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -234,38 +234,5 @@
             </tbody>
         </table>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script>
-        // Initialize Firebase
-        var firebaseConfig = {
-            // Your Firebase configuration
-        };
-        firebase.initializeApp(firebaseConfig);
-
-        // Get a reference to the database service
-        var database = firebase.database();
-
-        // Retrieve data from Firebase and populate the table
-        var usersRef = database.ref('users');
-        usersRef.on('value', function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                var childData = childSnapshot.val();
-                var row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${childData.studentId}</td>
-                    <td>${childData.firstName}</td>
-                    <td>${childData.lastName}</td>
-                    <td>${childData.regDate}</td>
-                    <td>
-                        <button class="btn btn-primary">Reset Password</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </td>
-                `;
-                document.querySelector('.user-table tbody').appendChild(row);
-            });
-        });
-        // Add new user to Firebase
-    </script>
 </body>
 </html>
