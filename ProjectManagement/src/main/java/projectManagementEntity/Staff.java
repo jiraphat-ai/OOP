@@ -1,3 +1,4 @@
+package projectManagementEntity;
 public class Staff {
     private String firstName;
     private String lastName;
