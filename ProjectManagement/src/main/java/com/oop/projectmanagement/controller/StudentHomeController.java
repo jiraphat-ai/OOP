@@ -29,7 +29,7 @@ public class StudentHomeController {
 
         return "homestudent";
     }
-    
+
     @GetMapping("/logout")
         public String logout(HttpSession session) {
         session.invalidate();

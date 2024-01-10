@@ -145,92 +145,17 @@
         <div class="profile">
             <img src="profile.jpg" alt="Profile Picture">
             <div>
-                <div class="staff">Staff</div>
+                <div class="staff">Username</div>
                 <div>First Last</div>
             </div>
         </div>
         <div class="menu">
             <ul>
-                <li><a href="#">User</a></li>
-                <li><a href="#">Subject</a></li>
-                <li><a href="#">Create New Subject</a></li>
-                <li><a href="#">Create New Account</a></li>
+                <li><a href="#">My Group</a></li>
+                <li><a href="#">My Project</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </div>
-    </div>
-    <div class="content">
-        <div class="white-frame">
-            <div class="header">
-                <h2 class="display-4">All Users</h2>
-            </div>
-            <div class="search">
-                <input type="text" class="form-control" placeholder="Student ID">
-                <input type="text" class="form-control" placeholder="Name">
-                <button class="btn btn-primary">Search</button>
-            </div>
-        </div>
-        <div class="add-user">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
-        </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="studentId" class="form-label">Student ID</label>
-                                <input type="text" class="form-control" id="studentId" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="firstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="firstName" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="lasttName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" required>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="addUserToFirestore()">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <table class="table table-striped">
-            <thead>
-                <tr class="bg-light"> 
-                    <th>Student ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white">
-                <tr>
-                    <td id="student-id"></td>
-                    <td id="first-name"></td>
-                    <td id="last-name"></td>
-                    <td>
-                        <button class="btn btn-primary">Reset Password</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </td>
-                </tr>
-                <!-- Add more rows here -->
-            </tbody>
-        </table>
     </div>
     <script>
         function addUserToFirestore() {

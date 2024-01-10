@@ -37,7 +37,6 @@ public class FileUploadController {
 
             // TODO: save users in DB?
 
-            
             //save users to firestore
             Firestore db = firebaseInitializer.getDb();
             for (User user : users) {
@@ -54,6 +53,5 @@ public class FileUploadController {
             throw new RuntimeException("Failed to parse CSV file: " + ex.getMessage());
         }
     }
-    
+
     }}
-    

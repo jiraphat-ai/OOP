@@ -45,7 +45,7 @@ public class LoginController {
                 if (username.equals(storedUsername) && password.equals(storedPassword)) {
                     if ("student".equals(userType)) {
                         model.addAttribute("message", "Login successful. User type: " + userType);
-                        return "index"; // Redirect to index page if user is a student
+                        return "homestudent"; // Redirect to index page if user is a student
                     } else if ("staff".equals(userType)) {
                         model.addAttribute("message", "Login successful. User type: " + userType);
                         return "homestaff"; // Redirect to homestaff page if user is a staff
