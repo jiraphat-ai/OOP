@@ -11,7 +11,7 @@ import com.google.cloud.firestore.Firestore;
 import com.oop.projectmanagement.FirebaseInitializer;
 //import com.oop.projectmanagement.model.User;
 @Controller
-public class homestaffController {
+public class HomestaffController {
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
