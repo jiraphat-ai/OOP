@@ -219,13 +219,13 @@
                 </tr>
             </thead>
             <tbody class="bg-white">
-                <tr>
-                    <td id="student-id"></td>
-                    <td id="first-name"></td>
-                    <td id="last-name"></td>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.studentId}"></td>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.lastName}"></td>
                     <td>
                         <button class="btn btn-primary">Reset Password</button>
-                        <button class="btn btn-danger">Delete</button>
+                        <button class="btn btn-danger" onclick="deleteUser('${user.studentId}')">Delete</button>
                     </td>
                 </tr>
                 <!-- Add more rows here -->
@@ -265,6 +265,24 @@
                 console.error('Error:', error);
             });
         }
+
+        function deleteUser(studentId) {
+        fetch('/deleteUser?studentId=' + encodeURIComponent(studentId), {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('User deleted successfully');
+                location.reload(); // Reload the page to update the list of users
+            } else {
+                alert('Error deleting user: ' + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
         </script>
 </body>
 </html>
