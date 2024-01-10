@@ -1,7 +1,9 @@
 package com.oop.projectmanagement.controller;
 
+import com.google.cloud.Timestamp;
+
 public class User {
-    private String id;
+    private String student_id;
     private String first_name;
     private String last_name;
     private String password;
@@ -11,12 +13,12 @@ public class User {
     public User() {}
 
     // getters and setters
-    public String getId() {
-        return id;
+    public String getStudent_id() {
+        return student_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setStudent_id(String student_id) {
+        this.student_id = student_id;
     }
 
     public String getFirstName() {
@@ -50,4 +52,10 @@ public class User {
     public void setUserType(String user_type) {
         this.user_type = user_type;
     }
+
+    public Timestamp getRegDate() {
+        return Timestamp.now();
+    }
+
+
 }

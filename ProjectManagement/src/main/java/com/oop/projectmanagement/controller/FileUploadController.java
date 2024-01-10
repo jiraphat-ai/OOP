@@ -45,7 +45,7 @@ public class FileUploadController {
             }
             //read each user
             for (User user : users) {
-                System.out.println(user.getId());
+                System.out.println(user.getStudent_id());
             }
 
             System.out.println("CSV file was uploaded and parsed successfully.");
