@@ -51,7 +51,7 @@ public class LoginController {
                         return "redirect:/homestudent"; // Redirect to index page if user is a student
                     } else if ("staff".equals(userType)) {
                         model.addAttribute("message", "Login successful. User type: " + userType);
-                        return "redirect:/homesstaff"; // Redirect to homestaff page if user is a staff
+                        return "redirect:/importuserfile"; // Redirect to homestaff page if user is a staff
                     }
                 }
             }
