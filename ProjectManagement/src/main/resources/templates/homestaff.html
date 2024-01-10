@@ -245,45 +245,39 @@
     </div>
     <script>
         function addUserToFirestore() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const userType = document.getElementById('userType').value;
-    
-            const userData = {
-                username,
-                password,
-                firstName,
-                lastName,
-                userType
-            };
-    
-            fetch('/addUser', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();  // Parse the JSON response
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('User added successfully');
-                } else {
-                    alert('Error adding user: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong. Please try again later...');
-            });
-        }
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const userType = document.getElementById('userType').value;
+
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+        formData.append('firstName', firstName);
+        formData.append('lastName', lastName);
+        formData.append('userType', userType);
+
+        fetch('/addUser', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert('User added successfully');
+            } else {
+                alert('Error adding user: ' + data.message);
+            }
+        })
+
+    }
+
     </script>
     
 </body>
