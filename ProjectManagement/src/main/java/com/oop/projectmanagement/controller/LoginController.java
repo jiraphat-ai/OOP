@@ -36,7 +36,6 @@ public class LoginController {
             Model model , HttpSession session) {
         Firestore db = firebaseInitializer.getDb();
 
-//pls don't delete our fetch naja
         try {
             ApiFuture<QuerySnapshot> query = db.collection("useraccount").get();
             QuerySnapshot querySnapshot = query.get();
