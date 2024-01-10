@@ -23,6 +23,7 @@ public class StudentHomeController {
 public String homestudent(HttpSession session, Model model) {
     String username = (String) session.getAttribute("username");
     Firestore db = firebaseInitializer.getDb();
+//pls don't delete our fetch naja
     try {
         ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
         QuerySnapshot querySnapshot = query.get();
