@@ -185,8 +185,8 @@
                     <div class="modal-body">
                         <form>
                             <div class="mb-3">
-                                <label for="studentId" class="form-label">Student ID</label>
-                                <input type="text" class="form-control" id="studentId" required>
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" required>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
@@ -197,11 +197,19 @@
                                 <input type="text" class="form-control" id="firstName" required>
                             </div>
                             <div class="mb-3">
-                                <label for="lasttName" class="form-label">Last Name</label>
+                                <label for="lastName" class="form-label">Last Name</label>
                                 <input type="text" class="form-control" id="lastName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="userType" class="form-label">User Type</label>
+                                <select class="form-select" id="userType" required>
+                                    <option value="student">Student</option>
+                                    <option value="staff">Staff</option>
+                                </select>
                             </div>
                         </form>
                     </div>
+                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" onclick="addUserToFirestore()">Save changes</button>
@@ -209,10 +217,12 @@
                 </div>
             </div>
         </div>
+
         <table class="table table-striped">
             <thead>
                 <tr class="bg-light"> 
-                    <th>Student ID</th>
+                    <!-- Change "studentId" to "username" and update other column names accordingly -->
+                    <th>Username</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Action</th>
@@ -220,12 +230,13 @@
             </thead>
             <tbody class="bg-white">
                 <tr th:each="user : ${users}">
-                    <td th:text="${user.studentId}"></td>
-                    <td th:text="${user.firstName}"></td>
-                    <td th:text="${user.lastName}"></td>
+                    <!-- Use correct attribute names from "useraccount" collection -->
+                    <td th:text="${user['username']}"></td>
+                    <td th:text="${user['firstName']}"></td>
+                    <td th:text="${user['lastName']}"></td>
                     <td>
-                        <button class="btn btn-primary">Reset Password</button>
-                        <button class="btn btn-danger" onclick="deleteUser('${user.studentId}')">Delete</button>
+                        <button type="button" class="btn btn-primary" onclick="resetPassword('${user['username']}')">Reset Password</button>
+                        <button class="btn btn-danger" onclick="deleteUser('${user['username']}')">Delete</button>
                     </td>
                 </tr>
                 <!-- Add more rows here -->
@@ -234,55 +245,46 @@
     </div>
     <script>
         function addUserToFirestore() {
-            const studentId = document.getElementById('studentId').value;
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
+            const userType = document.getElementById('userType').value;
     
             const userData = {
-                studentId,
+                username,
                 password,
                 firstName,
-                lastName
+                lastName,
+                userType
             };
     
-            fetch('/addUser?studentId=' + encodeURIComponent(studentId) + '&password=' + encodeURIComponent(password) + '&firstName=' + encodeURIComponent(firstName) + '&lastName=' + encodeURIComponent(lastName), {
+            fetch('/addUser', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(userData),
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Parse the JSON response
+            })
             .then(data => {
                 if (data.success) {
                     alert('User added successfully');
                 } else {
                     alert('Error adding user: ' + data.message);
-              }
+                }
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error('Error:', error);
+                alert('Something went wrong. Please try again later...');
             });
         }
-
-        function deleteUser(studentId) {
-        fetch('/deleteUser?studentId=' + encodeURIComponent(studentId), {
-            method: 'DELETE',
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('User deleted successfully');
-                location.reload(); // Reload the page to update the list of users
-            } else {
-                alert('Error deleting user: ' + data.message);
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-        </script>
+    </script>
+    
 </body>
 </html>
