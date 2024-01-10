@@ -109,11 +109,13 @@
 
         .add-user {
             margin-bottom: 20px;
+            margin-left: 20px; /* Adjusted margin */
         }
 
         .user-table {
             width: 100%;
             border-collapse: collapse;
+            border: 1px solid black; /* Add this line */
         }
 
         .user-table th,
@@ -137,6 +139,8 @@
             margin: 20px;
             padding: 20px;
             border: 1px solid black; /* Add this line */
+            border-radius: 5px; /* Add this line */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add this line */
         }
     </style>
 </head>
@@ -165,7 +169,7 @@
                 <h2 class="display-4">All Users</h2>
             </div>
             <div class="search">
-                <input type="text" class="form-control" placeholder="Student ID">
+                <input type="text" class="form-control" placeholder="Username">
                 <input type="text" class="form-control" placeholder="Name">
                 <button class="btn btn-primary">Search</button>
             </div>
@@ -240,6 +244,7 @@
                 </div>
             </div>
         </div>
+        
 
         <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -277,8 +282,18 @@
                     <td th:text="${user['firstName']}"></td>
                     <td th:text="${user['lastName']}"></td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">Reset Password</button>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal">Delete</button>
+                        <button type="button" class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#resetPasswordModal"
+                                onclick="setUsernameForResetPasswordModal('${user['username']}')">
+                            Reset Password
+                        </button>
+                        <button type="button" class="btn btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteUserModal"
+                                onclick="setUsernameForDeleteUserModal('${user['username']}')">
+                            Delete
+                        </button>
                     </td>
                 </tr>
                 <!-- Add more rows here -->
@@ -322,8 +337,54 @@
                     console.error('Error:', error);
                 });
         }
-    </script>
 
-    
+        function resetPasswordInFirestore() {
+            const username = document.getElementById('resetPasswordModal').innerText.split(' - ')[1];
+            const newPassword = document.getElementById('newPassword').value;
+
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('newPassword', newPassword);
+
+            fetch('/resetPassword', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('Password reset successfully');
+                        location.reload(); // Refresh the page after resetting the password
+                    } else {
+                        alert('Error resetting password: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function setUsernameForResetPasswordModal(username) {
+        document.getElementById('resetPasswordModalLabel').innerText = `Reset Password - ${username}`;
+        document.getElementById('resetPasswordUsername').value = username;
+    }
+
+    // Add these functions to your existing script tag or create a new one
+        function setUsernameForResetPasswordModal(username) {
+            document.getElementById('resetPasswordModalLabel').innerText = `Reset Password - ${username}`;
+            document.getElementById('resetPasswordUsername').value = username;
+        }
+
+        function setUsernameForDeleteUserModal(username) {
+            document.getElementById('deleteUserModalLabel').innerText = `Delete User - ${username}`;
+            document.getElementById('deleteUserUsername').value = username;
+        }
+
+    </script>
 </body>
 </html>
