@@ -3,7 +3,7 @@ package com.oop.projectmanagement.controller;
 import com.google.cloud.Timestamp;
 
 public class User {
-    private String student_id;
+    private String username;
     private String first_name;
     private String last_name;
     private String password;
@@ -13,12 +13,12 @@ public class User {
     public User() {}
 
     // getters and setters
-    public String getStudent_id() {
-        return student_id;
+    public String getUsername() {
+        return username;
     }
 
-    public void setStudent_id(String student_id) {
-        this.student_id = student_id;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFirstName() {
