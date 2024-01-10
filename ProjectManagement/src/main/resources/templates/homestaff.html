@@ -209,6 +209,25 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal" id="resetPasswordModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Reset Password</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="password" id="newPassword" placeholder="Enter new password">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="updatePassword()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <table class="table table-striped">
             <thead>
                 <tr class="bg-light"> 
@@ -224,7 +243,7 @@
                     <td th:text="${user.firstName}"></td>
                     <td th:text="${user.lastName}"></td>
                     <td>
-                        <button class="btn btn-primary">Reset Password</button>
+                        <button type="button" class="btn btn-primary" onclick="resetPassword('${user.studentId}')">Reset Password</button>
                         <button class="btn btn-danger" onclick="deleteUser('${user.studentId}')">Delete</button>
                     </td>
                 </tr>
@@ -265,7 +284,7 @@
                 console.error('Error:', error);
             });
         }
-
+        
         function deleteUser(studentId) {
         fetch('/deleteUser?studentId=' + encodeURIComponent(studentId), {
             method: 'DELETE',

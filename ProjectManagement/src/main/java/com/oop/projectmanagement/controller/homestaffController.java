@@ -85,9 +85,16 @@ public class homestaffController {
 
     }
 
+    @PostMapping("/updatePassword")
+    public ResponseEntity<String> updatePassword(@RequestParam String Id, @RequestParam String newPassword) {
+        // Your code to update the password in Firestore goes here
+        // If the update is successful, return a success message
+        return new ResponseEntity<>("Password updated successfully", HttpStatus.OK);
+    }
+
     @DeleteMapping("/deleteUser")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> deleteUser(@RequestParam("studentId") String studentId) {
+    public ResponseEntity<Map<String, Object>> deleteUser(@RequestParam("Id") String studentId) {
         Firestore db = firebaseInitializer.getDb();
         Map<String, Object> response = new HashMap<>();
 
