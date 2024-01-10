@@ -39,7 +39,7 @@ public class LoginController {
             QuerySnapshot querySnapshot = query.get();
             List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
             for (DocumentSnapshot document : documents) {
-                String storedUsername = document.getString("username");
+                String storedUsername = document.getString("id");
                 String storedPassword = document.getString("password");
                 String userType = document.getString("userType"); // Get user type
                 if (username.equals(storedUsername) && password.equals(storedPassword)) {
