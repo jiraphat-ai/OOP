@@ -4,9 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import com.google.api.core.ApiFuture;
@@ -51,24 +48,5 @@ public String homestudent(HttpSession session, Model model) {
         session.invalidate();
         return "redirect:/login";
     }
-@Controller
-public class UserController {
 
-    @GetMapping("/user")
-    public String getUser(Model model) {
-        User user = new User();
-        // Set user attributes here
-        model.addAttribute("user", user);
-        return "user"; // This should be the name of your Thymeleaf template (without the .html extension)
-    }
-
-    @PostMapping("/user")
-    public String postUser(@RequestParam("firstname") String firstname, @RequestParam("lastname") String lastname, Model model) {
-        User user = new User();
-        user.setFirstname(firstname);
-        user.setLastname(lastname);
-        model.addAttribute("user", user);
-         return "redirect:/user";
-    }
-}
 }
