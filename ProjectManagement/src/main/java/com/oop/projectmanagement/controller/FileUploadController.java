@@ -31,6 +31,7 @@ public class FileUploadController {
                     .withType(User.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
+                    
 
             // convert `CsvToBean` object to list of users
             List<User> users = csvToBean.parse();
