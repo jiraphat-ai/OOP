@@ -2,6 +2,8 @@ package com.oop.projectmanagement.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +33,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@RequestParam("username") String username, @RequestParam("password") String password,
-            Model model) {
+            Model model , HttpSession session) {
         Firestore db = firebaseInitializer.getDb();
 
         try {
@@ -45,10 +47,11 @@ public class LoginController {
                 if (username.equals(storedUsername) && password.equals(storedPassword)) {
                     if ("student".equals(userType)) {
                         model.addAttribute("message", "Login successful. User type: " + userType);
-                        return "homestudent"; // Redirect to index page if user is a student
+                        session.setAttribute("username", username);
+                        return "redirect:/homestudent"; // Redirect to index page if user is a student
                     } else if ("staff".equals(userType)) {
                         model.addAttribute("message", "Login successful. User type: " + userType);
-                        return "homestaff"; // Redirect to homestaff page if user is a staff
+                        return "redirect:/homesstaff"; // Redirect to homestaff page if user is a staff
                     }
                 }
             }

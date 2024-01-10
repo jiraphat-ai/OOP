@@ -14,7 +14,7 @@
             margin: 0;
             padding: 0;
             font-family:  Sunflower, sans-serif;
-            background: linear-gradient(to right, #1F2863, #003b7a); 
+            background: linear-gradient(to right, #1F2863, #003b7a);
             color: #000000; /* สีข้อความ */
             display: flex;
         }
@@ -145,8 +145,8 @@
         <div class="profile">
             <img src="profile.jpg" alt="Profile Picture">
             <div>
-                <div class="staff">Username</div>
-                <div>First Last</div>
+                <div class="student" th:text="${username}"> </div>
+                <div th:text="${firstName} + ' ' + ${lastName}"> </div>
             </div>
         </div>
         <div class="menu">
@@ -157,39 +157,5 @@
             </ul>
         </div>
     </div>
-    <script>
-        function addUserToFirestore() {
-            const studentId = document.getElementById('studentId').value;
-            const password = document.getElementById('password').value;
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-
-            const userData = {
-                studentId,
-                password,
-                firstName,
-                lastName
-            };
-
-            fetch('/addUser?studentId=' + encodeURIComponent(studentId) + '&password=' + encodeURIComponent(password) + '&firstName=' + encodeURIComponent(firstName) + '&lastName=' + encodeURIComponent(lastName), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('User added successfully');
-                } else {
-                    alert('Error adding user: ' + data.message);
-              }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
-        </script>
 </body>
 </html>

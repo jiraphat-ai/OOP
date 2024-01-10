@@ -1,53 +1,54 @@
 package com.oop.projectmanagement.controller;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 public class User {
-    private String id;
-    private String first_name;
-    private String last_name;
-    private String password;
-    private String user_type;
+    private String username;
+    private String firstname;
+    private String lastname;
 
-    // no-arg constructor
-    public User() {}
-
-    // getters and setters
-    public String getId() {
-        return id;
+    // Getter for username
+    public String getUsername() {
+        return username;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    // Setter for username
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getFirstName() {
-        return first_name;
+    // Getter for firstname
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFirstName(String first_name) {
-        this.first_name = first_name;
+    // Setter for firstname
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getLastName() {
-        return last_name;
+    // Getter for lastname
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setLastName(String last_name) {
-        this.last_name = last_name;
+    // Setter for lastname
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUserType() {
-        return user_type;
-    }
-
-    public void setUserType(String user_type) {
-        this.user_type = user_type;
+    @PostMapping("/login")
+    public String login(HttpSession session, Model model) {
+        // Validate the username and password here
+        String username = (String) session.getAttribute("username");
+        // If validation is successful, add the username to the model 
+        model.addAttribute("username", username);
+   
+    
+        return "redirect:/homestudent";
     }
 }
