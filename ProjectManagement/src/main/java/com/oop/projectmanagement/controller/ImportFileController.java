@@ -21,4 +21,9 @@ public class ImportFileController {
 
         return "importuserfile";
     }
+    @GetMapping("/importsubjectfile")
+    public String portfileSubject(Model model) {
+
+        return "importsubjectfile";
+    }
 }

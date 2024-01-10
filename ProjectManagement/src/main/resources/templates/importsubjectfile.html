@@ -124,13 +124,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/importsubjectfile" class="nav-link link-dark">
+                    <a href="importsubjectfile" class="nav-link active">
                         <img src="https://cdn3.iconfinder.com/data/icons/interaction-design/512/Import_B-512.png" alt="" width="16" height="16">
                         Create New Subject
                     </a>
                 </li>
                 <li>
-                    <a href="/importuserfile" class="nav-link active">
+                    <a href="/importuserfile" class="nav-link link-dark">
                         <img src="https://cdn3.iconfinder.com/data/icons/interaction-design/512/Import_B-512.png" alt=""
                             width="16" height="16">
                         Create New User
@@ -158,7 +158,7 @@
                     <div class="col">
                         <div class="container-fulid my-3 p-3 bg-primary w-100 rounded">
                             <p class="text-center" style="font-size: x-large; font-weight: bolder;">Import File To
-                                Create New User</p>
+                                Create New Subject</p>
                         </div>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                             <div class="container py-5">
                                 <div class="row">
                                     <div class="col-md-6 offset-md-3">
-                                        <form method="POST" action="/upload"
+                                        <form method="POST" action="/uploadsubject"
                                             class="dropzone dz-clickable border rounded bg-light p-3">
                                             <div class="dz-default dz-message text-center">
                                                 <img src="https://cdn3.iconfinder.com/data/icons/interaction-design/512/Import_B-512.png"
@@ -200,7 +200,7 @@
     <script>
         Dropzone.autoDiscover = false;
         var myDropzone = new Dropzone(".dropzone", {
-            url: "/upload",
+            url: "/uploadsubject",
             paramName: "file",
             maxFilesize: 2, // MB
             maxFiles: 10,
