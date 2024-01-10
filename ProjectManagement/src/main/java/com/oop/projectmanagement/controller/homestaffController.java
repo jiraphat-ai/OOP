@@ -8,20 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
 
-
-
 @Controller
-public class HomestaffController {
+public class homestaffController {
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
     @GetMapping("/homestaff")
     public String portfileUser(Model model) {
+
         return "homestaff";
     }
 }
