@@ -215,7 +215,6 @@
                     <th>Student ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Reg Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -224,7 +223,6 @@
                     <td id="student-id"></td>
                     <td id="first-name"></td>
                     <td id="last-name"></td>
-                    <td id="reg-date"></td>
                     <td>
                         <button class="btn btn-primary">Reset Password</button>
                         <button class="btn btn-danger">Delete</button>
@@ -234,5 +232,39 @@
             </tbody>
         </table>
     </div>
+    <script>
+        function addUserToFirestore() {
+            const studentId = document.getElementById('studentId').value;
+            const password = document.getElementById('password').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+    
+            const userData = {
+                studentId,
+                password,
+                firstName,
+                lastName
+            };
+    
+            fetch('/addUser?studentId=' + encodeURIComponent(studentId) + '&password=' + encodeURIComponent(password) + '&firstName=' + encodeURIComponent(firstName) + '&lastName=' + encodeURIComponent(lastName), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('User added successfully');
+                } else {
+                    alert('Error adding user: ' + data.message);
+              }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+        </script>
 </body>
 </html>
