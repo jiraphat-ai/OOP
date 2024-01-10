@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Controller
-public class HomeStaffController {
+public class homestaffController {
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
