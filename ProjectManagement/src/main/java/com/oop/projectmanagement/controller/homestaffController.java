@@ -103,45 +103,4 @@ public class homestaffController {
     return "redirect:/homestaff";
 }
 
-@GetMapping("/searchUsers")
-@ResponseBody
-public ResponseEntity<Map<String, Object>> searchUsers(
-        @RequestParam(name = "username", required = false) String username,
-        @RequestParam(name = "name", required = false) String name) {
-
-    Firestore db = firebaseInitializer.getDb();
-    List<Map<String, Object>> users = new ArrayList<>();
-
-    try {
-        // สร้าง query ด้วยเงื่อนไขที่ต้องการค้นหา
-        com.google.cloud.firestore.Query query = db.collection("useraccount");
-
-        if (username != null && !username.isEmpty()) {
-            query = query.whereEqualTo("username", username);
-        }
-
-        if (name != null && !name.isEmpty()) {
-            // ใช้ whereEqualTo() หลายครั้งเพื่อทำเงื่อนไข OR
-            query = query.whereEqualTo("firstName", name).whereEqualTo("lastName", name);
-        }
-
-        ApiFuture<QuerySnapshot> querySnapshot = query.get();
-        for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
-            users.add(document.getData());
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("users", users);
-        return ResponseEntity.ok(response);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", false);
-        response.put("message", "Error searching users");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    }
-}
-
 }
