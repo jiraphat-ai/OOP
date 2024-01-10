@@ -1,3 +1,4 @@
+package projectManagementEntity;
 public class Student {
     private String id;
     private String name;
@@ -6,8 +7,7 @@ public class Student {
     public Student(String id, String name, String lastname) {
         this.id = id;
         this.name = name;
-        this.age = age;
-        this.grade = grade;
+
     }
 
     // Getters and Setters
