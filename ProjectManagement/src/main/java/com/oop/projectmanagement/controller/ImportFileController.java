@@ -1,6 +1,7 @@
 package com.oop.projectmanagement.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -8,9 +9,15 @@ import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
@@ -117,5 +124,51 @@ public String homestudent(HttpSession session, Model model) {
         }
         model.addAttribute("users", users);
         return "createsubject";
+    }
+    @PostMapping("/addsubject")
+    public String addSubject(@RequestParam("subjectID") String subjectID, @RequestParam("subjectName") String subjectName,
+                             Model model , HttpSession session) {
+        try {
+            //add to firebase firestore
+            Firestore db = firebaseInitializer.getDb();
+            DocumentReference docRef = db.collection("subject").document( subjectID);
+            // Add document data  with id "alovelace" using a hashmap
+            Map<String, Object> data = new HashMap<>();
+            data.put("subjectID", subjectID);
+            data.put("subjectName", subjectName);
+            //asynchronously write data
+            docRef.set(data);
+            System.out.println("Data added successfully");
+
+        } catch (Exception e) {
+            // Handle any exceptions that occur during the process
+            e.printStackTrace();
+            // You can add custom error handling logic here
+        }
+        return "redirect:/createsubject";
+    }
+    @PostMapping("/deleteSubject")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteSubject(@RequestBody Map<String, String> user) {
+        Firestore db = firebaseInitializer.getDb();
+        String username = user.get("username");
+
+        try {
+            // Check if the user exists
+            ApiFuture<QuerySnapshot> query = db.collection("subject").whereEqualTo("subjectID", username).get();
+            QuerySnapshot querySnapshot = query.get();
+            if (querySnapshot.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            // Delete the user
+            DocumentReference userRef = querySnapshot.getDocuments().get(0).getReference();
+            userRef.delete();
+
+            return new ResponseEntity<>(Map.of("success", true), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(Map.of("success", false, "message", "Error deleting user"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
