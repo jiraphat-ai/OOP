@@ -21,13 +21,14 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
 
 @Controller
-public class ImportFileController extends MenubarController {
+public class ImportFileController {
 
       @Autowired
     private FirebaseInitializer firebaseInitializer;
 
     @GetMapping("/importuserfile")
 public String homestudent(HttpSession session, Model model) {
+        System.out.println("User: " + session.getAttribute("username"));
     String username = (String) session.getAttribute("username");
     Firestore db = firebaseInitializer.getDb();
     try {
@@ -43,6 +44,8 @@ public String homestudent(HttpSession session, Model model) {
             model.addAttribute("firstName", firstName);
             model.addAttribute("lastName", lastName);
             model.addAttribute("username", username);
+
+            System.out.println("User: " + firstName + " " + lastName + " " + username);
         }
     } catch (Exception e) {
         model.addAttribute("error", "An error occurred: " + e.getMessage());

@@ -35,7 +35,7 @@ public class LoginController {
     public String login(@RequestParam("username") String username, @RequestParam("password") String password,
             Model model , HttpSession session) {
         Firestore db = firebaseInitializer.getDb();
-
+            System.out.println("User: " + username + " " + password);
         try {
             ApiFuture<QuerySnapshot> query = db.collection("useraccount").get();
             QuerySnapshot querySnapshot = query.get();
@@ -50,6 +50,7 @@ public class LoginController {
                         session.setAttribute("username", username);
                         return "redirect:/homestudent"; // Redirect to index page if user is a student
                     } else if ("staff".equals(userType)) {
+                        session.setAttribute("username", username);
                         model.addAttribute("message", "Login successful. User type: " + userType);
                         return "redirect:/importuserfile"; // Redirect to homestaff page if user is a staff
                     }
