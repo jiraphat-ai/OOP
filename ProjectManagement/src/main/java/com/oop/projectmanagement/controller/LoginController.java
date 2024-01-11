@@ -52,7 +52,7 @@ public class LoginController {
                     } else if ("staff".equals(userType)) {
                         session.setAttribute("username", username);
                         model.addAttribute("message", "Login successful. User type: " + userType);
-                        return "redirect:/importuserfile"; // Redirect to homestaff page if user is a staff
+                        return "redirect:/homestaff"; // Redirect to homestaff page if user is a staff
                     }
                 }
             }
