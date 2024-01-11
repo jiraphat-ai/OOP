@@ -9,8 +9,8 @@ import com.google.cloud.Timestamp;
 
 public class User {
     private String username;
-    private String firstname;
-    private String lastname;    
+    private String first_name;
+    private String last_name;    
     private String password;
     private String user_type;
 
@@ -27,23 +27,23 @@ public class User {
     }
 
     // Getter for firstname
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return first_name;
     }
 
     // Setter for firstname
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String first_name) {
+        this.first_name = first_name;
     }
 
     // Getter for lastname
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return last_name;
     }
 
     // Setter for lastname
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getPassword() {
