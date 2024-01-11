@@ -263,7 +263,7 @@
                 </div>
             </div>
         </div>
-        
+
 
         <table class="table table-striped">
             <thead>
@@ -285,13 +285,13 @@
                         <button type="button" class="btn btn-primary"
                                 data-bs-toggle="modal"
                                 data-bs-target="#resetPasswordModal"
-                                onclick="setUsernameForResetPasswordModal('${user['username']}')">
+                                onclick="setUsernameForResetPasswordModal(`${user['username']}`)">
                             Reset Password
                         </button>
                         <button type="button" class="btn btn-danger"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteUserModal"
-                                onclick="setUsernameForDeleteUserModal('${user['username']}')">
+                                onclick="setUsernameForDeleteUserModal(`${user['username']}`)">
                             Delete
                         </button>
                     </td>
