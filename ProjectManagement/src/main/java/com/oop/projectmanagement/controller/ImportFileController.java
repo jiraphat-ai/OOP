@@ -122,10 +122,10 @@ public String homestudent(HttpSession session, Model model) {
         return "createsubject";
     }
     @PostMapping("/addsubject")
-    public void addSubject(@RequestParam("subjectID") String subjectID, @RequestParam("subjectName") String subjectName,
-            Model model , HttpSession session) {
+    public String addSubject(@RequestParam("subjectID") String subjectID, @RequestParam("subjectName") String subjectName,
+                             Model model , HttpSession session) {
         try {
-            //add to firebase firestore 
+            //add to firebase firestore
             Firestore db = firebaseInitializer.getDb();
             DocumentReference docRef = db.collection("subject").document( subjectID);
             // Add document data  with id "alovelace" using a hashmap
@@ -141,5 +141,6 @@ public String homestudent(HttpSession session, Model model) {
             e.printStackTrace();
             // You can add custom error handling logic here
         }
+        return "redirect:/createsubject";
     }
 }
