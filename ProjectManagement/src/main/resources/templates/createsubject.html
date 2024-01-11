@@ -11,8 +11,13 @@
     <script src="jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <title>Import File To Create New User</title>
     <style>
@@ -94,7 +99,7 @@
                         <img src="https://cdn-icons-png.flaticon.com/512/3884/3884871.png" alt="" width="40" height="40"
                             class="rounded-circle me-2">
                         <strong> STAFF <br>
-                            <div th:text="${firstname} + ' ' + ${lastname}"> </div>
+                            <div th:text="${session.firstName} + ' ' + ${session.lastName}"> </div>
                         </strong>
                     </a>
                 </div>
@@ -163,11 +168,11 @@
                                 <div class="header">
                                 </div>
                                 <div class="search" style="display: flex;">
-                                    <input type="text" class="form-control" style="margin-right: 10px;"
+                                    <input type="text" class="form-control" style="margin-right: 10px;" id="subjectIDInput"
                                         placeholder="SubjectID">
-                                    <input type="text" class="form-control" style="margin-right: 10px;"
+                                    <input type="text" class="form-control" style="margin-right: 10px;" id="subjectNameInput"
                                         placeholder="SubjectName">
-                                    <button class="btn btn-success">Search</button>
+                                    <button class="btn btn-success" onclick="searchSubjects()">Search</button>
                                 </div>
                             </div>
                             <div class="add-user mt-3">
@@ -232,7 +237,7 @@
             </div>
             <!-- FILEPATH: /c:/Users/Mayme/Downloads/OOP-20240108T134845Z-001/OOP/ProjectManagement/src/main/resources/templates/createsubject.html -->
 
-            <div style="width: 100%; height: 50vh; background-color: white;border-radius: 10px;">
+            <div class="p-3" style="width: 100%; height: 50vh; background-color: white;border-radius: 10px;">
                 <table class="table table-striped">
                     <thead>
                         <tr class="bg-light">
@@ -262,8 +267,20 @@
         </div>
     </div>
     </div>
+
     <script th:inline="javascript">
         /*<![CDATA[*/
+        $(document).ready(function() {
+            // Check if the table exists
+            if ($('.table').length) {
+                // Initialize DataTable
+                $('.table').DataTable({
+
+                });
+            } else {
+                console.error('Table #user-table does not exist');
+            }
+        });
         function deleteSubject(username) {
             fetch('/deleteSubject', {
                 method: 'POST',
@@ -297,6 +314,28 @@
                 $('#modal_btn_del').attr('onclick', `deleteSubject('${username}')`);
             });
         }
+
+        function searchSubjects() {
+        // Get the values from the input fields
+        var subjectID = document.getElementById('subjectIDInput').value.trim().toLowerCase();
+        var subjectName = document.getElementById('subjectNameInput').value.trim().toLowerCase();
+
+        // Get all rows in the table
+        var rows = document.querySelectorAll('tbody tr');
+
+        // Loop through each row and check if it matches the search criteria
+        rows.forEach(function (row) {
+            var rowSubjectID = row.querySelector('td:nth-child(1)').innerText.trim().toLowerCase();
+            var rowSubjectName = row.querySelector('td:nth-child(2)').innerText.trim().toLowerCase();
+
+            // Check if the row matches the search criteria
+            var matchSubjectID = rowSubjectID.includes(subjectID);
+            var matchSubjectName = rowSubjectName.includes(subjectName);
+
+            // Show/hide the row based on the search criteria
+            row.style.display = (matchSubjectID && matchSubjectName) ? '' : 'none';
+        });
+    }
     </script>
 
 </body>

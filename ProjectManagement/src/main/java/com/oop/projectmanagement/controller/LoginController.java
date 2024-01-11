@@ -16,7 +16,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
-import projectManagementEntity.Account;
+
 
 @Controller
 public class LoginController {
@@ -31,11 +31,12 @@ public class LoginController {
         return "login";
     }
 
+    /* LOGIN AND FETCH DATA MEDTHOD */
     @PostMapping("/login")
     public String login(@RequestParam("username") String username, @RequestParam("password") String password,
-            Model model , HttpSession session) {
+            Model model, HttpSession session) {
         Firestore db = firebaseInitializer.getDb();
-            System.out.println("User: " + username + " " + password);
+
         try {
             ApiFuture<QuerySnapshot> query = db.collection("useraccount").get();
             QuerySnapshot querySnapshot = query.get();
@@ -43,24 +44,30 @@ public class LoginController {
             for (DocumentSnapshot document : documents) {
                 String storedUsername = document.getString("username");
                 String storedPassword = document.getString("password");
-                String userType = document.getString("userType"); // Get user type
+                String userType = document.getString("userType");
+                String firstName = document.getString("firstName");
+                String lastName = document.getString("lastName"); 
                 if (username.equals(storedUsername) && password.equals(storedPassword)) {
                     if ("student".equals(userType)) {
                         model.addAttribute("message", "Login successful. User type: " + userType);
                         session.setAttribute("username", username);
-                        return "redirect:/homestudent"; // Redirect to index page if user is a student
+                        session.setAttribute("firstName", firstName);
+                        session.setAttribute("lastName", lastName);
+                        return "redirect:/homestudent"; 
                     } else if ("staff".equals(userType)) {
-                        session.setAttribute("username", username);
                         model.addAttribute("message", "Login successful. User type: " + userType);
-                        return "redirect:/homestaff"; // Redirect to homestaff page if user is a staff
+                        session.setAttribute("username", username);
+                        session.setAttribute("firstName", firstName);
+                        session.setAttribute("lastName", lastName);
+                        return "redirect:/importuserfile"; 
                     }
                 }
             }
             model.addAttribute("error", "Invalid username or password. Please try again.");
-            return "login"; // Redirect back to login page if username or password is incorrect
+            return "login"; 
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
-            return "login"; // Redirect back to login page if an exception occurs
+            return "login"; 
         }
     }
 }

@@ -30,87 +30,40 @@ import com.oop.projectmanagement.FirebaseInitializer;
 @Controller
 public class ImportFileController {
 
-      @Autowired
+    @Autowired
     private FirebaseInitializer firebaseInitializer;
 
+        
     @GetMapping("/importuserfile")
-public String homestudent(HttpSession session, Model model) {
-        System.out.println("User: " + session.getAttribute("username"));
-    String username = (String) session.getAttribute("username");
-    Firestore db = firebaseInitializer.getDb();
-    try {
-        ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
-        QuerySnapshot querySnapshot = query.get();
-        List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-        if (!documents.isEmpty()) {
-            DocumentSnapshot document = documents.get(0);
-            // Fetch the values you need from the document
-            String firstName = document.getString("firstName");
-            String lastName = document.getString("lastName");
-            // Add the values to the model
-            model.addAttribute("firstname", firstName);
-            model.addAttribute("lastname", lastName);
-            model.addAttribute("username", username);
 
-            System.out.println("User: " + firstName + " " + lastName + " " + username);
-        }
-    } catch (Exception e) {
-        model.addAttribute("error", "An error occurred: " + e.getMessage());
+    public String getUserinfo1(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        String firstName = (String) session.getAttribute("firstName");
+        String lastName = (String) session.getAttribute("lastName");
+        // Now you can use the username, firstName, and lastName
+        return "importuserfile"; 
+       
     }
-    return "importuserfile"; // Return the name of the view
-}
-   
-
 
     @GetMapping("/importsubjectfile")
-    public String importSubjectFile(HttpSession session, Model model) {
+    public String getUserinfo(HttpSession session) {
         String username = (String) session.getAttribute("username");
-        Firestore db = firebaseInitializer.getDb();
-        try {
-            ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
-            QuerySnapshot querySnapshot = query.get();
-            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-            if (!documents.isEmpty()) {
-                DocumentSnapshot document = documents.get(0);
-                // Fetch the values you need from the document
-                String firstName = document.getString("firstName");
-                String lastName = document.getString("lastName");
-                // Add the values to the model
-                model.addAttribute("firstname", firstName);
-                model.addAttribute("lastname", lastName);
-                model.addAttribute("username", username);
-    
-                System.out.println("User: " + firstName + " " + lastName + " " + username);
-            }
-        } catch (Exception e) {
-            model.addAttribute("error", "An error occurred: " + e.getMessage());
-        }
+        String firstName = (String) session.getAttribute("firstName");
+        String lastName = (String) session.getAttribute("lastName");
+        // Now you can use the username, firstName, and lastName
         return "importsubjectfile";
+
     }
 
     @GetMapping("/createsubject")
-    public String createSubject(HttpSession session, Model model) {
-        String username = (String) session.getAttribute("username");
-    Firestore db = firebaseInitializer.getDb();
-    try {
-        ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
-        QuerySnapshot querySnapshot = query.get();
-        List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-        if (!documents.isEmpty()) {
-            DocumentSnapshot document = documents.get(0);
-            // Fetch the values you need from the document
-            String firstName = document.getString("firstName");
-            String lastName = document.getString("lastName");
-            // Add the values to the model
-            model.addAttribute("firstname", firstName);
-            model.addAttribute("lastname", lastName);
-            model.addAttribute("username", username);
 
-            System.out.println("User: " + firstName + " " + lastName + " " + username);
-        }
-    } catch (Exception e) {
-        model.addAttribute("error", "An error occurred: " + e.getMessage());
-    }
+    public String getUserinfo(HttpSession session,Model model ) {
+        Firestore db = firebaseInitializer.getDb();
+        String username = (String) session.getAttribute("username");
+        String firstName = (String) session.getAttribute("firstName");
+        String lastName = (String) session.getAttribute("lastName");
+        // Now you can use the username, firstName, and lastName
+        
         List<Map<String, Object>> users = new ArrayList<>();
         try {
             ApiFuture<QuerySnapshot> query = db.collection("subject").get();
@@ -125,18 +78,20 @@ public String homestudent(HttpSession session, Model model) {
         model.addAttribute("users", users);
         return "createsubject";
     }
+
     @PostMapping("/addsubject")
-    public String addSubject(@RequestParam("subjectID") String subjectID, @RequestParam("subjectName") String subjectName,
-                             Model model , HttpSession session) {
+    public String addSubject(@RequestParam("subjectID") String subjectID,
+            @RequestParam("subjectName") String subjectName,
+            Model model, HttpSession session) {
         try {
-            //add to firebase firestore
+            // add to firebase firestore
             Firestore db = firebaseInitializer.getDb();
-            DocumentReference docRef = db.collection("subject").document( subjectID);
-            // Add document data  with id "alovelace" using a hashmap
+            DocumentReference docRef = db.collection("subject").document(subjectID);
+            // Add document data with id "alovelace" using a hashmap
             Map<String, Object> data = new HashMap<>();
             data.put("subjectID", subjectID);
             data.put("subjectName", subjectName);
-            //asynchronously write data
+            // asynchronously write data
             docRef.set(data);
             System.out.println("Data added successfully");
 
@@ -147,6 +102,7 @@ public String homestudent(HttpSession session, Model model) {
         }
         return "redirect:/createsubject";
     }
+
     @PostMapping("/deleteSubject")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteSubject(@RequestBody Map<String, String> user) {
@@ -168,7 +124,8 @@ public String homestudent(HttpSession session, Model model) {
             return new ResponseEntity<>(Map.of("success", true), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(Map.of("success", false, "message", "Error deleting user"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Map.of("success", false, "message", "Error deleting user"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
