@@ -32,8 +32,8 @@ public String homestudent(HttpSession session, Model model) {
         if (!documents.isEmpty()) {
             DocumentSnapshot document = documents.get(0);
             // Fetch the values you need from the document
-            String firstName = document.getString("firstname");
-            String lastName = document.getString("lastname");
+            String firstName = document.getString("firstName");
+            String lastName = document.getString("lastName");
             // Add the values to the model
             model.addAttribute("firstName", firstName);
             model.addAttribute("lastName", lastName);
@@ -62,10 +62,10 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public String postUser(@RequestParam("firstname") String firstname, @RequestParam("lastname") String lastname, Model model) {
+    public String postUser(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, Model model) {
         User user = new User();
-        user.setFirstname(firstname);
-        user.setLastname(lastname);
+        user.setFirstname(firstName);
+        user.setLastname(lastName);
         model.addAttribute("user", user);
          return "redirect:/user";
     }

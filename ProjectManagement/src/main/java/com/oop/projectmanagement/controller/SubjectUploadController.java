@@ -40,7 +40,7 @@ public class SubjectUploadController {
 
             // TODO: save users in DB?
 
-            
+
             //save users to firestore
             Firestore db = firebaseInitializer.getDb();
             for (Subject user : users) {

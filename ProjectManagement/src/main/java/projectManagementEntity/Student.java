@@ -1,30 +1,41 @@
 package projectManagementEntity;
 public class Student {
-    private String id;
-    private String name;
-    private String lastname;
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String password;
 
-    public Student(String id, String name, String lastname) {
-        this.id = id;
-        this.name = name;
-
+    // Getters
+    public String getFirstName() {
+        return this.firstName;
     }
 
-    // Getters and Setters
-    public String getId() {
-        return id;
+    public String getLastName() {
+        return this.lastName;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getUsername() {
+        return this.username;
     }
 
-    public String getName() {
-        return name;
+    public String getPassword() {
+        return this.password;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    // Setters
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
