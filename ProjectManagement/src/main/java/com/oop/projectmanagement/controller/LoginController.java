@@ -59,7 +59,7 @@ public class LoginController {
                         session.setAttribute("username", username);
                         session.setAttribute("firstName", firstName);
                         session.setAttribute("lastName", lastName);
-                        return "redirect:/importuserfile"; 
+                        return "redirect:/homestaff"; 
                     }
                 }
             }
