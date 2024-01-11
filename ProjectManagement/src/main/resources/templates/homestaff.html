@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@500&display=swap" rel="stylesheet">
     <script src="jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <title>homestaff</title>
     <style>
@@ -326,10 +329,10 @@
             </div>
         </div>
 
-
-        <table class="table table-striped">
+    <div class="bg-white p-3">
+        <table class="table" id="user-table">
             <thead>
-                <tr class="bg-light">
+                <tr class="bg-primary text-white">
                     <!-- Change "studentId" to "username" and update other column names accordingly -->
                     <th>Username</th>
                     <th>First Name</th>
@@ -337,7 +340,7 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody class="bg-white">
+            <tbody class="bg-white" >
             <tr th:each="user : ${users}">
                 <td th:text="${user['username']}"></td>
                 <td th:text="${user['firstName']}"></td>
@@ -360,6 +363,7 @@
                 <!-- Add more rows here -->
             </tbody>
         </table>
+    </div>
     </div>
 </div>
     <script th:inline="javascript">
@@ -388,7 +392,17 @@
         /*]]>*/
     </script>
     <script>
+        $(document).ready(function() {
+            // Check if the table exists
+            if ($('.table').length) {
+                // Initialize DataTable
+                $('.table').DataTable({
 
+                });
+            } else {
+                console.error('Table #user-table does not exist');
+            }
+        });
         function addUserToFirestore() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
