@@ -11,8 +11,13 @@
     <script src="jquery-3.7.1.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <title>Import File To Create New User</title>
     <style>
@@ -232,7 +237,7 @@
             </div>
             <!-- FILEPATH: /c:/Users/Mayme/Downloads/OOP-20240108T134845Z-001/OOP/ProjectManagement/src/main/resources/templates/createsubject.html -->
 
-            <div style="width: 100%; height: 50vh; background-color: white;border-radius: 10px;">
+            <div class="p-3" style="width: 100%; height: 50vh; background-color: white;border-radius: 10px;">
                 <table class="table table-striped">
                     <thead>
                         <tr class="bg-light">
@@ -262,8 +267,20 @@
         </div>
     </div>
     </div>
+
     <script th:inline="javascript">
         /*<![CDATA[*/
+        $(document).ready(function() {
+            // Check if the table exists
+            if ($('.table').length) {
+                // Initialize DataTable
+                $('.table').DataTable({
+
+                });
+            } else {
+                console.error('Table #user-table does not exist');
+            }
+        });
         function deleteSubject(username) {
             fetch('/deleteSubject', {
                 method: 'POST',
