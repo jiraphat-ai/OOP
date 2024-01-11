@@ -44,12 +44,6 @@ public String homestudent(HttpSession session, Model model) {
     }
     return "homestudent"; // Return the name of the view
 }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
-    }
 @Controller
 public class UserController {
 
