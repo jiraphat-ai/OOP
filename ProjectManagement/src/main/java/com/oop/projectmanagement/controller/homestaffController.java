@@ -3,10 +3,7 @@ package com.oop.projectmanagement.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -116,7 +113,33 @@ public ResponseEntity<Map<String, Object>> resetPassword(
         e.printStackTrace();
         return new ResponseEntity<>(Map.of("success", false, "message", "Error resetting password"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 }
+    @PostMapping("/deleteUser")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteUser(@RequestBody Map<String, String> user) {
+        Firestore db = firebaseInitializer.getDb();
+        String username = user.get("username");
+
+        try {
+            // Check if the user exists
+            ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
+            QuerySnapshot querySnapshot = query.get();
+            if (querySnapshot.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            // Delete the user
+            DocumentReference userRef = querySnapshot.getDocuments().get(0).getReference();
+            userRef.delete();
+
+            return new ResponseEntity<>(Map.of("success", true), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(Map.of("success", false, "message", "Error deleting user"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     
 
