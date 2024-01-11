@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -144,7 +144,6 @@
 
         a {
         text-decoration: none;
-        font-size: 22px;
         color: black;
         }
 
@@ -204,7 +203,7 @@
 <body>
 <div class="sidebar">
     <div class="profile">
-        <img src="profile.jpg" alt="Profile Picture">
+        <img src="/static/icon.png" alt="Profile Picture">
         <div>
             <div class="staff">Username</div>
             <div>First Last</div>
@@ -230,15 +229,15 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <div class="card">
-            <div class = "picture"><p><img src="https://static.vecteezy.com/system/resources/previews/028/169/648/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png" alt="John" style="width:140px"></p>
-                <h4><p>B6428228</p></h4>
-                    <h4>Name Lastname</h4>
-            </div>
+            <div class = "picture"><img src="https://cdn.discordapp.com/attachments/1089622962065391687/1195036177087074385/profile.png?ex=65b2872b&is=65a0122b&hm=e528a2c22209f8dbe8520b266dbe3ee9565f6c10cd868a4f44b6cd2aac95c1b2&" alt="John" style="width:140px"/>
+            <p>B6428228</p>
+                fristName lastName
+                <div id="student-id"></div>
+                <div id="first-name"></div>
+                <div id="last-name"></div>
+        </div>
             <div class="detail">
                 <div class="bio"><h4>Bio</h4>
-                    <form>
-                        <input type="text" name="bio" class="bio-input">
-                    </form>
                 </div>
                 <h4>Contact</h4>
                 <h4>Tag: </h4>
@@ -247,8 +246,8 @@
         </div>
 </div>
 
-    <script>
-        function addUserToFirestore() {
+<script>
+    function addUserToFirestore() {
             const studentId = document.getElementById('studentId').value;
             const password = document.getElementById('password').value;
             const firstName = document.getElementById('firstName').value;
@@ -280,7 +279,6 @@
                 console.error('Error:', error);
             });
         }
-
 </script>
 </body>
 </html>
