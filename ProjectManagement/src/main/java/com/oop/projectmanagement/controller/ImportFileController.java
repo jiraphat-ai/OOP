@@ -1,6 +1,7 @@
 package com.oop.projectmanagement.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
@@ -117,5 +120,26 @@ public String homestudent(HttpSession session, Model model) {
         }
         model.addAttribute("users", users);
         return "createsubject";
+    }
+    @PostMapping("/addsubject")
+    public void addSubject(@RequestParam("subjectID") String subjectID, @RequestParam("subjectName") String subjectName,
+            Model model , HttpSession session) {
+        try {
+            //add to firebase firestore 
+            Firestore db = firebaseInitializer.getDb();
+            DocumentReference docRef = db.collection("subject").document( subjectID);
+            // Add document data  with id "alovelace" using a hashmap
+            Map<String, Object> data = new HashMap<>();
+            data.put("subjectID", subjectID);
+            data.put("subjectName", subjectName);
+            //asynchronously write data
+            docRef.set(data);
+            System.out.println("Data added successfully");
+
+        } catch (Exception e) {
+            // Handle any exceptions that occur during the process
+            e.printStackTrace();
+            // You can add custom error handling logic here
+        }
     }
 }
