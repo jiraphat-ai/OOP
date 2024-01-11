@@ -57,13 +57,53 @@ public String homestudent(HttpSession session, Model model) {
 
     @GetMapping("/importsubjectfile")
     public String importSubjectFile(HttpSession session, Model model) {
-
+        String username = (String) session.getAttribute("username");
+        Firestore db = firebaseInitializer.getDb();
+        try {
+            ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
+            QuerySnapshot querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+            if (!documents.isEmpty()) {
+                DocumentSnapshot document = documents.get(0);
+                // Fetch the values you need from the document
+                String firstName = document.getString("firstName");
+                String lastName = document.getString("lastName");
+                // Add the values to the model
+                model.addAttribute("firstname", firstName);
+                model.addAttribute("lastname", lastName);
+                model.addAttribute("username", username);
+    
+                System.out.println("User: " + firstName + " " + lastName + " " + username);
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "An error occurred: " + e.getMessage());
+        }
         return "importsubjectfile";
     }
 
     @GetMapping("/createsubject")
     public String createSubject(HttpSession session, Model model) {
-        Firestore db = firebaseInitializer.getDb();
+        String username = (String) session.getAttribute("username");
+    Firestore db = firebaseInitializer.getDb();
+    try {
+        ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
+        QuerySnapshot querySnapshot = query.get();
+        List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+        if (!documents.isEmpty()) {
+            DocumentSnapshot document = documents.get(0);
+            // Fetch the values you need from the document
+            String firstName = document.getString("firstName");
+            String lastName = document.getString("lastName");
+            // Add the values to the model
+            model.addAttribute("firstname", firstName);
+            model.addAttribute("lastname", lastName);
+            model.addAttribute("username", username);
+
+            System.out.println("User: " + firstName + " " + lastName + " " + username);
+        }
+    } catch (Exception e) {
+        model.addAttribute("error", "An error occurred: " + e.getMessage());
+    }
         List<Map<String, Object>> users = new ArrayList<>();
         try {
             ApiFuture<QuerySnapshot> query = db.collection("subject").get();
