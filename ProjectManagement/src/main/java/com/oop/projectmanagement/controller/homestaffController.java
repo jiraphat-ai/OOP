@@ -95,6 +95,7 @@ public ResponseEntity<Map<String, Object>> resetPassword(
         @RequestParam("newPassword") String newPassword) {
 
     Firestore db = firebaseInitializer.getDb();
+    //test merge
 
     try {
         // Check if the user exists
