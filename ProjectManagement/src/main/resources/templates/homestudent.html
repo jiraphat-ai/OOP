@@ -183,8 +183,8 @@
         <div class="profile">
             <img src="profile.jpg" alt="Profile Picture">
             <div>
-                <div class="student" th:text="${username}"> </div>
-                <div th:text="${firstName} + ' ' + ${lastName}"> </div>
+                <div class="student" th:text="${session.username}"> </div>
+                <div th:text="${session.firstName} + ' ' + ${session.lastName}"> </div>
             </div>
         </div>
         <div class="notification">

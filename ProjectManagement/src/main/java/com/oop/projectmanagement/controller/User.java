@@ -65,15 +65,5 @@ public class User {
     public Timestamp getRegDate() {
         return Timestamp.now();
     }
- @PostMapping("/login")
-    public String login(HttpSession session, Model model) {
-        // Validate the username and password here
-        String username = (String) session.getAttribute("username");
-        // If validation is successful, add the username to the model 
-        model.addAttribute("username", username);
-   
-    
-        return "redirect:/homestudent";
 
-}
 }

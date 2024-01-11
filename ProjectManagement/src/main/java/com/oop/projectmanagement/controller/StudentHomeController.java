@@ -17,57 +17,25 @@ import com.oop.projectmanagement.FirebaseInitializer;
 
 @Controller
 public class StudentHomeController {
-
+    private String username;
+    private String firstName;
+    private String lastName;
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
+    
     @GetMapping("/homestudent")
-public String homestudent(HttpSession session, Model model) {
-    String username = (String) session.getAttribute("username");
-    Firestore db = firebaseInitializer.getDb();
-    try {
-        ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
-        QuerySnapshot querySnapshot = query.get();
-        List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-        if (!documents.isEmpty()) {
-            DocumentSnapshot document = documents.get(0);
-            // Fetch the values you need from the document
-            String firstName = document.getString("firstName");
-            String lastName = document.getString("lastName");
-            // Add the values to the model
-            model.addAttribute("firstName", firstName);
-            model.addAttribute("lastName", lastName);
-            model.addAttribute("username", username);
-        }
-    } catch (Exception e) {
-        model.addAttribute("error", "An error occurred: " + e.getMessage());
-    }
-    return "homestudent"; // Return the name of the view
-}
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
-    }
-@Controller
-public class UserController {
-
-    @GetMapping("/user")
-    public String getUser(Model model) {
-        User user = new User();
-        // Set user attributes here
-        model.addAttribute("user", user);
-        return "user"; // This should be the name of your Thymeleaf template (without the .html extension)
+    public String getUserinfo(HttpSession session) {
+        username = (String) session.getAttribute("username");
+        firstName = (String) session.getAttribute("firstName");
+        lastName = (String) session.getAttribute("lastName");
+        // Now you can use the username, firstName, and lastName
+        return "homestudent"; 
+       
     }
 
-    @PostMapping("/user")
-    public String postUser(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, Model model) {
-        User user = new User();
-        user.setFirstname(firstName);
-        user.setLastname(lastName);
-        model.addAttribute("user", user);
-         return "redirect:/user";
-    }
-}
+
+
+
 }
