@@ -163,11 +163,11 @@
                                 <div class="header">
                                 </div>
                                 <div class="search" style="display: flex;">
-                                    <input type="text" class="form-control" style="margin-right: 10px;"
+                                    <input type="text" class="form-control" style="margin-right: 10px;" id="subjectIDInput"
                                         placeholder="SubjectID">
-                                    <input type="text" class="form-control" style="margin-right: 10px;"
+                                    <input type="text" class="form-control" style="margin-right: 10px;" id="subjectNameInput"
                                         placeholder="SubjectName">
-                                    <button class="btn btn-success">Search</button>
+                                    <button class="btn btn-success" onclick="searchSubjects()">Search</button>
                                 </div>
                             </div>
                             <div class="add-user mt-3">
@@ -297,6 +297,28 @@
                 $('#modal_btn_del').attr('onclick', `deleteSubject('${username}')`);
             });
         }
+
+        function searchSubjects() {
+        // Get the values from the input fields
+        var subjectID = document.getElementById('subjectIDInput').value.trim().toLowerCase();
+        var subjectName = document.getElementById('subjectNameInput').value.trim().toLowerCase();
+
+        // Get all rows in the table
+        var rows = document.querySelectorAll('tbody tr');
+
+        // Loop through each row and check if it matches the search criteria
+        rows.forEach(function (row) {
+            var rowSubjectID = row.querySelector('td:nth-child(1)').innerText.trim().toLowerCase();
+            var rowSubjectName = row.querySelector('td:nth-child(2)').innerText.trim().toLowerCase();
+
+            // Check if the row matches the search criteria
+            var matchSubjectID = rowSubjectID.includes(subjectID);
+            var matchSubjectName = rowSubjectName.includes(subjectName);
+
+            // Show/hide the row based on the search criteria
+            row.style.display = (matchSubjectID && matchSubjectName) ? '' : 'none';
+        });
+    }
     </script>
 
 </body>
