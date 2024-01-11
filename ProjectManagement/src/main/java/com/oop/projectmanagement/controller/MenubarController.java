@@ -26,8 +26,8 @@ public void getUserData(HttpSession session, Model model) {
         if (!documents.isEmpty()) {
             DocumentSnapshot document = documents.get(0);
             // Fetch the values you need from the document
-            String firstName = document.getString("firstname");
-            String lastName = document.getString("lastname");
+            String firstName = document.getString("firstName");
+            String lastName = document.getString("lastName");
             // Add the values to the model
             model.addAttribute("firstName", firstName);
             model.addAttribute("lastName", lastName);
