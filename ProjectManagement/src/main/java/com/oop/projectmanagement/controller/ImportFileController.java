@@ -1,6 +1,9 @@
 package com.oop.projectmanagement.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
 
@@ -57,7 +60,19 @@ public String homestudent(HttpSession session, Model model) {
 
     @GetMapping("/createsubject")
     public String createSubject(HttpSession session, Model model) {
-
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> users = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> query = db.collection("subject").get();
+            QuerySnapshot querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                users.add(document.getData());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("users", users);
         return "createsubject";
     }
 }
