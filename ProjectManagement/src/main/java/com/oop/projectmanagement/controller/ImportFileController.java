@@ -38,8 +38,8 @@ public String homestudent(HttpSession session, Model model) {
             String firstName = document.getString("firstName");
             String lastName = document.getString("lastName");
             // Add the values to the model
-            model.addAttribute("firstName", firstName);
-            model.addAttribute("lastName", lastName);
+            model.addAttribute("firstname", firstName);
+            model.addAttribute("lastname", lastName);
             model.addAttribute("username", username);
 
             System.out.println("User: " + firstName + " " + lastName + " " + username);
