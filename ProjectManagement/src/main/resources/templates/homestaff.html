@@ -18,7 +18,7 @@
             font-family:  Sunflower, sans-serif;
             background: linear-gradient(to right, #1F2863, #003b7a); 
             color: #000000; /* สีข้อความ */
-            display: flex;
+        
         }
 
         .sidebar {
@@ -134,10 +134,9 @@
         }
 
         .white-frame {
-            width: 1433px;
+            width: auto;
             height: 199px;
             background-color: #fff;
-            margin: 20px;
             padding: 20px;
             border: 1px solid black; /* Add this line */
             border-radius: 5px; /* Add this line */
@@ -146,7 +145,8 @@
     </style>
 </head>
 <body>
-    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-3" style="width: 280px; height: 100vh;">
+    <div class="row" >
+    <div class="d-flex flex-column flex-shrink-0 p-3 col-2 bg-light" style="width: 280px;">
         <div class="sidebar">
             <div class="profile">
                 <a href="#" class="d-flex align-items-center link-dark text-decoration-none ">
@@ -226,7 +226,7 @@
             </ul>
         </div>
     </div> -->
-    <div class="content">
+    <div class="content col-9">
         <div class="white-frame">
             <div class="header">
                 <h2 class="display-4">All Users</h2>
@@ -237,7 +237,7 @@
                 <button class="btn btn-primary">Search</button>
             </div>
         </div>
-        <div class="add-user">
+        <div class="add-user mt-3">
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
         </div>
 
@@ -361,6 +361,7 @@
             </tbody>
         </table>
     </div>
+</div>
     <script th:inline="javascript">
         /*<![CDATA[*/
         function deleteUser(username) {
