@@ -36,7 +36,7 @@ public class ImportFileController {
         
     @GetMapping("/importuserfile")
 
-    public String getUserinfo1(HttpSession session) {
+    public String getUserinfo(HttpSession session) {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
