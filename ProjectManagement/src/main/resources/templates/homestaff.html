@@ -235,9 +235,9 @@
                 <h2 class="display-4">All Users</h2>
             </div>
             <div class="search">
-                <input type="text" class="form-control" placeholder="Username">
-                <input type="text" class="form-control" placeholder="Name">
-                <button class="btn btn-primary">Search</button>
+                <input type="text" class="form-control" id="usernameInput" placeholder="Username">
+                <input type="text" class="form-control" id="nameInput" placeholder="Name">
+                <button class="btn btn-primary" onclick="searchUsername()">Search</button>
             </div>
         </div>
         <div class="add-user mt-3">
@@ -419,6 +419,32 @@
                                     $('#modal_btn_del').attr('onclick', `deleteUser('${username}')`);
                                 });
                             }
+                            
+                          
+                            function searchUsername() {
+                                    // Get the values from the input fields
+                                    var username = document.getElementById('usernameInput').value.trim().toLowerCase();
+                                    var name = document.getElementById('nameInput').value.trim().toLowerCase();
+
+                                    // Get all rows in the table
+                                    var rows = document.querySelectorAll('tbody tr');
+
+                                    // Loop through each row and check if it matches the search criteria
+                                    rows.forEach(function (row) {
+                                        var rowUsername = row.querySelector('td:nth-child(1)').innerText.trim().toLowerCase();
+                                        var rowFirstName = row.querySelector('td:nth-child(2)').innerText.trim().toLowerCase();
+                                        var rowLastName = row.querySelector('td:nth-child(3)').innerText.trim().toLowerCase();
+
+                                        // Check if the row matches the search criteria
+                                        var matchUsername = rowUsername.includes(username);
+                                        var matchName = rowFirstName.includes(name) || rowLastName.includes(name);
+
+                                        // Show/hide the row based on the search criteria
+                                        row.style.display = (matchUsername && matchName) ? '' : 'none';
+                                    });
+                                }
+
+
 
                         </script>
                     </body>

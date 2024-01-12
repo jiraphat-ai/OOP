@@ -28,12 +28,12 @@ import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class homestaffController {
+public class StaffHomeController {
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
-       
+
     @GetMapping("/homestaff")
     public String getUserinfo(HttpSession session,Model model) {
         Firestore db = firebaseInitializer.getDb();
@@ -43,7 +43,7 @@ public class homestaffController {
         // Now you can use the username, firstName, and lastName
         List<Map<String, Object>> users = new ArrayList<>();
         try {
-            
+
             ApiFuture<QuerySnapshot> query = db.collection("useraccount").get();
             QuerySnapshot querySnapshot = query.get();
             List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();

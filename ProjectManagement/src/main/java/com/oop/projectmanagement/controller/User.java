@@ -10,7 +10,7 @@ import com.google.cloud.Timestamp;
 public class User {
     private String username;
     private String first_name;
-    private String last_name;    
+    private String last_name;
     private String password;
     private String user_type;
 
