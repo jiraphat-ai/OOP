@@ -79,6 +79,7 @@
             flex-grow: 1;
             padding: 20px;
         }
+        
 
         .header {
             display: flex;
@@ -254,6 +255,20 @@
             </li>
 
         </ul>
+    </div>
+     <!-- เนื้อหาหลัก -->
+
+     <div class="searchform">
+        <form action="/searchgroup" method="get">
+            <label for="subjectId">Subject ID:</label>
+            <input type="text" id="subjectId" name="subjectId" required>
+            <input type="submit" value="Search">
+        </form>
+    </div>
+    <div class="searchResults">
+    <p th:text="${group}"></p>
+    </div>
+
     </div>
 </body>
 </html>
