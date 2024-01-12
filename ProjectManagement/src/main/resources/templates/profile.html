@@ -1,21 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@500&display=swap" rel="stylesheet">
+    <script src="jquery-3.7.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <title>homestudent</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family:  Sunflower, sans-serif;
+            font-family: Sunflower, sans-serif;
             background: linear-gradient(to right, #1F2863, #003b7a);
-            color: #000000; /* สีข้อความ */
+            color: #000000;
+            /* สีข้อความ */
             display: flex;
         }
 
@@ -23,7 +32,8 @@
             padding: 20px;
             width: 250px;
             height: 100vh;
-            background-color: #fff; /* สีขาว */
+            background-color: #fff;
+            /* สีขาว */
             position: flex;
             left: 0;
             top: 0;
@@ -76,12 +86,17 @@
 
         .content {
             flex-grow: 1;
-            padding: 20px;
+            padding: 25px;
+            & span {
+            max-height: 50px;
+            overflow-y: auto;
+            }
         }
 
         .header {
             display: flex;
-            justify-content: center; /* แก้ตรงนี้ */
+            justify-content: center;
+            /* แก้ตรงนี้ */
             align-items: center;
             margin-bottom: 20px;
         }
@@ -98,13 +113,6 @@
 
         .search input[type="text"] {
             margin-right: 10px;
-        }
-
-        .search button {
-            background-color: green;
-            color: white;
-            border: none;
-            padding: 5px 10px;
         }
 
         .add-user {
@@ -132,45 +140,58 @@
 
         .white-frame {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             width: auto;
-            height: 450px;
+            height: 500px;
             background-color: #fff;
             margin: 20px;
             padding: 20px;
             border-radius: 25px;
         }
 
+        .card {
+            display: flex;
+            flex: 1;
+            text-align: center;
+            border-right: 1px solid black;
+            height: 500px;
+            justify-content: center;
+        }
+
+        .card2 {
+            display: flex;
+            flex: 2;
+            flex-direction: column;
+            text-align: left;
+            border: none;
+            margin: 100px;
+        }
+
         a {
-        text-decoration: none;
-        color: black;
+            text-decoration: none;
+            color: black;
         }
 
-        button:hover, a:hover {
-        opacity: 0.7;
+        button:hover,
+        a:hover {
+            opacity: 0.7;
         }
 
-        .card{
-          display: grid;
-          grid-template-columns: repeat(3, 250px);
-          grid-template-rows: 250px;
-          align-img: center;
-          text-align: center;
-          grid-gap: 200px;
-        }
-        .detail{
-          display: grid;
-          text-align: left;
-          grid-template-columns: 600px;
+        .detail {
+            display: grid;
+            text-align: left;
+            grid-template-columns: 600px;
         }
 
         .search {
-        display: flex;
-        align-items: left;
-        justify-content: center;
-        margin-top: 20px;
-}
+            display: flex;
+            align-items: left;
+            justify-content: center;
+            margin-top: 20px;
+
+        }
+
         .search input[type="text"] {
             width: 1590px;
             box-sizing: border-box;
@@ -183,102 +204,332 @@
             background-repeat: no-repeat;
             padding: 12px 20px 12px 40px;
 
-}
-        .bio-input{
-        width: 100%;
-        height: auto;
-        box-sizing: border-box;
-        border: 2px solid #ccc; /* Border style */
-        border-radius: 4px;
-        font-size: 16px;
-        background-color: white;
-        background-image: url('searching.png');
-        background-position: 10px 10px;
-        background-repeat: no-repeat;
-        padding: 12px 20px 12px 40px;
-        margin-top: 10px; /* Adjust margin as needed */
+        }
+
+        .bio-input {
+            width: 100%;
+            height: 100px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            /* Border style */
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+            background-image: url('searching.png');
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            padding: 12px 20px 12px 40px;
+            margin-top: 10px;
+            /* Adjust margin as needed */
+        }
+
+        .icon-wrap {
+            display: flex;
+            flex-direction: row;
+            border-radius: 1rem;
+            gap: 12px;
+            padding: 4px;
+
+            & p {
+                height: 100% ;
+            }
+        }
+
+        .social-icon {
+            aspect-ratio: 1;
+            width: 25px;
+            height: 25px;
+        }
+
+        .button {
+            background-color: #04AA6D;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 10px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .button2 {
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button2:hover {
+            background-color: #008CBA;
+            color: white;
         }
     </style>
 </head>
+
 <body>
-<div class="sidebar">
-    <div class="profile">
-        <img src="/static/icon.png" alt="Profile Picture">
-        <div>
-            <div class="staff">Username</div>
-            <div>First Last</div>
-        </div>
-    </div>
-    <div class="menu">
-        <ul>
-            <li><a href="#">My Group</a></li>
-            <li><a href="#">My Project</a></li>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </div>
-</div>
-
-<div class="content">
-    <div class="search">
-        <form>
-            <input type="text" name="search" placeholder="Search..">
-        </form>
-    </div>
-
-    <div class="white-frame">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-        <div class="card">
-            <div class = "picture"><img src="https://cdn.discordapp.com/attachments/1089622962065391687/1195036177087074385/profile.png?ex=65b2872b&is=65a0122b&hm=e528a2c22209f8dbe8520b266dbe3ee9565f6c10cd868a4f44b6cd2aac95c1b2&" alt="John" style="width:140px"/>
-            <p>B6428228</p>
-                fristName lastName
-                <div id="student-id"></div>
-                <div id="first-name"></div>
-                <div id="last-name"></div>
-        </div>
-            <div class="detail">
-                <div class="bio"><h4>Bio</h4>
-                </div>
-                <h4>Contact</h4>
-                <h4>Tag: </h4>
+    <div class="sidebar">
+        <div class="profile">
+            <img src="/static/icon.png" alt="Profile Picture">
+            <div>
+                <div class="staff">Username</div>
+                <div>First Last</div>
             </div>
         </div>
+        <div class="menu">
+            <ul>
+                <li><a href="#">My Group</a></li>
+                <li><a href="#">My Project</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
         </div>
-</div>
+    </div>
 
-<script>
-    function addUserToFirestore() {
-            const studentId = document.getElementById('studentId').value;
-            const password = document.getElementById('password').value;
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
+<div class="content">
+    <div class="white-frame">
+        <div class="card">
+            <div class="leftPro">
+                <div class = "picture">
+                    <iconify-icon icon="ph:student-fill" width="100px"></iconify-icon>
+                </div>
+                <div class="infoNL">
+                    <div>
+                        <H3>
+                            <span th:text="${username}"></span><br>
+                            <span th:text="${firstName + ' ' + lastName}"></span>
+                        </H3>
+                    </div>
+                </div>
+                    <div class="add-user mt-3">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubjectModal">Edit Profile</button>
+                    </div>
+                </div>
 
-            const userData = {
-                studentId,
-                password,
-                firstName,
-                lastName
-            };
+                </div>
+                <div class="card2">
+                    <div class ="content">
+                        <h4>Bio</h4><span th:text="${bio}"></span>
+                    </div>
 
-            fetch('/addUser?studentId=' + encodeURIComponent(studentId) + '&password=' + encodeURIComponent(password) + '&firstName=' + encodeURIComponent(firstName) + '&lastName=' + encodeURIComponent(lastName), {
+                    <div class ="content"><br>
+                        <h4>Contact</h4>
+                        <a th:href="${facebook}" target="_blank" rel="noopener noreferrer" class="icon-wrap" name="facebookName" placeholder="Facebook">
+                            <div>
+                                <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png" alt="facebook">
+                                Facebook
+                            </div>
+                        </a>
+                        <a th:href="${instagram}" target="_blank" rel="noopener noreferrer" class="icon-wrap">
+                            <div>
+                                <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="instagram">
+                                Instagram
+                            </div>
+                        </a>
+                    </div>
+                    <div class ="content">
+                        <h4>Tag:</h4>
+                        <span th:text="${tag}"></span></div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+        <!-- edit Modal -->
+        <div class="modal fade" id="addSubjectModal" tabindex="-1"
+             aria-labelledby="addSubjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addSubjectModalLabel">Edit Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/addsubject}" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="bio" class="form-label">Bio</label>
+                                <input type="text" class="form-control" id="bio" name="bio" placeholder="Enter bio" th:value="${bio}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="facebookName" class="form-label">Contact</label>
+                                <input type="text" class="form-control" id="facebookName" name="facebookName" placeholder="Facebook" th:value="${facebook}" />
+                                <input type="text" class="form-control" id="instagramName" name="instagramName" placeholder="Instagram" th:value="${instagram}" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="tag" class="form-label">Tag</label>
+                                <input type="text" class="form-control" id="tag" name="tag" placeholder="Enter tag" th:value="${tag}" />
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="updateUserProfile()">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- end edit Modal -->
+    </div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function deleteUser(username) {
+            fetch('/deleteUser', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(userData),
+                body: JSON.stringify({ username: username }),
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('User added successfully');
-                } else {
-                    alert('Error adding user: ' + data.message);
-              }
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('User deleted successfully');
+                        location.reload();
+                    } else {
+                        alert('Error deleting user: ' + data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+        /*]]>*/
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Check if the table exists
+            if ($('.table').length) {
+                // Initialize DataTable
+                $('.table').DataTable({
+
+                });
+            } else {
+                console.error('Table #user-table does not exist');
+            }
+        });
+        function addUserToFirestore() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const userType = document.getElementById('userType').value;
+
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('password', password);
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('userType', userType);
+
+            fetch('/addUser', {
+                method: 'POST',
+                body: formData,
             })
-            .catch((error) => {
-                console.error('Error:', error);
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('User added successfully');
+                        location.reload(); // Refresh the page after adding a user
+                    } else {
+                        alert('Error adding user: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function setUsernameForDeleteUserModal(element) {
+            $(element).parent().each(function () {
+                const username = $(this).siblings().first().text();
+                console.log("username");
+                document.getElementById('deleteUserModalLabel').innerText = `Delete User - ${username}`;
+                $('#modal_btn_del').attr('onclick', `deleteUser('${username}')`);
             });
         }
-</script>
+
+    </script>
+    <script>
+        function setSubjectForEditModal(element) {
+            var subjectID = $(element).data('subject-id');
+            var subjectName = $(element).data('subject-name');
+
+            $('#editSubjectID').val(subjectID);
+            $('#editSubjectName').val(subjectName);
+        }
+
+        function setSubjectForDeleteModal(element) {
+            // Implement this function if needed
+        }
+
+        // Attach the setSubjectForEditModal function to the modal's show event
+        $('#editSubjectModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            setSubjectForEditModal(button[0]);
+        });
+
+        </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Add click event listener to all elements with the class 'social-link'
+                    document.querySelectorAll('.social-link').forEach(function (icon) {
+                        icon.addEventListener('click', function () {
+                            // Fetch data and open a new tab with the link from 'data-link' attribute
+                            var link = icon.getAttribute('data-link');
+                            if (link) {
+                                fetchDataAndOpenNewTab(link);
+                            }
+                        });
+                    });
+
+                    function fetchDataAndOpenNewTab(link) {
+                        // Open a new tab with the fetched link
+                        window.open(link, '_blank');
+                    }
+                });
+            </script>
+
+            <script>
+                async function updateUserProfile() {
+                    try {
+                        const bio = document.getElementById('bio').value;
+                        const facebook = document.getElementById('facebookName').value;
+                        const instagram = document.getElementById('instagramName').value;
+                        const tag = document.getElementById('tag').value;
+
+                        const data = {
+                            bio: bio,
+                            facebook: facebook,
+                            instagram: instagram,
+                            tag: tag
+                        };
+
+                        const response = await fetch('/updateUserProfile', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        alert('Profile updated successfully');
+                        location.reload(); // Refresh the page
+                    } catch (error) {
+                        console.error('Error updating profile:', error);
+                        alert('Error updating profile. Please try again.');
+                    }
+                }
+            </script>
+
 </body>
 </html>
