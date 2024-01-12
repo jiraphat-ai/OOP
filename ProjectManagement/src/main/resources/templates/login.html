@@ -1,77 +1,134 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300&display=swap"
+      rel="stylesheet"
+    />
     <title>Login</title>
-</head>
-<body>
-    <div class="login-container">
-        <h2 style="text-align: center;">Login</h2>
-        <h6 style="text-align: center; line-height: 1;">Enter your Username and Password to login</h6>
-        <form th:action="@{/login}" method="post">
-            <div class="form-group">
-                <label for="username">Enter your username:</label>
-                <input type="text" id="username" name="username" required>
-                <label for="password">Enter your password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
-        <p th:if="${error}" th:text="${error}" style="color: red; margin-top: 10px;"></p>
+  </head>
+  <body>
+    <div class="TitleName">
+      <h1>Welcome  to <br>Project Management </h1>
     </div>
-</body>
-<style>
+
+     <img class="loginimage" src="https://penfly.co.uk/pf_ups/2019/02/developing.png" alt="login-image" />
+
+     <div class="login-container">
+      <div class="loginhead">
+        <h1 style="text-align: center">Log In</h1>
+        <h5 style="text-align: center; line-height: 0">
+          Enter your Username and Password to login
+        </h5>
+        <br />     
+        <br />
+      </div>
+      <form th:action="@{/login}" method="post">
+        <div class="form-group">
+          <label for="username">Enter your username</label>
+          <input type="text" id="username" name="username" required />
+          <br />
+          <label for="password">Enter your password</label>
+          <input type="password" id="password" name="password" required />
+          <button type="submit">Log In</button>
+        </div>
+      </form>
+      <p
+        th:if="${error}"
+        th:text="${error}"
+        style="color: red; margin-top: 10px"
+      ></p>
+    </div>
+  </body>
+  <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center; /* Center vertically */
-        height: 100vh;
+      font-family: "Sunflower", sans-serif;
+      font-weight: 300;
+      font-style: normal;
+      background: rgb(29, 81, 172);
+      background: linear-gradient(
+        142deg,
+        rgba(29, 81, 172, 1) 0%,
+        rgba(167, 185, 212, 1) 84%,
+        rgba(244, 244, 235, 1) 100%
+      );
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center; /* Center vertically */
+      height: 100vh;
     }
     .login-container {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 50%; /* Take up 50% of the width */
-        height: 100%; /* Take up 100% of the height */
-        margin-left: auto; /* Move the container to the right */
-        margin-right: 0;    /* Reset the default right margin */
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 40%; /* Take up 50% of the width */
+      height: 60%; /* Take up 100% of the height */
+      margin-left: auto; /* Move the container to the right */
+      margin-right: 45px; /* Reset the default right margin */
     }
     .form-group {
-        margin-bottom: 10px;
-
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     label {
-        display: block;
-        margin-bottom: 8px;
+      margin-bottom: 8px;
+      margin-right: 325px;
     }
 
     input {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+      width: 80%;
+      padding: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 10px;
     }
 
     button {
-        background-color: #100385;
-        color: #fff;
-        padding: 10px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        width: 100%;
+      background-color: #1d51ac;
+      color: #fff;
+      padding: 15px;
+      border: 1px solid #1d51ac;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 30px;
+      width: 80%;
+      font-size: 17px;
+      font-family: "Sunflower", sans-serif;
+      font-weight: 300;
+      font-style: normal;
     }
 
     button:hover {
-        background-color: #09209e;
+      background-color: #1d51ac;
     }
-</style>
-</html>
+    .loginhead {
+      color: #1d51ac;
+    }
+    .loginimage {
+      position: absolute;
+      left: 150px; /* Adjust as needed */
+      top: 190px; /* Adjust as needed */
+      width: 504px;
+      height: 550px;
+      overflow: hidden;
+    }
+    .TitleName {
+      position: absolute;
+      left: 150px; /* Adjust as needed */
+      top: 33px; /* Adjust as needed */
 
+      color: #fff;
+      font-size: 25px;
+    }
+  </style>
+</html>
