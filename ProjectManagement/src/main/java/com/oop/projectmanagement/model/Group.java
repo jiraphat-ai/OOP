@@ -1,11 +1,14 @@
 package com.oop.projectmanagement.model;
 
+import java.util.ArrayList;
+
 public class Group {
     private String groupID;
     private String subjectID;
     private String group_name;
     private String group_description;
-    private String group_leader;
+    private Integer group_member;
+    private ArrayList<String> tags;
 
     // no-arg constructor
     public Group() {}
@@ -44,12 +47,22 @@ public class Group {
         this.group_description = group_description;
     }
 
-    public String getGroupLeader() {
-        return group_leader;
+    public Integer getGroupMember() {
+        return group_member;
     }
 
-    public void setGroupLeader(String group_leader) {
-        this.group_leader = group_leader;
+    public void setGroupMember(Integer group_member) {
+        this.group_member = group_member;
     }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
+
+
 
 }
