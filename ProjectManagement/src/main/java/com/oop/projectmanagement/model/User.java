@@ -1,4 +1,4 @@
-package com.oop.projectmanagement.controller;
+package com.oop.projectmanagement.model;
 
 import javax.servlet.http.HttpSession;
 
