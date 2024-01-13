@@ -1,4 +1,4 @@
-package com.oop.projectmanagement.controller;
+package com.oop.projectmanagement.model;
 public class Subject {
     private String subjectID;
     private String subject_name;
