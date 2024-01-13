@@ -31,11 +31,11 @@ public class JoinGroup {
         return "joingroup";
     }
     @GetMapping("/searchgroup")
-        public String searchGroup(@RequestParam("subjectID") String subjectID,  Model model) {
+    public String searchGroup(@RequestParam("subjectID") String subjectID,  Model model) {
         List<Map<String, Object>> groups = getGroupsBySubjectId(subjectID);
         model.addAttribute("groups", groups);
         return "/joingroup";  // return the name of the view that will display the groups
-}
+    }
     private List<Map<String, Object>> getGroupsBySubjectId(String subjectID) {
         Firestore db = firebaseInitializer.getDb();
         List<Map<String, Object>> groups = new ArrayList<>();
