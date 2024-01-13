@@ -60,7 +60,7 @@
                     </form>
                 </div>
             </div>
-            <div class="white-frame2">
+            <div class="white-frame2 p-3 mt-3">
                 <table class="table" id="user-table">
                     <thead>
                     <tr class="fetch-table">
@@ -71,7 +71,7 @@
                         <th class="fixed-column">Action</th>
                     </tr>
                     </thead>
-                    <div class="table-grid">
+
                         <tbody >
                         <tr th:each="group : ${groups}">
                             <td th:text="${group.groupName}"><span th:text="${group['groupName']}"></span></td>
@@ -112,7 +112,7 @@
             success: function (data) {
                 $(".sidebar").html(data);
                 $(".nav-link").each(function () {
-                    if ($(this).attr("href") == filename) {
+                    if ($(this).attr("href") == "/" + filename) {
                         $(this).addClass("active");
                     }
                     else {

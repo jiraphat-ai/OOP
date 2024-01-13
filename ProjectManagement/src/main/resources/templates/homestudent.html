@@ -53,7 +53,7 @@
             success: function (data) {
                 $(".sidebar").html(data);
                 $(".nav-link").each(function () {
-                    if ($(this).attr("href") == filename) {
+                    if ($(this).attr("href") == "/" + filename) {
                         $(this).addClass("active");
                     }
                     else {
