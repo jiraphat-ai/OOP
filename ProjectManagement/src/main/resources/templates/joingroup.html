@@ -32,7 +32,7 @@
                     <h2 class="header"><b>Join Group</b></h2>
                     <hr>
 
-                    <form action="/searchgroup" method="get">
+                    <form action="/searchgroup" method="post">
                         <div class="form-grid">
                             <label for="subjectId"><b>Subject ID</b></label>
                             <label for="section"><b>Section:</b></label>
@@ -40,7 +40,7 @@
                             <div></div> <!-- Empty div for the submit button -->
 
                             <input type="text" id="subjectId" name="subjectID" required>
-                            <input type="number" id="#" name="#" >
+                            <input type="number" id="section" name="#" >
                             <div >
                                 <table  class="checkbox-group">
                                     <tr>
@@ -100,9 +100,10 @@
 <script>
     var filename = window.location.pathname.split("/").pop();
     $(document).ready(function() {
+
         getSideBar()
     });
-
+    $('form[action="/searchgroup"]').submit(searchGroup);
 
     function getSideBar(){
         console.log("filename: " + filename)
@@ -147,6 +148,33 @@
             inbox.style.display = 'none';
         }
     }
+    function searchGroup(event) {
+        event.preventDefault();
+
+        var subjectId = $('#subjectId').val();
+        var section = $('#section').val();
+        var skills = [];
+        $('.checkbox-group input:checked').each(function() {
+            skills.push($(this).val());
+        });
+
+        $.ajax({
+            url: '/searchgroup',
+            type: 'GET',
+            data: {
+                subjectID: subjectId,
+                section: section,
+                skills: skills
+            },
+            success: function(data) {
+                console.log('data:', data);
+                let table = $(data).find('#user-table');
+                $('#user-table').replaceWith(table);
+            }
+        });
+    }
+
+
 </script>
 </body>
 

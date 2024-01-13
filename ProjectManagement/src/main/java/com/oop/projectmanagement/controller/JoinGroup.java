@@ -31,25 +31,27 @@ public class JoinGroup {
         return "joingroup";
     }
     @GetMapping("/searchgroup")
-    public String searchGroup(@RequestParam("subjectID") String subjectID,  Model model) {
-        List<Map<String, Object>> groups = getGroupsBySubjectId(subjectID);
+    public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") String section  ,  Model model) {
+        List<Map<String, Object>> groups = getGroupsBySubjectId(subjectID , section);
         model.addAttribute("groups", groups);
         return "/joingroup";  // return the name of the view that will display the groups
     }
-    private List<Map<String, Object>> getGroupsBySubjectId(String subjectID) {
+    private List<Map<String, Object>> getGroupsBySubjectId(String subjectID, String section ) {
         Firestore db = firebaseInitializer.getDb();
         List<Map<String, Object>> groups = new ArrayList<>();
+        //i want to get the group that have the  same any text in subjectID and section
         try {
-            ApiFuture<QuerySnapshot> query = db.collection("group").whereEqualTo("subjectID", subjectID).get();
+            ApiFuture<QuerySnapshot> query = db.collection("group").whereEqualTo("subjectID", subjectID).whereEqualTo("section", section).get();
             QuerySnapshot querySnapshot = query.get();
             List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
             for (QueryDocumentSnapshot document : documents) {
-                Map<String, Object> groupData = document.getData();
-                System.out.println(groupData); // print the group data
-                groups.add(groupData);
+                groups.add(document.getData());
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+
+
+
         return groups;  }
 }
