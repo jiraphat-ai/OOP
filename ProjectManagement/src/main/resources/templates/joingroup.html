@@ -23,11 +23,12 @@
         .sidebar {
             padding: 20px;
             width: 250px;
-            height: auto;
+            height: 100vh;
             background-color: #fff; /* สีขาว */
             position: flex;
             left: 0;
             top: 0;
+            overflow: auto;
             padding-top: 20px;
         }
 
@@ -95,7 +96,14 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
-
+        .table-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        .fetch-table {
+        background-color: #eeeeee;
+        }
         .white-frame1 {
             width: 1200px; /* Increase width to make the frame larger */
             height: auto; /* Increase height to make the frame larger */
@@ -103,7 +111,7 @@
             margin: 20px;
             padding: 20px;
             border-radius: 10px; 
-            margin-top: 40px;
+            margin-top: 5px;
           }
           .white-frame2 {
             width: 1200px; /* Increase width to make the frame larger */
@@ -165,7 +173,7 @@
 <body>
     <div class="sidebar">
         <div class="profile">
-            <img src="profile.jpg" alt="Profile Picture">
+            <img src="/profile.jpg" alt="Profile Picture">
             <div>
                 <div class="student" th:text="${session.username}"> </div>
                 <div th:text="${session.firstName} + ' ' + ${session.lastName}"> </div>
@@ -250,7 +258,7 @@
         <div class="form-grid">
             <label for="subjectId"><b>Subject ID:</b></label>
             <label for="section"><b>Section:</b></label>
-            <label for="tag"><b>Tag</b></label>
+            <label for="tag"><b>Skills</b></label>
             <div></div> <!-- Empty div for the submit button -->
     
             <input type="text" id="subjectId" name="subjectID" required>
@@ -268,16 +276,34 @@
     </div>
 </div>
 <div class="white-frame2">
-     <div class="searchResults">
-         <ul>
-             <li th:each="group : ${groups}">
-                 <p>Group Name: <span th:text="${group['groupName']}"></span></p>
-                <p>Subject ID: <span th:text="${group['subjectID']}"></span></p>
-                <p>joinedMember: <span th:text="${group['joinedMember']}"></span></p>
-             </li>
-         </ul>
-     </div>
+
+    <table class="table" id="user-table">
+        <thead>
+            <tr class="fetch-table">
+                 <th class="fixed-column">Groupname</th>
+                 <th class="fixed-column">Section</th>
+                 <th class="fixed-column">Skill</th>
+                 <th class="fixed-column">Member</th>
+                 <th class="fixed-column">Action</th>
+            </tr>
+        </thead>
+        <div class="table-grid">
+        <tbody >
+        <tr th:each="group : ${groups}">
+            <td th:text="${group.groupName}"><span th:text="${group['groupName']}"></span></td>
+            <td th:text="${group['section']}"></td>
+            <td th:text="${group['tag']}"></td>
+            <td th:text="${group['joinedMember']} + '/'+ ${group['maxMember']}"></td>
+            <td>
+                <button type="button" class="btn btn-primary">Moredetail</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
     </div>
+</div>
+
+
 </div>
 </body>
 </html>
