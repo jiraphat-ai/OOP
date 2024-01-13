@@ -3,25 +3,18 @@ package com.oop.projectmanagement.model;
 import java.util.ArrayList;
 
 public class Group {
-    private String groupID;
     private String subjectID;
     private String group_name;
+    private Integer section;
     private String group_description;
-    private Integer group_member;
-    private ArrayList<String> tags;
+    private Integer max_member;
+    private ArrayList<String> tag;
 
     // no-arg constructor
+
     public Group() {}
 
     // getters and setters
-
-    public String getGroupID() {
-        return groupID;
-    }
-
-    public void setGroupID(String groupID) {
-        this.groupID = groupID;
-    }
 
     public String getSubjectID() {
         return subjectID;
@@ -39,6 +32,14 @@ public class Group {
         this.group_name = group_name;
     }
 
+    public Integer getSection() {
+        return section;
+    }
+
+    public void setSection(Integer section) {
+        this.section = section;
+    }
+
     public String getGroupDescription() {
         return group_description;
     }
@@ -47,21 +48,27 @@ public class Group {
         this.group_description = group_description;
     }
 
-    public Integer getGroupMember() {
-        return group_member;
+    public Integer getMaxMember() {
+        return max_member;
     }
 
-    public void setGroupMember(Integer group_member) {
-        this.group_member = group_member;
+    public void setMaxMember(Integer max_member) {
+        this.max_member = max_member;
     }
 
-    public ArrayList<String> getTags() {
-        return tags;
+    public ArrayList<String> getTag() {
+        return tag;
     }
 
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
+    public void setTag(ArrayList<String> tag) {
+        this.tag = tag;
     }
+
+    public Integer getJoinedMember() {
+        return 1;
+    }
+
+
 
 
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html>
 <head>
     <meta charset="UTF-8">
@@ -28,24 +28,43 @@
 
     <div class="col-9 main-content">
         <form action="/createGroup" method="post">
-            <div class="mb-3">-
-                <label for="groupName" class="form-label">Group Name</label>
-                <input type="text" class="form-control" id="groupName" name="groupName" required>
+            <div class="row" >
+            <div class="col-2">
+                <label for="subjectID" class="form-label">Subject ID</label>
+                <input type="text" class="form-control" id="subjectID" name="groupName" required>
             </div>
-            <div class="mb-3">
-                <label for="groupDescription" class="form-label">Group Description</label>
-                <textarea class="form-control" id="groupDescription" name="groupDescription" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
 
-                <select class="form-select form-select-solid" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
+                <div class="col-2">
+                    <label for="section" class="form-label">Section</label>
+                    <input type="text" class="form-control" id="section" name="groupName" required>
+                </div>
+                <div class="col">
+                    <label for="groupName" class="form-label">Group Name</label>
+                    <input type="text" class="form-control" id="groupName" name="groupName" required>
+                </div>
+                <div class="col-3">
+                    <label for="member" class="form-label">Member</label>
+                    <input type="number" class="form-control number" id="member" name="groupName" required>
+                </div>
+            </div>
+            <div class="row mb-5" >
+                <div class="col">
+                    <label for="groupDescription" class="form-label">Group Description</label>
+                    <textarea class="form-control" id="groupDescription" name="groupDescription" rows="3" required></textarea>
+                </div>
+            <div class="col">
+                <label for="mutiselect" class="form-label">Tag</label>
+                <select class="form-select form-select-solid" id="mutiselect" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
                     <option></option>
                     <option value="1">Option 1</option>
                     <option value="2">Option 2</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Create Group</button>-->
+
+            </div>
+            <button type="submit" class="btn btn-primary">Create Group</button>
         </form>
+
     </div>
 </div>
 <script src="assets/plugins/global/plugins.bundle.js"></script>
@@ -82,6 +101,55 @@
             }
         });
     }
+
+    //get form data input and sent to controller
+    $('form[action="/createGroup"]').submit(createGroup);
+
+    function getTagInSelect() {
+        let tag = [];
+        $('#mutiselect option:selected').each(function() {
+            tag.push($(this).val());
+        });
+        console.log(tag);
+        return tag;
+    }
+
+    function createGroup(event) {
+        event.preventDefault();
+
+        let subjectId = $('#subjectID').val();
+        let section = $('#section').val();
+        let member = $('#member').val();
+        let groupName = $('#groupName').val();
+        let groupDescription = $('#groupDescription').val();
+        let tag = getTagInSelect();
+
+        $.ajax({
+            url: "/createGroup",
+            type: "POST",
+            data: {
+                subjectID: subjectId,
+                section: section,
+                maxMember: member,
+                groupName: groupName,
+                groupDescription: groupDescription,
+                tag: tag
+            },
+            success: function (data) {
+                Swal.fire({
+                    text: data,
+                    icon: "success",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn btn-primary"
+                    }
+                });
+            }
+        });
+
+    }
+
 </script>
 </body>
 
