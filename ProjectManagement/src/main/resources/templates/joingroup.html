@@ -26,7 +26,66 @@
     <div class="sidebar col-3"></div>
     <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
     <div class="col-9 main-content">
+        <div class="content">
+            <div class="white-frame1">
+                <div class="searchform">
+                    <h2 class="header"><b>Join Group</b></h2>
+                    <hr>
 
+                    <form action="/searchgroup" method="get">
+                        <div class="form-grid">
+                            <label for="subjectId"><b>Subject ID</b></label>
+                            <label for="section"><b>Section:</b></label>
+                            <label for="tag"><b>Skills</b></label>
+                            <div></div> <!-- Empty div for the submit button -->
+
+                            <input type="text" id="subjectId" name="subjectID" required>
+                            <input type="number" id="#" name="#" >
+                            <div >
+                                <table  class="checkbox-group">
+                                    <tr>
+                                        <td><input type="checkbox" name="dev" value="developer">Developer</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td><input type="checkbox" name="manager" value="manager">Manager</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="designer" value="tester">Tester</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td><input type="checkbox" name="tester" value="designer">Designer</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <input class="btn btn-primary search" type="submit" value="Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="white-frame2">
+                <table class="table" id="user-table">
+                    <thead>
+                    <tr class="fetch-table">
+                        <th class="fixed-column">Groupname</th>
+                        <th class="fixed-column">Section</th>
+                        <th class="fixed-column">Skill</th>
+                        <th class="fixed-column">Member</th>
+                        <th class="fixed-column">Action</th>
+                    </tr>
+                    </thead>
+                    <div class="table-grid">
+                        <tbody >
+                        <tr th:each="group : ${groups}">
+                            <td th:text="${group.groupName}"><span th:text="${group['groupName']}"></span></td>
+                            <td th:text="${group['section']}"></td>
+                            <td th:text="${group['tag']}"></td>
+                            <td th:text="${group['joinedMember']} + '/'+ ${group['maxMember']}"></td>
+                            <td>
+                                <button type="button" class="btn btn-primary">More Detail</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 <script src="assets/plugins/global/plugins.bundle.js"></script>
@@ -62,6 +121,31 @@
                 });
             }
         });
+    }
+    var notifications = 5; // Replace with the actual number of notifications
+
+    // Update the badge when the page loads
+    window.onload = function() {
+        updateBadge();
+    };
+
+    function updateBadge() {
+        var badge = document.getElementById('badge');
+        if (notifications > 0) {
+            badge.textContent = notifications;
+            badge.style.display = 'inline';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    function toggleNotifications() {
+        var inbox = document.getElementById('notification-inbox');
+        if (inbox.style.display === 'none') {
+            inbox.style.display = 'block';
+        } else {
+            inbox.style.display = 'none';
+        }
     }
 </script>
 </body>
