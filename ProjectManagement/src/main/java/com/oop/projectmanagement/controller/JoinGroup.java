@@ -51,6 +51,5 @@ public class JoinGroup {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        return groups;
-    }
+        return groups;  }
 }

@@ -140,42 +140,53 @@
             border: 1px solid black;
             border-radius: 50%; /* This makes the frame circular */
           }
-        .notification {
+          .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-          }
+            top: 10px;
+            right: 10px;
+            z-index: 100; /* Ensure the button is above other elements */
+        }
           .notification-button {
-            padding: 0px; /* Increase padding to make the button bigger */
+            border: none;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            color: #333;
+            width: 50px;
+            height: 50px;
             position: relative;
             display: flex;
-            align-items:center;
+            align-items: center;
             justify-content: center;
-            width: 70px; /* Increase width to make the button bigger */
-            height: 70px; /* Increase height to make the button bigger */
-            background-color: #f6f2f4;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 50%; /* This makes the button round */
-          }
-          .notification-button:hover {
-            background-color: #007B9A;
-          }
-          .badge {
+        }
+
+        .notification-button .fas {
+            font-size: 24px;
+        }
+        .notification-button:hover {
+            background-color: #e0e0e0; /* Change to the color you want when hovered */
+        }
+        .badge {
             position: absolute;
-            top: -10px;
-            right: -8px;
-            padding: 5px;
-            width: 18px; /* Set width and height to the same value */
-            height: 18px; /* Set width and height to the same value */
-            display: inline-block; /* Allow width and height to be set */
-            text-align: center; /* Center the badge text */
-            line-height: 20px; /* Vertically center the badge text */
-            border-radius: 50%; /* This makes the badge round */
+            top: 0;
+            right: 0;
             background-color: red;
             color: white;
-          }
+            border-radius: 50%;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .notification-inbox {
+            display: none; /* Hidden by default */
+            position: absolute;
+            right: 0;
+            width: 200px; /* Adjust as needed */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 99; /* Ensure the inbox is above other elements */
+        }
     </style>
 </head>
 <body>
@@ -188,10 +199,17 @@
             </div>
         </div>
         <div class="notification">
-            <button type="button" class="icon-button ">
+            <button type="button" class="notification-button" onclick="toggleNotifications()">
                 <i class="fas fa-bell"></i>
-             <span class="badge"> <!--notification number --> </span>
+                <span id="badge" class="badge"></span> <!-- Remove the hardcoded number of notifications -->
             </button>
+            <div id="notification-inbox" class="notification-inbox">
+                <!-- Add your notifications here -->
+                <p>Notification 1</p>
+                <p>Notification 2</p>
+                <p>Notification 3</p>
+                <!-- etc. -->
+            </div>
         </div>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
@@ -256,4 +274,31 @@
         </ul>
     </div>
 </body>
+<script>
+    var notifications = 5; // Replace with the actual number of notifications
+
+    // Update the badge when the page loads
+    window.onload = function() {
+        updateBadge();
+    };
+
+    function updateBadge() {
+        var badge = document.getElementById('badge');
+        if (notifications > 0) {
+            badge.textContent = notifications;
+            badge.style.display = 'inline';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    function toggleNotifications() {
+        var inbox = document.getElementById('notification-inbox');
+        if (inbox.style.display === 'none') {
+            inbox.style.display = 'block';
+        } else {
+            inbox.style.display = 'none';
+        }
+    }
+</script>
 </html>
