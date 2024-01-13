@@ -1,0 +1,81 @@
+<div class="profile">
+    <img src="/usericon.png" alt="Profile Picture">
+    <div>
+        <div class="student" th:text="${session.username}"> </div>
+        <div th:text="${session.firstName} + ' ' + ${session.lastName}"> </div>
+    </div>
+</div>
+<div class="notification">
+    <button type="button" class="notification-button" onclick="toggleNomenu_bar_studenttifications()">
+        <i class="fas fa-bell"></i>
+        <span id="badge" class="badge"></span> <!-- Remove the hardcoded number of notifications -->
+    </button>
+    <div id="notification-inbox" class="notification-inbox">
+        <!-- Add your notifications here -->
+        <p>Notification 1</p>
+        <p>Notification 2</p>
+        <p>Notification 3</p>
+        <!-- etc. -->
+    </div>
+</div>
+<ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+        <a href="/homestudent" class="nav-link link-dark" aria-current="page">
+            <img src="https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Home-House--1024.png" width="16" height="16" fill="currentColor"
+                 class="bi bi-person-add" viewBox="0 0 16 16">
+            <path
+                    d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+            <path
+                    d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+            </img>
+            Home
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/mygroup" class="nav-link link-dark" aria-current="page">
+            <img src="https://cdn0.iconfinder.com/data/icons/users-android-l-lollipop-icon-pack/24/group2-1024.png" width="16" height="16" fill="currentColor"
+                 class="bi bi-person-add" viewBox="0 0 16 16">
+            <path
+                    d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+            <path
+                    d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+            </img>
+            My Group
+        </a>
+    </li>
+    <li>
+        <a href="/myproject" class="nav-link link-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-book-fill" viewBox="0 0 16 16">
+                <path
+                        d="M8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783" />
+            </svg>
+            My Project
+        </a>
+    </li>
+    <li>
+        <a href="/creategroup" class="nav-link link-dark">
+            <img src="https://cdn4.iconfinder.com/data/icons/glyphs/24/icons_add-1024.png"  alt="" width="16" height="16">
+            Create Group
+        </a>
+    </li>
+    <li>
+        <a href="/joingroup" class="nav-link link-dark">
+            <img src="https://cdn3.iconfinder.com/data/icons/interaction-design/512/Import_B-512.png" alt=""
+                 width="16" height="16">
+            Join Group
+        </a>
+    <li>
+        <a href="/logout" class="nav-link link-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                 class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                <path fill-rule="evenodd"
+                      d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+            </svg>
+            Log Out
+        </a>
+    </li>
+
+</ul>

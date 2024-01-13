@@ -1,5 +1,6 @@
 package com.oop.projectmanagement.controller;
 
+import com.oop.projectmanagement.model.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,14 +32,14 @@ public class FileUploadController {
                     .withType(User.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
-                    
+
 
             // convert `CsvToBean` object to list of users
             List<User> users = csvToBean.parse();
 
             // TODO: save users in DB?
 
-            
+
             //save users to firestore
             Firestore db = firebaseInitializer.getDb();
             for (User user : users) {

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
+    <!--end::Page Vendor Stylesheets-->
+    <!--begin::Global Stylesheets Bundle(used by all pages)-->
+    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="/styles.css" rel="stylesheet"  type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <title>Join Group</title>
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="row" >
+    <!-- สำหรับรับค่า Menubar -->
+    <div class="sidebar col-3"></div>
+    <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
+    <div class="col-9 main-content">
+        <div class="content">
+            <div class="white-frame1">
+                <div class="searchform">
+                    <h2 class="header"><b>Join Group</b></h2>
+                    <hr>
+
+                    <form action="/searchgroup" method="post">
+                        <div class="form-grid">
+                            <label for="subjectId"><b>Subject ID</b></label>
+                            <label for="section"><b>Section:</b></label>
+                            <label for="tag"><b>Skills</b></label>
+                            <div></div> <!-- Empty div for the submit button -->
+
+                            <input type="text" id="subjectId" name="subjectID" required>
+                            <input type="number" id="section" name="#" >
+                            <div >
+                                <table  class="checkbox-group">
+                                    <tr>
+                                        <td><input type="checkbox" name="dev" value="developer">Developer</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td><input type="checkbox" name="manager" value="manager">Manager</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="designer" value="tester">Tester</td>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td><input type="checkbox" name="tester" value="designer">Designer</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <input class="btn btn-primary search" type="submit" value="Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="white-frame2 p-3 mt-3">
+                <table class="table" id="user-table">
+                    <thead>
+                    <tr class="fetch-table">
+                        <th class="fixed-column">Groupname</th>
+                        <th class="fixed-column">Section</th>
+                        <th class="fixed-column">Skill</th>
+                        <th class="fixed-column">Member</th>
+                        <th class="fixed-column">Action</th>
+                    </tr>
+                    </thead>
+
+                        <tbody >
+                        <tr th:each="group : ${groups}">
+                            <td th:text="${group.groupName}"><span th:text="${group['groupName']}"></span></td>
+                            <td th:text="${group['section']}"></td>
+                            <td th:text="${group['tag']}"></td>
+                            <td th:text="${group['joinedMember']} + '/'+ ${group['maxMember']}"></td>
+                            <td>
+                                <button type="button" class="btn btn-primary">More Detail</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/plugins/global/plugins.bundle.js"></script>
+<script src="assets/js/scripts.bundle.js"></script>
+<!--end::Global Javascript Bundle-->
+<!--begin::Page Vendors Javascript(used by this page)-->
+<script src="assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+<!--end::Page Vendors Javascript-->
+<!--begin::Page Custom Javascript(used by this page)-->
+<script src="assets/js/custom/documentation/documentation.js"></script>
+
+<script>
+    var filename = window.location.pathname.split("/").pop();
+    $(document).ready(function() {
+
+        getSideBar()
+    });
+    $('form[action="/searchgroup"]').submit(searchGroup);
+
+    function getSideBar(){
+        console.log("filename: " + filename)
+        $.ajax({
+            url: "/menu_bar_student",
+            type: "GET",
+            success: function (data) {
+                $(".sidebar").html(data);
+                $(".nav-link").each(function () {
+                    if ($(this).attr("href") == "/" + filename) {
+                        $(this).addClass("active");
+                    }
+                    else {
+                        $(this).removeClass("active");
+                    }
+                });
+            }
+        });
+    }
+    var notifications = 5; // Replace with the actual number of notifications
+
+    // Update the badge when the page loads
+    window.onload = function() {
+        updateBadge();
+    };
+
+    function updateBadge() {
+        var badge = document.getElementById('badge');
+        if (notifications > 0) {
+            badge.textContent = notifications;
+            badge.style.display = 'inline';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    function toggleNotifications() {
+        var inbox = document.getElementById('notification-inbox');
+        if (inbox.style.display === 'none') {
+            inbox.style.display = 'block';
+        } else {
+            inbox.style.display = 'none';
+        }
+    }
+    function searchGroup(event) {
+        event.preventDefault();
+
+        var subjectId = $('#subjectId').val();
+        var section = $('#section').val();
+        var skills = [];
+        $('.checkbox-group input:checked').each(function() {
+            skills.push($(this).val());
+        });
+
+        $.ajax({
+            url: '/searchgroup',
+            type: 'GET',
+            data: {
+                subjectID: subjectId,
+                section: section,
+                skills: skills
+            },
+            success: function(data) {
+                console.log('data:', data);
+                let table = $(data).find('#user-table');
+                $('#user-table').replaceWith(table);
+            }
+        });
+    }
+
+
+</script>
+</body>
+
+</html>
+
