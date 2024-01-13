@@ -6,10 +6,17 @@
     </div>
 </div>
 <div class="notification">
-    <button type="button" class="icon-button ">
+    <button type="button" class="notification-button" onclick="toggleNotifications()">
         <i class="fas fa-bell"></i>
-        <span class="badge"> <!--notification number --> </span>
+        <span id="badge" class="badge"></span> <!-- Remove the hardcoded number of notifications -->
     </button>
+    <div id="notification-inbox" class="notification-inbox">
+        <!-- Add your notifications here -->
+        <p>Notification 1</p>
+        <p>Notification 2</p>
+        <p>Notification 3</p>
+        <!-- etc. -->
+    </div>
 </div>
 <ul class="nav nav-pills flex-column mb-auto">
     <li class="nav-item">
