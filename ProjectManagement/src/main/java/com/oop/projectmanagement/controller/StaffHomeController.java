@@ -33,21 +33,20 @@ public class StaffHomeController {
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
-
-    @GetMapping("/homestaff")
-    public String getUserinfo(HttpSession session,Model model) {
-        Firestore db = firebaseInitializer.getDb();
-        String username = (String) session.getAttribute("username");
+    
+    @GetMapping("/homestaff") // Map ONLY GET Requests
+    public String getUserinfo(HttpSession session,Model model) { // Get the session
+        Firestore db = firebaseInitializer.getDb(); // Get the database
+        String username = (String) session.getAttribute("username"); // Get the username from the session
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
-        // Now you can use the username, firstName, and lastName
         List<Map<String, Object>> users = new ArrayList<>();
         try {
 
-            ApiFuture<QuerySnapshot> query = db.collection("useraccount").get();
-            QuerySnapshot querySnapshot = query.get();
-            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
+            ApiFuture<QuerySnapshot> query = db.collection("useraccount").get(); // Get all the documents from the collection
+            QuerySnapshot querySnapshot = query.get(); // Get the documents
+            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments(); // Get the documents as a list
+            for (QueryDocumentSnapshot document : documents) { // Loop through the documents
                 users.add(document.getData());
             }
         } catch (InterruptedException | ExecutionException e) {
@@ -59,16 +58,16 @@ public class StaffHomeController {
 
     @PostMapping("/addUser")
     public String addUser(
-    @RequestParam("firstName") String firstName,
+    @RequestParam("firstName") String firstName, // Get the value from the form
     @RequestParam("lastName") String lastName,
     @RequestParam("password") String password,
     @RequestParam("userType") String userType,
     @RequestParam("username") String username) {
 
-    Firestore db = firebaseInitializer.getDb();
+    Firestore db = firebaseInitializer.getDb(); // Get the database
 
-    Map<String, Object> user = new HashMap<>();
-    user.put("firstName", firstName);
+    Map<String, Object> user = new HashMap<>(); // Create a new map
+    user.put("firstName", firstName); // Put the values into the map
     user.put("lastName", lastName);
     user.put("password", password);
     user.put("userType", userType);
