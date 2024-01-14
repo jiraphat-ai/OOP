@@ -41,7 +41,7 @@ public class JoinGroup {
         List<Map<String, Object>> groups = new ArrayList<>();
         //i want to get the group that have the  same any text in subjectID and section
         try {
-            ApiFuture<QuerySnapshot> query = db.collection("group").whereEqualTo("subjectID", subjectID).get();
+            ApiFuture<QuerySnapshot> query = db.collection("group").whereEqualTo("subjectID", subjectID).whereEqualTo("section", section).get();
             QuerySnapshot querySnapshot = query.get();
             List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
             for (QueryDocumentSnapshot document : documents) {
