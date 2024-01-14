@@ -15,6 +15,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
+import com.google.cloud.firestore.Query;
 
 @Controller
 public class JoinGroup {
@@ -41,9 +42,13 @@ public class JoinGroup {
         List<Map<String, Object>> groups = new ArrayList<>();
         //i want to get the group that have the  same any text in subjectID and section
         try {
-            ApiFuture<QuerySnapshot> query = db.collection("group").whereEqualTo("subjectID", subjectID).whereEqualTo("section", section).get();
-            QuerySnapshot querySnapshot = query.get();
-            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+            Query query = db.collection("group").whereEqualTo("subjectID", subjectID);
+            if (section != 0) {
+                query = query.whereEqualTo("section", section);
+            }
+
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
             for (QueryDocumentSnapshot document : documents) {
                 groups.add(document.getData());
             }
@@ -51,7 +56,6 @@ public class JoinGroup {
             e.printStackTrace();
         }
 
-
-
-        return groups;  }
+        return groups;
+    }
 }
