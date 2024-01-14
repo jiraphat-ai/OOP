@@ -124,4 +124,10 @@ public class ImportFileController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+@GetMapping("/groupdetail")
+public String getGroupDetail(HttpSession session, Model model) {
+    
+    
+    return "groupdetail";
+}
 }
