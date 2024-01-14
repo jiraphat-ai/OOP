@@ -31,12 +31,12 @@ public class JoinGroup {
         return "joingroup";
     }
     @GetMapping("/searchgroup")
-    public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") String section  ,  Model model) {
+    public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") int section  ,  Model model) {
         List<Map<String, Object>> groups = getGroupsBySubjectId(subjectID , section);
         model.addAttribute("groups", groups);
         return "/joingroup";  // return the name of the view that will display the groups
     }
-    private List<Map<String, Object>> getGroupsBySubjectId(String subjectID, String section ) {
+    private List<Map<String, Object>> getGroupsBySubjectId(String subjectID, int section ) {
         Firestore db = firebaseInitializer.getDb();
         List<Map<String, Object>> groups = new ArrayList<>();
         //i want to get the group that have the  same any text in subjectID and section
