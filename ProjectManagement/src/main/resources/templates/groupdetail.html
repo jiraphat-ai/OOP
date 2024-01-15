@@ -160,40 +160,6 @@
         // Add your logic to delete the group from Firestore here
         console.log("Group deleted!");
     }
-
-    // Add a variable to store the current group name
-    var currentGroupName = "";
-
-    // Function to fetch and populate group data in the edit modal
-    function editGroup(groupName) {
-        currentGroupName = groupName;
-        // Fetch group data using an AJAX call or any other method
-        // Populate the modal fields with the fetched data
-        // For simplicity, let's assume you have a function getGroupData(groupName) to fetch the data
-        var groupData = getGroupData(groupName);
-
-        // Populate modal fields
-        $("#editGroupName").val(groupData.groupName);
-        // Populate other fields as needed
-    }
-
-    // Function to save edited group information
-    function saveEditedGroup() {
-        var editedGroupName = $("#editGroupName").val();
-        // Get other edited fields as needed
-
-        // Perform the update in the Firestore database
-        updateGroup(currentGroupName, editedGroupName);
-        // Close the modal
-        $('#editGroupModal').modal('hide');
-    }
-
-    // Function to update group information in Firestore
-    function updateGroup(oldGroupName, newGroupName) {
-        // Add your logic to update group information in Firestore
-        // Use the Firestore SDK to update the document
-        // For example, you can use the DocumentReference and set method
-    }
 </script>
 </body>
 
