@@ -27,16 +27,23 @@
     </div>
 
     <div class="col-9 main-content">
+
+            <p class="text-center" style="font-size: x-large; font-weight: bolder;">
+                Create Group <hr>
         <form action="/createGroup" method="post">
             <div class="row" >
             <div class="col-2">
                 <label for="subjectID" class="form-label">Subject ID</label>
-                <input type="text" class="form-control" id="subjectID" name="groupName" required>
+                <select class="form-select" id="subjectID" data-control="select2" data-placeholder="Select an option">
+                    <div th:each="ID : ${subjectid}">
+                        <option th:text="${ID['subjectID']}"></option>
+                    </div>
+                </select>
             </div>
 
                 <div class="col-2">
                     <label for="section" class="form-label">Section</label>
-                    <input type="text" class="form-control" id="section" name="groupName" required>
+                    <input type="number" class="form-control number" min=1 max=10 id="section" name="groupName" required>
                 </div>
                 <div class="col">
                     <label for="groupName" class="form-label">Group Name</label>
@@ -44,7 +51,7 @@
                 </div>
                 <div class="col-3">
                     <label for="member" class="form-label">Member</label>
-                    <input type="number" class="form-control number" id="member" name="groupName" required>
+                    <input type="number" class="form-control number" min=1 max=15 id="member" name="groupName" required>
                 </div>
             </div>
             <div class="row mb-5" >
