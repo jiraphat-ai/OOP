@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
+
+import com.oop.projectmanagement.model.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,19 +78,12 @@ public class ImportFileController {
     }
 
     @PostMapping("/addsubject")
-    public String addSubject(@RequestParam("subjectID") String subjectID,
-            @RequestParam("subjectName") String subjectName,
-            Model model, HttpSession session) {
+    public String addSubject(Subject subject) {
         try {
             // add to firebase firestore
             Firestore db = firebaseInitializer.getDb();
-            DocumentReference docRef = db.collection("subject").document(subjectID);
-            // Add document data with id "alovelace" using a hashmap
-            Map<String, Object> data = new HashMap<>();
-            data.put("subjectID", subjectID);
-            data.put("subjectName", subjectName);
-            // asynchronously write data
-            docRef.set(data);
+            DocumentReference docRef = db.collection("subject").document(subject.getSubjectID());
+            docRef.set(subject);
             System.out.println("Data added successfully");
 
         } catch (Exception e) {
