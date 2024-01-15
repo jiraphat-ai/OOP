@@ -1,16 +1,21 @@
 package com.oop.projectmanagement.controller;
 
-import com.google.cloud.firestore.WriteResult;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.*;
+import com.oop.projectmanagement.model.Group;
+import com.oop.projectmanagement.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
 
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.Firestore;
 import com.oop.projectmanagement.FirebaseInitializer;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,22 +24,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-public class GroupDetail {
+public class GroupDetail extends CustomControl {
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
     @GetMapping("/groupdetail")
-
-    public String getUserinfo(HttpSession session) {
+    public String getUserinfo(HttpSession session , @RequestParam String documentId, Model model) throws ExecutionException, InterruptedException {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
+        System.out.println("documentId " + documentId);
+        Group group = getGroupDetail(documentId);
+
+        model.addAttribute("group", group);
         // Now you can use the username, firstName, and lastName
         return "groupdetail";
 
     }
-    
+
+
+
+    //get user detail from firestore by reference feild
+
+
     @PostMapping("/deleteGroup")
     @ResponseBody
     public String deleteGroup(@RequestParam String groupName) {

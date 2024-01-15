@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 @Controller
-public class MyGroup {
+public class MyGroup extends CustomControl{
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;

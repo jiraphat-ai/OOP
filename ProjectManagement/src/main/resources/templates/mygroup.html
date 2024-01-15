@@ -36,8 +36,8 @@
     <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
     <div class="col-9 main-content">
         <p class="text-center" style="font-size: x-large; font-weight: bolder;">My Group</p><hr>
-        <button class="table" th:each="group : ${groupList}" style="border-radius: 10px;">
-            <a href="/groupdetail" class="nav-link link-dark">
+        <button class="table" onclick="getGroupDetail(this)" th:each="group : ${groupList}" style="border-radius: 10px;">
+            <a  class="nav-link link-dark">
                 <div class="row" >
                     <div class="col">
                         <h3>Subject ID <span th:text="${group.subjectID}"></span></h3>
@@ -62,7 +62,8 @@
                         <strong>Group Name : <span th:text="${group.groupName}"></span></strong>
                     </div>
                     <div class="col">
-                        <strong>Owner : <span th:text="${group.groupOwner}"></span></strong>
+                        <strong>Owner : <span  th:text="${group.groupOwner}"></span></strong>
+                        <input type="hidden" class="doc_id" th:value="${group.documentId}">
                     </div>
                 </div>
             </a>
@@ -103,6 +104,20 @@
             }
         });
     }
+    function getGroupDetail(element){
+        var docId = $(element).find(".doc_id").val();
+        console.log("docId: " + docId)
+        $.ajax({
+            url: "/groupdetail",
+            type: "GET",
+            data: {documentId: docId},
+            success: function (data) {
+                //get data specific detail
+                $(".main-content").html(data);
+            }
+        });
+    }
+
 </script>
 </body>
 

@@ -1,9 +1,11 @@
 package com.oop.projectmanagement.model;
 
+import com.oop.projectmanagement.controller.CustomControl;
+
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 
-public class Group {
+public class Group extends CustomControl {
     private String subjectID;
     private String group_name;
     private Integer section;
@@ -89,4 +91,12 @@ public class Group {
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
     }
+
+    public ArrayList<User> getMembers() {
+        return getAllUsersFromMembers(this.documentId);
+    }
+
+//    public Subject getSubject() throws Exception {
+//        return getSubjectDetailBySubjectID(this.subjectID);
+//    }
 }
