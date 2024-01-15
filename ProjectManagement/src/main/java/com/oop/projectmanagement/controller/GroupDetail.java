@@ -1,5 +1,6 @@
 package com.oop.projectmanagement.controller;
 
+import com.google.cloud.firestore.WriteResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,7 @@ public class GroupDetail {
     @PostMapping("/deleteGroup")
     @ResponseBody
     public String deleteGroup(@RequestParam String groupName) {
-        Firestore firestore = firebaseInitializer.getFirestore();
+        Firestore firestore = firebaseInitializer.getDb();
         DocumentReference groupRef = firestore.collection("group").document(groupName);
 
         try {
