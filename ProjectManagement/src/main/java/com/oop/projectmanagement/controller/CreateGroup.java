@@ -57,8 +57,11 @@ public class CreateGroup {
         try {
             Firestore db = firebaseInitializer.getDb();
             String username = (String) session.getAttribute("username");
-            group.setOwner(username);
+            group.setGroupOwner(username);
             db.collection("group").add(group);
+
+
+
             return "Group created successfully";
         } catch (Exception e) {
             return "Error creating group: " + e.getMessage();

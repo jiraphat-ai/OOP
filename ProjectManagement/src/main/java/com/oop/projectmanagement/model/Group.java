@@ -13,6 +13,8 @@ public class Group {
 
     private String owner;
 
+    private String documentId;
+
     // no-arg constructor
 
     public Group() {}
@@ -71,12 +73,20 @@ public class Group {
         return 1;
     }
 
-    public String getOwner() {
+    public String getGroupOwner() {
         return owner;
     }
 
 
-    public void setOwner(String username) {
+    public void setGroupOwner(String username) {
         this.owner = username;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }

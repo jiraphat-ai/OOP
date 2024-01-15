@@ -36,14 +36,14 @@
     <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
     <div class="col-9 main-content">
         <p class="text-center" style="font-size: x-large; font-weight: bolder;">My Group</p><hr>
-        <button class="table" style="border-radius: 10px;">
+        <button class="table" th:each="group : ${groupList}" style="border-radius: 10px;">
             <a href="/groupdetail" class="nav-link link-dark">
-                <div class="row">
+                <div class="row" >
                     <div class="col">
-                        <h3>Subject ID</h3>
+                        <h3>Subject ID <span th:text="${group.subjectID}"></span></h3>
                     </div>
                     <div class="col">
-                        <h3>Subject Name</h3>
+                        <h3>Subject Name <span th:text="${group.subjectID}"></span></h3>
                     </div>
                     <div class="col">
                         <h3>Members</h3>
@@ -51,15 +51,18 @@
                 </div>
                 <br>
             
-                <div class="row">
+                <div class="row" >
                     <div class="col">
-                        <strong>Tag :</strong>
+                        Tag :
+                        <div th:each="tag : ${group.tag}" >
+                            <span th:text="${tag}"></span>
+                        </div>
                     </div>
                     <div class="col">
-                        <strong>Group Name :</strong>
+                        <strong>Group Name : <span th:text="${group.groupName}"></span></strong>
                     </div>
                     <div class="col">
-                        <strong>Owner :</strong>
+                        <strong>Owner : <span th:text="${group.groupOwner}"></span></strong>
                     </div>
                 </div>
             </a>
