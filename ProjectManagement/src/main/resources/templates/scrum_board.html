@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
+    <!--end::Page Vendor Stylesheets-->
+    <!--begin::Global Stylesheets Bundle(used by all pages)-->
+    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="/styles.css" rel="stylesheet"  type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <title>Home</title>
+    <style>
+        body {
+            font-family: 'Sunflower', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .scrum-board {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .column {
+            flex: 1;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 0 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .column h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .task {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .task:hover {
+            background-color: #e0e0e0;
+        }
+
+        .task h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+    .headertest {
+            display: flex;
+            justify-content: space-between; /* Add space between the buttons */
+            align-items: center; /* Align items vertically in the center */
+            padding: 10px; /* Add some padding */
+            background-color: #f4f4f4; /* Set background color */
+        }
+
+        .headertest button {
+            /* Common styles for buttons */
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px; /* Add rounded corners */
+        }
+
+        .create-task-btn button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .navigation-btn button {
+            background-color: #3498db;
+            color: white;
+            margin-left: 10px; /* Add space between navigation buttons */
+        }
+
+        .create-task-btn button:hover,
+        .navigation-btn button:hover {
+            opacity: 0.8; /* Reduce opacity on hover for a subtle effect */
+        }
+
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999; /* Higher z-index to appear on top of the overlay */
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .confirmation-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999; /* Higher z-index to appear on top of the overlay */
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .form-container input,
+        .form-container textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0 12px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .form-container button.cancel {
+            background-color: #f44336;
+        }
+
+        .form-container button:hover,
+        .form-container button.cancel:hover {
+            opacity: 0.8;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+            z-index: 998; /* Higher z-index to appear on top of the form popup */
+        }
+
+        /* Add styles for the confirmation popup */
+        .confirmation-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .confirmation-popup p {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .confirmation-popup button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .confirmation-popup button.cancel {
+            background-color: #f44336;
+        }
+
+        .confirmation-popup button:hover,
+        .confirmation-popup button.cancel:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+<div class="row" >
+    <!-- สำหรับรับค่า Menubar -->
+    <div class="sidebar col-3"></div>
+    <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
+    <div class="col-9 main-content">
+        <div class ="headertest">
+            <div class="create-task-btn">
+            <button onclick="openForm()">Create Task</button>
+                </div>
+            <div class="navigation-btn">
+            <button onclick="navigateToScrumBoard()">Scrum Board</button>
+            <button onclick="navigateToGroup()">Group</button>
+                </div>
+        </div>
+        <div class="scrum-board">
+            <div class="column" id="todo" onclick="moveToNextColumn('todo')"> <!-- Updated -->
+                <h2>To Do</h2>
+            </div>
+            <div class="column" id="doing" onclick="moveToNextColumn('doing')"> <!-- Updated -->
+                <h2>Doing</h2>
+            </div>
+            <div class="column" id="checking" onclick="moveToNextColumn('checking')"> <!-- Updated -->
+                <h2>Checking</h2>
+            </div>
+            <div class="column" id="done">
+                <h2>Done</h2>
+            </div>
+        </div>
+        <!-- Create Task form-popup -->
+        <div class="form-popup" id="taskForm">
+            <form class="form-container">
+                <label for="taskName"><b>Task Name</b></label>
+                <input type="text" placeholder="Enter Task Name" name="taskName" required>
+
+                <label for="member"><b>Member</b></label>
+                <input type="text" placeholder="Enter Member Name" name="member" required th:value="${session.firstName + ' ' + session.lastName}">
+
+                <label for="deadline"><b>Deadline</b></label>
+                <input type="date" name="deadline" required>
+
+                <label for="time"><b>Time</b></label>
+                <input type="text" placeholder="Enter Time Estimate" name="time" required>
+
+                <label for="description"><b>Description</b></label>
+                <textarea placeholder="Enter Task Description" name="description" required></textarea>
+
+                <button type="button" class="btn" onclick="saveTask()">Save</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">Cancel</button>
+            </form>
+        </div>
+        <div class="overlay" id="overlay" onclick="closeForm()"></div>
+
+    </div>
+</div>
+<script src="assets/plugins/global/plugins.bundle.js"></script>
+<script src="assets/js/scripts.bundle.js"></script>
+<!--end::Global Javascript Bundle-->
+<!--begin::Page Vendors Javascript(used by this page)-->
+<script src="assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+<!--end::Page Vendors Javascript-->
+<!--begin::Page Custom Javascript(used by this page)-->
+<script src="assets/js/custom/documentation/documentation.js"></script>
+
+<!-- Confirmation Popup HTML -->
+<div class="confirmation-popup" id="confirmationPopup">
+    <p>Are you sure you want to change the status of this task?</p>
+    <button onclick="changeStatus()">OK</button>
+    <button class="cancel" onclick="cancelStatusChange()">Cancel</button>
+</div>
+
+<!-- Confirmation Popup for 'Checking' Status Change -->
+<div class="confirmation-popup" id="confirmationCheckingPopup">
+    <p>Are you sure you want to move this task to the 'Checking' column?</p>
+    <button onclick="changeToChecking()">OK</button>
+    <button class="cancel" onclick="cancelCheckingStatusChange()">Cancel</button>
+</div>
+
+<script>
+    var filename = window.location.pathname.split("/").pop();
+    $(document).ready(function() {
+        getSideBar()
+    });
+
+    function getSideBar() {
+        console.log("filename: " + filename)
+        $.ajax({
+            url: "/menu_bar_student",
+            type: "GET",
+            success: function(data) {
+                $(".sidebar").html(data);
+                $(".nav-link").each(function() {
+                    if ($(this).attr("href") == "/" + filename) {
+                        $(this).addClass("active");
+                    } else {
+                        $(this).removeClass("active");
+                    }
+                });
+            }
+        });
+    }
+
+    function openForm() {
+        document.getElementById('taskForm').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeForm() {
+        document.getElementById('taskForm').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+     function saveTask() {
+    const taskName = document.getElementsByName('taskName')[0].value;
+    const member = document.getElementsByName('member')[0].value;
+    const deadline = document.getElementsByName('deadline')[0].value;
+    const time = document.getElementsByName('time')[0].value;
+    const description = document.getElementsByName('description')[0].value;
+
+    if (taskName && member && deadline && time && description) {
+        const todoColumn = document.getElementById('todo');
+        const newTask = document.createElement('div');
+        newTask.className = 'task';
+        newTask.setAttribute('data-status', 'todo'); // Set initial status to 'todo'
+        newTask.setAttribute('data-deadline', deadline); // Set task deadline
+        newTask.setAttribute('data-time', time); // Set task time estimate
+        newTask.setAttribute('data-description', description); // Set task description
+        newTask.innerHTML = `<h3>${taskName}</h3><p>${member}</p>`;
+
+        // Add "Accept" button to change status to "Doing"
+        const acceptButton = document.createElement('button');
+        acceptButton.innerText = 'Accept';
+        acceptButton.onclick = function(event) {
+            event.stopPropagation(); // Prevent task click when accepting
+            confirmAcceptTask(newTask);
+        };
+
+
+        newTask.appendChild(acceptButton);
+
+        // Add click event listener to the task element
+        newTask.addEventListener('click', function() {
+            showTaskDetails(newTask);
+        });
+
+        todoColumn.appendChild(newTask);
+        closeForm();
+    } else {
+        alert('Please fill in all task details');
+    }
+}
+
+    function confirmAcceptTask(taskElement) {
+        const confirmationPopup = document.getElementById('confirmationPopup');
+        confirmationPopup.style.display = 'block';
+        confirmationPopup.taskElement = taskElement;
+    }
+
+    function acceptTask(taskElement) {
+        // Move the task to the "Doing" column
+        const doingColumn = document.getElementById('doing');
+
+        // Remove the "Accept" button
+        taskElement.querySelector('button').remove();
+
+        // Ensure the presence of the "status-buttons" element
+        let statusButtons = taskElement.querySelector('.status-buttons');
+        if (!statusButtons) {
+            statusButtons = document.createElement('div');
+            statusButtons.className = 'status-buttons';
+            taskElement.appendChild(statusButtons);
+        }
+
+        // Add a single button for transitioning between statuses
+        const statusButton = createStatusButton('Next Status', taskElement);
+        statusButtons.appendChild(statusButton);
+
+        doingColumn.appendChild(taskElement);
+    }
+
+    function createStatusButton(label, taskElement) {
+    const button = document.createElement('button');
+    button.innerText = label;
+    button.onclick = function() {
+        confirmStatusChange(taskElement);
+    };
+    return button;
+    }
+
+    function confirmStatusChange(taskElement) {
+        const confirmationPopup = document.getElementById('confirmationPopup');
+        confirmationPopup.style.display = 'block';
+        confirmationPopup.taskElement = taskElement;
+    }
+
+    function changeStatus() {
+    const confirmationPopup = document.getElementById('confirmationPopup');
+    const taskElement = confirmationPopup.taskElement;
+
+    // Close the confirmation popup
+    confirmationPopup.style.display = 'none';
+
+    // Determine the next status based on the current status
+    const currentStatus = taskElement.getAttribute('data-status');
+    let nextStatus;
+
+    switch (currentStatus) {
+        case 'todo':
+            nextStatus = 'doing';
+            break;
+        case 'doing':
+            nextStatus = 'checking';  // Change to 'checking' instead of 'done'
+            break;
+        case 'checking':
+            nextStatus = 'done';
+            break;
+        default:
+            // Handle other cases if needed
+            break;
+    }
+
+    // Move the task to the corresponding column based on the next status
+    const columnId = nextStatus;
+    const column = document.getElementById(columnId);
+
+    if (column) {
+        // Clone the task element before moving
+        const clonedTask = taskElement.cloneNode(true);
+
+        // Update the status attribute of the task element
+        taskElement.setAttribute('data-status', nextStatus);
+
+        // Remove the original task element from the current column
+        taskElement.remove();
+
+        // Append the cloned task to the new column
+        column.appendChild(clonedTask);
+
+        // Call acceptTask to handle additional changes
+        acceptTask(clonedTask);
+
+        // Log some details for debugging
+        console.log('Task moved successfully. Current Status:', currentStatus, 'Next Status:', nextStatus);
+        console.log('Original Task Element Details:', taskElement.outerHTML);
+        console.log('Cloned Task Element Details:', clonedTask.outerHTML);
+        console.log('Column Details:', column.outerHTML);
+    } else {
+        // Handle the case where the next status column is not found
+        console.error('Column not found for the next status: ' + nextStatus);
+    }
+}
+
+    function cancelStatusChange() {
+        const confirmationPopup = document.getElementById('confirmationPopup');
+        confirmationPopup.style.display = 'none';
+    }
+
+    function closeConfirmationPopup() {
+        const confirmationPopup = document.getElementById('confirmationPopup');
+        const taskElement = confirmationPopup.taskElement;
+
+        // Close the confirmation popup
+        confirmationPopup.style.display = 'none';
+
+        // Perform the operations to accept the task outside the function
+        acceptTask(taskElement);
+    }
+
+    function cancelCheckingStatusChange() {
+        const confirmationCheckingPopup = document.getElementById('confirmationCheckingPopup');
+        confirmationCheckingPopup.style.display = 'none';
+    }
+
+    <!-- Updated --><!-- Updated --><!-- Updated --><!-- Updated --><!-- Updated --><!-- Updated -->
+
+    function moveToNextColumn(columnId) {
+            const column = document.getElementById(columnId);
+            const tasks = column.getElementsByClassName('task');
+
+            // Loop through tasks in the column
+            for (const task of tasks) {
+                task.onclick = function () {
+                    // Display task details or move task to the next column based on its status
+                    const currentStatus = task.getAttribute('data-status');
+                    switch (currentStatus) {
+                        case 'todo':
+                            moveTaskTo(columnId, 'doing');
+                            break;
+                        case 'doing':
+                            moveTaskTo(columnId, 'checking');
+                            break;
+                        case 'checking':
+                            moveTaskTo(columnId, 'done');
+                            break;
+                        // Add more cases if needed
+                    }
+                };
+            }
+        }
+
+        function moveTaskTo(currentColumnId, nextColumnId) {
+            const currentColumn = document.getElementById(currentColumnId);
+            const nextColumn = document.getElementById(nextColumnId);
+            const tasks = currentColumn.getElementsByClassName('task');
+
+            // Loop through tasks in the current column
+            for (const task of tasks) {
+                const taskStatus = task.getAttribute('data-status');
+                if (taskStatus === currentColumnId) {
+                    // Update task status and move it to the next column
+                    task.setAttribute('data-status', nextColumnId);
+
+                    // Clone the task element before moving
+                    const clonedTask = task.cloneNode(true);
+
+                    // Remove the original task element from the current column
+                    task.remove();
+
+                    // Append the cloned task to the next column
+                    nextColumn.appendChild(clonedTask);
+
+                    // Update the task button (e.g., 'Accept' button) based on the new status
+                    updateTaskButton(clonedTask);
+
+                    // Add click event listener to the cloned task
+                    clonedTask.onclick = function () {
+                        // Display task details or move task to the next column based on its status
+                        moveTaskTo(nextColumnId, 'done'); // Modify this based on your needs
+                    };
+                }
+            }
+        }
+
+     // New function to update task button based on its status
+        function updateTaskButton(taskElement) {
+            const statusButtons = taskElement.querySelector('.status-buttons');
+            if (statusButtons) {
+                const currentStatus = taskElement.getAttribute('data-status');
+                const buttonLabel = getNextStatusLabel(currentStatus);
+                statusButtons.innerHTML = ''; // Clear existing buttons
+
+                // Add a single button for transitioning between statuses
+                const statusButton = createStatusButton(buttonLabel, taskElement);
+                statusButtons.appendChild(statusButton);
+            }
+        }
+
+        // New function to get the label for the next status
+        function getNextStatusLabel(currentStatus) {
+            let nextStatusLabel;
+            switch (currentStatus) {
+                case 'todo':
+                    nextStatusLabel = 'Move to Doing';
+                    break;
+                case 'doing':
+                    nextStatusLabel = 'Move to Checking';
+                    break;
+                case 'checking':
+                    nextStatusLabel = 'Move to Done';
+                    break;
+                // Add more cases if needed
+            }
+            return nextStatusLabel;
+        }
+</script>
+<script>
+    // Your existing script content here
+
+    // Function to navigate to the Scrum Board page
+    function navigateToScrumBoard() {
+        window.location.href = '/scrum_board';  // Replace with your actual Scrum Board page URL
+    }
+
+    // Function to navigate to the Group page
+    function navigateToGroup() {
+        window.location.href = '/homestudent    ';  // Replace with your actual Group page URL
+    }
+
+</script>
+
+</body>
+
+</html>
+
