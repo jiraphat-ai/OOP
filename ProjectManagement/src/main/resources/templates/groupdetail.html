@@ -77,12 +77,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Add form fields for editing group information -->
                 <label for="editGroupName" class="form-label">Group Name:</label>
                 <input type="text" class="form-control" id="editGroupName" placeholder="Enter group name">
-
-                <!-- Add other fields as needed -->
-
+                <label for="editGroupDescription" class="form-label">Group Description:</label>
+                <textarea class="form-control" id="editGroupDescription" placeholder="Enter group description"></textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -112,11 +110,7 @@
   </div>
 <script src="assets/plugins/global/plugins.bundle.js"></script>
 <script src="assets/js/scripts.bundle.js"></script>
-<!--end::Global Javascript Bundle-->
-<!--begin::Page Vendors Javascript(used by this page)-->
 <script src="assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
-<!--end::Page Vendors Javascript-->
-<!--begin::Page Custom Javascript(used by this page)-->
 <script src="assets/js/custom/documentation/documentation.js"></script>
 
 <script>
@@ -149,16 +143,33 @@
         $('#deleteGroupModal').modal('show');
     }
 
+    // Add this function to handle the delete confirmation button click
     $('#confirmDeleteGroup').click(function() {
-        // Perform deletion here, e.g., call a function to delete the group
-        deleteGroup();
+        // Get the group name from the HTML or your data
+        var groupName = 
+        // Call the deleteGroup function with the group name
+        deleteGroup(groupName);
+
         // Close the modal
         $('#deleteGroupModal').modal('hide');
     });
 
-    function deleteGroup() {
-        // Add your logic to delete the group from Firestore here
-        console.log("Group deleted!");
+    // Add this function to perform the AJAX request to delete the group
+    function deleteGroup(groupName) {
+        $.ajax({
+            type: 'POST',
+            url: '/deleteGroup',
+            data: { groupName: groupName },
+            success: function(response) {
+                console.log(response);
+                // Handle success, for example, show a message or refresh the page
+                location.reload();
+            },
+            error: function(error) {
+                console.error(error);
+                // Handle error, show an alert or log the error
+            }
+        });
     }
 </script>
 </body>
