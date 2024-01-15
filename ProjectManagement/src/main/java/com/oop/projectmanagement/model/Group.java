@@ -1,5 +1,6 @@
 package com.oop.projectmanagement.model;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 
 public class Group {
@@ -9,6 +10,8 @@ public class Group {
     private String group_description;
     private Integer max_member;
     private ArrayList<String> tag;
+
+    private String owner;
 
     // no-arg constructor
 
@@ -68,8 +71,12 @@ public class Group {
         return 1;
     }
 
+    public String getOwner() {
+        return owner;
+    }
 
 
-
-
+    public void setOwner(String username) {
+        this.owner = username;
+    }
 }

@@ -53,9 +53,11 @@ public class CreateGroup {
     }
     @PostMapping("/createGroup")
     @ResponseBody
-    public String createGroup(@ModelAttribute Group group) {
+    public String createGroup(@ModelAttribute Group group, HttpSession session) {
         try {
             Firestore db = firebaseInitializer.getDb();
+            String username = (String) session.getAttribute("username");
+            group.setOwner(username);
             db.collection("group").add(group);
             return "Group created successfully";
         } catch (Exception e) {
