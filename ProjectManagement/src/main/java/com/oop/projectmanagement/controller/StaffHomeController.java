@@ -1,5 +1,6 @@
 package com.oop.projectmanagement.controller;
 
+import com.oop.projectmanagement.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,21 +34,20 @@ public class StaffHomeController {
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
-
-    @GetMapping("/homestaff")
-    public String getUserinfo(HttpSession session,Model model) {
-        Firestore db = firebaseInitializer.getDb();
-        String username = (String) session.getAttribute("username");
+    
+    @GetMapping("/homestaff") // Map ONLY GET Requests
+    public String getUserinfo(HttpSession session,Model model) { // Get the session
+        Firestore db = firebaseInitializer.getDb(); // Get the database
+        String username = (String) session.getAttribute("username"); // Get the username from the session
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
-        // Now you can use the username, firstName, and lastName
         List<Map<String, Object>> users = new ArrayList<>();
         try {
 
-            ApiFuture<QuerySnapshot> query = db.collection("useraccount").get();
-            QuerySnapshot querySnapshot = query.get();
-            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
+            ApiFuture<QuerySnapshot> query = db.collection("useraccount").get(); // Get all the documents from the collection
+            QuerySnapshot querySnapshot = query.get(); // Get the documents
+            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments(); // Get the documents as a list
+            for (QueryDocumentSnapshot document : documents) { // Loop through the documents
                 users.add(document.getData());
             }
         } catch (InterruptedException | ExecutionException e) {
@@ -58,44 +58,17 @@ public class StaffHomeController {
     }
 
     @PostMapping("/addUser")
-    public String addUser(
-    @RequestParam("firstName") String firstName,
-    @RequestParam("lastName") String lastName,
-    @RequestParam("password") String password,
-    @RequestParam("userType") String userType,
-    @RequestParam("username") String username) {
+    public String addUser(User user) {
+        Firestore db = firebaseInitializer.getDb(); // Get the database
+        try {
+            ApiFuture<DocumentReference> addedDocRef = db.collection("useraccount").add(user);
 
-    Firestore db = firebaseInitializer.getDb();
-
-    Map<String, Object> user = new HashMap<>();
-    user.put("firstName", firstName);
-    user.put("lastName", lastName);
-    user.put("password", password);
-    user.put("userType", userType);
-    user.put("username", username);
-
-    // Set regDate with a specific date and time
-    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy 'at' HH:mm:ss z");
-    sdf.setTimeZone(TimeZone.getTimeZone("UTC+7")); // Set timezone as per your requirement
-
-    try {
-        Date date = sdf.parse("January 10, 2024 at 17:05:55 UTC+7");
-        Timestamp timestamp = new Timestamp(date.getTime());
-        user.put("regDate", timestamp);
-    } catch (Exception e) {
-        e.printStackTrace();
-        return "error";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
+        }
+        return "redirect:/homestaff";
     }
-
-    try {
-        ApiFuture<DocumentReference> addedDocRef = db.collection("useraccount").add(user);
-    } catch (Exception e) {
-        e.printStackTrace();
-        return "error";
-    }
-
-    return "redirect:/homestaff";
-}
 
 @PostMapping("/resetPassword")
 @ResponseBody

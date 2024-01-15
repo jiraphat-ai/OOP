@@ -15,6 +15,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
+import com.google.cloud.firestore.Query;
 
 @Controller
 public class JoinGroup {
@@ -31,19 +32,23 @@ public class JoinGroup {
         return "joingroup";
     }
     @GetMapping("/searchgroup")
-    public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") String section  ,  Model model) {
+    public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") int section  ,  Model model) {
         List<Map<String, Object>> groups = getGroupsBySubjectId(subjectID , section);
         model.addAttribute("groups", groups);
         return "/joingroup";  // return the name of the view that will display the groups
     }
-    private List<Map<String, Object>> getGroupsBySubjectId(String subjectID, String section ) {
+    private List<Map<String, Object>> getGroupsBySubjectId(String subjectID, int section ) {
         Firestore db = firebaseInitializer.getDb();
         List<Map<String, Object>> groups = new ArrayList<>();
         //i want to get the group that have the  same any text in subjectID and section
         try {
-            ApiFuture<QuerySnapshot> query = db.collection("group").whereEqualTo("subjectID", subjectID).whereEqualTo("section", section).get();
-            QuerySnapshot querySnapshot = query.get();
-            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+            Query query = db.collection("group").whereEqualTo("subjectID", subjectID);
+            if (section != 0) {
+                query = query.whereEqualTo("section", section);
+            }
+
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
             for (QueryDocumentSnapshot document : documents) {
                 groups.add(document.getData());
             }
@@ -51,7 +56,6 @@ public class JoinGroup {
             e.printStackTrace();
         }
 
-
-
-        return groups;  }
+        return groups;
+    }
 }
