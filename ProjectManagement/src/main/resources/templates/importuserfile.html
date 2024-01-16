@@ -160,6 +160,9 @@
                             <p class="text-center" style="font-size: x-large; font-weight: bolder;">Import File To
                                 Create New User</p>
                         </div>
+                        <div class="add-user mt-3">
+                            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#moreinfomordal">How To Import ?</button>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -190,6 +193,36 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal fade" id="moreinfomordal" tabindex="-1" aria-labelledby="Importusermordal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Importusermordal">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                                    <div class="modal-body">
+                                        <ol>
+                                            <li>Prepare your user file in the appropriate format (e.g., CSV, Excel).</li>
+                                            <li>Click on the "Drag and Drop here" area or browse for the file using the "Choose File" button.</li>
+                                            <li>If you choose to drag and drop, simply drag the file from your file explorer and drop it onto the designated area.</li>
+                                            <li>If you choose to browse, click on the "Choose File" button and select the user file from your computer.</li>
+                                            <li>Once the file is selected, it will be automatically uploaded.</li>
+                                            <li>Wait for the upload process to complete.</li>
+                                            <li>Review the imported user data and make any necessary adjustments.</li>
+                                            <li>Click on the "Save Changes" button to save the imported user data.</li>
+                                        </ol>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <a href="/download/User.csv" class="btn btn-success text-white" download>Download CSV Format</a>
+                                        </div>
+                                        </div>
+                                        </div>
+                                        
+                                </div>
+                            </div>
+                        </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
