@@ -2,13 +2,14 @@
         <p class="text-center" style="font-size: x-large; font-weight: bolder;">
             <span th:text="${group.groupName}"></span>
                 <span class="float-end">
-                    <button class="btn btn-primary" style="font-size: 1.5vh;" data-bs-toggle="modal" data-bs-target="#editGroupModal">
+                    <button class="btn btn-primary" style="font-size: 1.5vh;" data-bs-toggle="modal" data-bs-target="#editGroupModal" onclick="openEditGroupModal()">
                         <i class="fas fa-edit fa-lg"></i> Edit
-                    </button>
+                     </button>                     
                     <button id="deleteGroupButton" type="button" class="btn btn-danger" style="font-size: 1.5vh;" onclick="showDeleteGroupModal()">
                         <i class="fas fa-trash fa-lg"></i> Delete
                     </button>
             </span>
+            <div class="d-none" id="docId" th:text="${group.documentId}" ></div> <!-- Add this line to store the document ID -->
             </p>
             <hr>
             <div class="row">
@@ -93,13 +94,12 @@
 
 <script>
     var filename = window.location.pathname.split("/").pop();
-    $(document).ready(function() {
-        getSideBar()
+    $(document).ready(function () {
+        getSideBar();
     });
 
-
-    function getSideBar(){
-        console.log("filename: " + filename)
+    function getSideBar() {
+        console.log("filename: " + filename);
         $.ajax({
             url: "/menu_bar_student",
             type: "GET",
@@ -108,12 +108,11 @@
                 $(".nav-link").each(function () {
                     if ($(this).attr("href") == filename) {
                         $(this).addClass("active");
-                    }
-                    else {
+                    } else {
                         $(this).removeClass("active");
                     }
                 });
-            }
+            },
         });
     }
 
@@ -121,32 +120,74 @@
         $('#deleteGroupModal').modal('show');
     }
 
+    function openEditGroupModal() {
+        let documentId = $('#docId').text(); // Get the document ID from the HTML
+        let groupName = $('#editGroupName'); // Get the group name element from the modal
+        let groupDescription = $('#editGroupDescription'); // Get the group description element from the modal
+
+        // You can use the retrieved data to pre-fill the modal inputs if needed
+        // groupName.val(''); // Set the value for the group name input
+        // groupDescription.val(''); // Set the value for the group description textarea
+
+        $('#editGroupModal').modal('show'); // Open the "Edit Group" modal
+    }
+
+    function saveEditedGroup() {
+        let documentId = $('#docId').text(); // Get the document ID from the HTML
+        let groupName = $('#editGroupName').val(); // Get the edited group name
+        let groupDescription = $('#editGroupDescription').val(); // Get the edited group description
+
+        // Perform an AJAX request or any logic needed to save the edited group information
+        $.ajax({
+            type: 'POST',
+            url: '/editGroup', // Adjust the endpoint based on your server-side logic
+            data: {
+                documentId: documentId,
+                groupName: groupName,
+                groupDescription: groupDescription,
+            },
+            success: function (response) {
+                console.log(response);
+                // Handle success, for example, show a message or refresh the page
+                location.reload();
+            },
+            error: function (error) {
+                console.error(error);
+                // Handle error, show an alert or log the error
+            },
+        });
+
+        // Close the modal
+        $('#editGroupModal').modal('hide');
+    }
+
     // Add this function to handle the delete confirmation button click
-    $('#confirmDeleteGroup').click(function() {
+    $('#confirmDeleteGroup').click(function () {
+        let documentId = $('#docId').text(); // Get the document ID from the HTML
         // Get the group name from the HTML or your data
         var groupName = 'group1';
         // Call the deleteGroup function with the group name
-        deleteGroup(groupName);
+        deleteGroup(documentId);
 
         // Close the modal
         $('#deleteGroupModal').modal('hide');
     });
 
     // Add this function to perform the AJAX request to delete the group
-    function deleteGroup(groupName) {
+    function deleteGroup(documentId) {
         $.ajax({
             type: 'POST',
             url: '/deleteGroup',
-            data: { groupName: groupName },
-            success: function(response) {
+            data: { documentId: documentId },
+            success: function (response) {
                 console.log(response);
                 // Handle success, for example, show a message or refresh the page
                 location.reload();
             },
-            error: function(error) {
+            error: function (error) {
                 console.error(error);
                 // Handle error, show an alert or log the error
-            }
+            },
         });
     }
 </script>
