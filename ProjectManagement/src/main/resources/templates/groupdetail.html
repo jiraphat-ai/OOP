@@ -1,6 +1,6 @@
-<div class="col-9 main-content">
+<div class="col-9 main-content" style="border-radius: 10px;">
         <p class="text-center" style="font-size: x-large; font-weight: bolder;">
-            Group Name
+            <span th:text="${group.groupName}"></span>
                 <span class="float-end">
                     <button class="btn btn-primary" style="font-size: 1.5vh;" data-bs-toggle="modal" data-bs-target="#editGroupModal">
                         <i class="fas fa-edit fa-lg"></i> Edit
@@ -8,7 +8,7 @@
                     <button id="deleteGroupButton" type="button" class="btn btn-danger" style="font-size: 1.5vh;" onclick="showDeleteGroupModal()">
                         <i class="fas fa-trash fa-lg"></i> Delete
                     </button>
-                </span>
+            </span>
             </p>
             <hr>
             <div class="row">
@@ -33,13 +33,13 @@
                     <div class="row mb-5">
                         <div class="col">
                             <p style="font-size: larger;"><strong>Group Member:</strong><span th:each=" member :${group.members}" >
-                                <span th:text="${member.firstName}"></span>
+                               <br> <span th:text="${member.firstName}+' '+ ${member.lastName}"></span>
                             </span></p>
                         </div>
                     </div>
                 </div>
             </div>
-
+</div>
             </div>
         </form>
 
