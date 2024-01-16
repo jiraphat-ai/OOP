@@ -26,22 +26,21 @@ public class MyGroup extends CustomControl{
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
-        ArrayList<GroupFordetail> groupList = getGroupDataInFireStore();
+        ArrayList<GroupFordetail> groupList = getUserGroupsByUsername(session.getAttribute("username").toString());
         model.addAttribute("groupList", groupList);
         // Now you can use the username, firstName, and lastName
         return "mygroup";
 
     }
 
-    public ArrayList<GroupFordetail> getGroupDataInFireStore() throws ExecutionException, InterruptedException {
+    public ArrayList<GroupFordetail> getUserGroupsByUsername(String username) throws ExecutionException, InterruptedException {
         Firestore db = firebaseInitializer.getDb();
-        ArrayList<GroupFordetail> groupList = new ArrayList<>();
-        db.collection("group").get().get().getDocuments().forEach((QueryDocumentSnapshot document) -> {
+        ArrayList<GroupFordetail> userGroups = new ArrayList<>();
+        db.collection("group").whereEqualTo("groupOwner", username).get().get().getDocuments().forEach((QueryDocumentSnapshot document) -> {
             GroupFordetail group = document.toObject(GroupFordetail.class);
-            groupList.add(group);
-            //add document id to group object
             group.setDocumentId(document.getId());
+            userGroups.add(group);
         });
-        return groupList;
+        return userGroups;
     }
 }
