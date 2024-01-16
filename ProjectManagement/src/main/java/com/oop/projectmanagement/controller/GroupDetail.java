@@ -51,9 +51,9 @@ public class GroupDetail extends CustomControl {
 
     @PostMapping("/deleteGroup")
     @ResponseBody
-    public String deleteGroup(@RequestParam String groupName) {
+    public String deleteGroup(@RequestParam String documentId) {
         Firestore firestore = firebaseInitializer.getDb();
-        DocumentReference groupRef = firestore.collection("group").document(groupName);
+        DocumentReference groupRef = firestore.collection("group").document(documentId);
 
         try {
             // Delete the group document
@@ -64,5 +64,22 @@ public class GroupDetail extends CustomControl {
             return "Error deleting group: " + e.getMessage();
         }
     }
+
+    @PostMapping("/editGroup")
+    @ResponseBody
+    public String editGroup(@RequestParam String documentId, @RequestParam String groupName,
+                            @RequestParam String groupDescription) {
+                        Firestore firestore = firebaseInitializer.getDb();
+                        DocumentReference groupRef = firestore.collection("group").document(documentId);
+
+                        try {
+                            // Update the group document with the new information
+                            groupRef.update("groupName", groupName, "groupDescription", groupDescription);
+                            return "Group edited successfully";
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return "Error editing group: " + e.getMessage();
+                        }
+                    }
 }
 

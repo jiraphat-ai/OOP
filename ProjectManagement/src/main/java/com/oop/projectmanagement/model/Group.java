@@ -96,7 +96,7 @@ public class Group extends CustomControl {
         this.joined_member = joined_member;
     }
     public Integer getJoinedMember() {
-        return joined_member;
+        return 1;
     }
 
     public String getGroupOwner() {
