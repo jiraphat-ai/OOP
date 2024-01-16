@@ -37,9 +37,8 @@ public class ProfileController {
     @GetMapping("/profile")
     public String getUserinfo(HttpSession session,Model model) {
         Firestore db = firebaseInitializer.getDb();
-        String documentId = "DvqGIw0kkbAh6tGxoNsu";
 
-        DocumentReference documentRef = db.collection("useraccount").document(documentId);
+        DocumentReference documentRef = db.collection("useraccount").document();
 
         try {
             ApiFuture<DocumentSnapshot> documentSnapshotFuture = documentRef.get();
@@ -76,19 +75,33 @@ public class ProfileController {
     }
 
     @PutMapping("/updateUserProfile")
-    public ResponseEntity<String> updateUserProfile(@RequestBody Map<String, Object> data) {
+    public ResponseEntity<String> updateUserProfile(@RequestBody Map<String, Object> data, HttpSession session) {
         Firestore db = firebaseInitializer.getDb();
-        String documentId = "DvqGIw0kkbAh6tGxoNsu";
 
-        DocumentReference documentRef = db.collection("useraccount").document(documentId);
+        // Retrieve the username from the session
+        String username = (String) session.getAttribute("username");
+
+        // Ensure a valid username is available in the session
+        if (username == null) {
+            return new ResponseEntity<>("User not authenticated", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Fetch the document based on the username
+        ApiFuture<QuerySnapshot> querySnapshotFuture = db.collection("useraccount").whereEqualTo("username", username).limit(1).get();
 
         try {
-            ApiFuture<DocumentSnapshot> documentSnapshotFuture = documentRef.get();
-            DocumentSnapshot document = documentSnapshotFuture.get();
+            QuerySnapshot querySnapshot = querySnapshotFuture.get();
 
-            if (document.exists()) {
+            if (!querySnapshot.isEmpty()) {
                 // Document found, update required fields
+                DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                DocumentReference documentRef = document.getReference();
                 documentRef.update(data);
+
+                // Update session attributes with new information
+                session.setAttribute("bio", (String) data.get("bio"));
+                session.setAttribute("facebook", (String) data.get("facebook"));
+                session.setAttribute("instagram", (String) data.get("instagram"));
 
                 return new ResponseEntity<>("Profile updated successfully", HttpStatus.OK);
             } else {

@@ -33,11 +33,24 @@ public class MenubarController {
 
     @GetMapping("/menu_bar_student")
 
-    public String getBar(HttpSession session) {
+    public String getBar(HttpSession session, Model model) {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
+        String bio = (String) session.getAttribute("bio");
+        String facebook = (String) session.getAttribute("facebook");
+        String instagram = (String) session.getAttribute("instagram");
+
         // Now you can use the username, firstName, and lastName
+
+        model.addAttribute("username", username);
+        model.addAttribute("firstName", firstName);
+        model.addAttribute("lastName", lastName);
+        model.addAttribute("bio", bio);
+        model.addAttribute("facebook", facebook);
+        model.addAttribute("instagram", instagram);
+
+
         return "menu_bar_student";
 
     }

@@ -26,8 +26,9 @@ public class StudentHomeController {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
+        String bio = (String) session.getAttribute("bio");
         // Now you can use the username, firstName, and lastName
-        return "homestudent"; 
+        return "homestudent";
 
     }
 

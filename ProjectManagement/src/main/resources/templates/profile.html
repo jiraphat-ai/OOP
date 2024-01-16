@@ -16,6 +16,11 @@
     <link href="/styles.css" rel="stylesheet"  type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
     <title>homestudent</title>
     <style>
         body {
@@ -298,25 +303,25 @@
                     </div>
                 </div>
                     <div class="add-user mt-3">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubjectModal">Edit Profile</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubjectModal" onclick="submitUserProfileForm()">Edit Profile</button>
                     </div>
                 </div>
 
                 </div>
                 <div class="card2">
                     <div class ="content">
-                        <h4>Bio</h4><span th:text="${bio}"></span>
+                        <h4>Bio</h4><span th:text="${session.bio}"></span>
                     </div>
 
                     <div class ="content"><br>
                         <h4>Contact</h4>
-                        <a th:href="${facebook}" target="_blank" rel="noopener noreferrer" class="icon-wrap" name="facebookName" placeholder="Facebook">
+                        <a th:href="${session.facebook}" target="_blank" rel="noopener noreferrer" class="icon-wrap" name="facebookName" placeholder="Facebook">
                             <div>
                                 <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png" alt="facebook">
                                 Facebook
                             </div>
                         </a>
-                        <a th:href="${instagram}" target="_blank" rel="noopener noreferrer" class="icon-wrap">
+                        <a th:href="${session.instagram}" target="_blank" rel="noopener noreferrer" class="icon-wrap">
                             <div>
                                 <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="instagram">
                                 Instagram
@@ -340,36 +345,42 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                     </div>
-                    <form th:action="@{/addsubject}" method="post">
+                    <!-- Update th:action, add id attribute -->
+                    <form id="updateUserProfileForm" th:action="@{/updateUserProfile}" method="post">
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="bio" class="form-label">Bio</label>
-                                <input type="text" class="form-control" id="bio" name="bio" placeholder="Enter bio" th:value="${bio}" />
+                                <input type="text" class="form-control" id="bio" name="bio"
+                                       placeholder="Enter bio" th:value="${session.bio}" />
                             </div>
                             <div class="mb-3">
                                 <label for="facebookName" class="form-label">Contact</label>
-                                <input type="text" class="form-control" id="facebookName" name="facebookName" placeholder="Facebook" th:value="${facebook}" />
-                                <input type="text" class="form-control" id="instagramName" name="instagramName" placeholder="Instagram" th:value="${instagram}" />
+                                <input type="text" class="form-control" id="facebookName" name="facebookName"
+                                       placeholder="Facebook" th:value="${session.facebook}" />
+                                <input type="text" class="form-control" id="instagramName" name="instagramName"
+                                       placeholder="Instagram" th:value="${session.instagram}" />
                             </div>
                             <div class="mb-3">
                                 <label for="tag" class="form-label">Tag</label>
-                                <input type="text" class="form-control" id="tag" name="tag" placeholder="Enter tag" th:value="${tag}" />
+                                <input type="text" class="form-control" id="tag" name="tag"
+                                       placeholder="Enter tag" th:value="${tag}" />
                             </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <!-- Update onclick attribute to call JavaScript function -->
                                 <button type="button" class="btn btn-primary" onclick="updateUserProfile()">Save</button>
                             </div>
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
 
-                <!-- end edit Modal -->
-    </div>
         </div>
 
     </div>
-</div>
+
             <script src="assets/plugins/global/plugins.bundle.js"></script>
             <script src="assets/js/scripts.bundle.js"></script>
             <!--end::Global Javascript Bundle-->
@@ -379,31 +390,8 @@
             <!--begin::Page Custom Javascript(used by this page)-->
             <script src="assets/js/custom/documentation/documentation.js"></script>
 
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        function deleteUser(username) {
-            fetch('/deleteUser', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username: username }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('User deleted successfully');
-                        location.reload();
-                    } else {
-                        alert('Error deleting user: ' + data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        }
-        /*]]>*/
-    </script>
+
+
     <script>
         $(document).ready(function() {
             // Check if the table exists
@@ -421,14 +409,18 @@
             const password = document.getElementById('password').value;
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
-            const userType = document.getElementById('userType').value;
+            const bio = document.getElementById('bio').value;
+            const facebook = document.getElementById('facebook').value;
+            const instagram = document.getElementById('instagram').value;
 
             const formData = new FormData();
             formData.append('username', username);
             formData.append('password', password);
             formData.append('firstName', firstName);
             formData.append('lastName', lastName);
-            formData.append('userType', userType);
+            formData.append('bio', bio);
+            formData.append('facebook', facebook);
+            formData.append('instagram', instagram);
 
             fetch('/addUser', {
                 method: 'POST',
@@ -453,58 +445,33 @@
                 });
         }
 
-        function setUsernameForDeleteUserModal(element) {
-            $(element).parent().each(function () {
-                const username = $(this).siblings().first().text();
-                console.log("username");
-                document.getElementById('deleteUserModalLabel').innerText = `Delete User - ${username}`;
-                $('#modal_btn_del').attr('onclick', `deleteUser('${username}')`);
-            });
-        }
+        var filename = window.location.pathname.split("/").pop();
+    $(document).ready(function() {
+        getSideBar()
+    });
 
-    </script>
-    <script>
-        function setSubjectForEditModal(element) {
-            var subjectID = $(element).data('subject-id');
-            var subjectName = $(element).data('subject-name');
 
-            $('#editSubjectID').val(subjectID);
-            $('#editSubjectName').val(subjectName);
-        }
-
-        function setSubjectForDeleteModal(element) {
-            // Implement this function if needed
-        }
-
-        // Attach the setSubjectForEditModal function to the modal's show event
-        $('#editSubjectModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            setSubjectForEditModal(button[0]);
-        });
-
-        </script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    // Add click event listener to all elements with the class 'social-link'
-                    document.querySelectorAll('.social-link').forEach(function (icon) {
-                        icon.addEventListener('click', function () {
-                            // Fetch data and open a new tab with the link from 'data-link' attribute
-                            var link = icon.getAttribute('data-link');
-                            if (link) {
-                                fetchDataAndOpenNewTab(link);
-                            }
-                        });
-                    });
-
-                    function fetchDataAndOpenNewTab(link) {
-                        // Open a new tab with the fetched link
-                        window.open(link, '_blank');
+    function getSideBar(){
+        console.log("filename: " + filename)
+        $.ajax({
+            url: "/menu_bar_student",
+            type: "GET",
+            success: function (data) {
+                $(".sidebar").html(data);
+                $(".nav-link").each(function () {
+                    if ($(this).attr("href") == "/" + filename) {
+                        $(this).addClass("active");
+                    }
+                    else {
+                        $(this).removeClass("active");
                     }
                 });
-            </script>
+            }
+        });
+    }
 
-            <script>
-                async function updateUserProfile() {
+
+        async function updateUserProfile() {
                     try {
                         const bio = document.getElementById('bio').value;
                         const facebook = document.getElementById('facebookName').value;
@@ -530,6 +497,12 @@
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
 
+                        // Update DOM elements with new information
+                            document.getElementById('bio').innerText = bio;
+                            document.getElementById('facebookName').innerText = facebook;
+                            document.getElementById('instagramName').innerText = instagram;
+                            document.getElementById('tag').innerText = tag;
+
                         alert('Profile updated successfully');
                         location.reload(); // Refresh the page
                     } catch (error) {
@@ -537,33 +510,29 @@
                         alert('Error updating profile. Please try again.');
                     }
                 }
-            </script>
-<script>
-    var filename = window.location.pathname.split("/").pop();
-    $(document).ready(function() {
-        getSideBar()
-    });
 
+    </script>
 
-    function getSideBar(){
-        console.log("filename: " + filename)
-        $.ajax({
-            url: "/menu_bar_student",
-            type: "GET",
-            success: function (data) {
-                $(".sidebar").html(data);
-                $(".nav-link").each(function () {
-                    if ($(this).attr("href") == "/" + filename) {
-                        $(this).addClass("active");
-                    }
-                    else {
-                        $(this).removeClass("active");
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Add click event listener to all elements with the class 'social-link'
+                    document.querySelectorAll('.social-link').forEach(function (icon) {
+                        icon.addEventListener('click', function () {
+                            // Fetch data and open a new tab with the link from 'data-link' attribute
+                            var link = icon.getAttribute('data-link');
+                            if (link) {
+                                fetchDataAndOpenNewTab(link);
+                            }
+                        });
+                    });
+
+                    function fetchDataAndOpenNewTab(link) {
+                        // Open a new tab with the fetched link
+                        window.open(link, '_blank');
                     }
                 });
-            }
-        });
-    }
-</script>
+            </script>
+
 
 </body>
 </html>
