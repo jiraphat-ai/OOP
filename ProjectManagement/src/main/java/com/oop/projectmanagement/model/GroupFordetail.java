@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import javax.annotation.Nonnull;
 
-public class Group extends CustomControl {
+public class GroupFordetail extends CustomControl {
     private String subjectID;
     private DocumentReference subjectRef;
 
@@ -17,7 +17,6 @@ public class Group extends CustomControl {
     private String group_description;
     private Integer max_member;
     private ArrayList<String> tag;
-    private Integer joined_member;
    
 
     private String owner;
@@ -26,11 +25,13 @@ public class Group extends CustomControl {
 
     private String docIdSubject;
 
+    private Integer joined_member;
+
 
 
     // no-arg constructor
 
-    public Group() {}
+    public GroupFordetail() {}
 
     // getters and setters
     public void setSubjectRef(DocumentReference subjectRef) {
@@ -50,7 +51,12 @@ public class Group extends CustomControl {
        
         return subjectID;
     }
-
+    public void setJoinedMember(Integer joined_member) {
+        this.joined_member = joined_member;
+    }
+    public Integer getJoinedMember() {
+        return joined_member;
+    }
 
     public String getGroupName() {
         return group_name;
@@ -92,12 +98,7 @@ public class Group extends CustomControl {
         this.tag = tag;
     }
 
-    public void setJoinedMember(Integer joined_member) {
-        this.joined_member = joined_member;
-    }
-    public Integer getJoinedMember() {
-        return joined_member;
-    }
+ 
 
     public String getGroupOwner() {
         return owner;
@@ -120,5 +121,9 @@ public class Group extends CustomControl {
         return this.documentId != null ? getAllUsersFromMembers(this.documentId) : null;
     }
 
-   
+    public Subject getSubject() throws Exception {
+        // Assign the result to a DocumentReference variable
+        Subject subject = subjectRef.get().get().toObject(Subject.class);
+        return subject;
+    }
 }

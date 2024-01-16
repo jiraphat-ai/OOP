@@ -2,7 +2,7 @@ package com.oop.projectmanagement.controller;
 
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.oop.projectmanagement.model.Group;
+import com.oop.projectmanagement.model.GroupFordetail;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -26,18 +26,18 @@ public class MyGroup extends CustomControl{
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
-        ArrayList<Group> groupList = getGroupDataInFireStore();
+        ArrayList<GroupFordetail> groupList = getGroupDataInFireStore();
         model.addAttribute("groupList", groupList);
         // Now you can use the username, firstName, and lastName
         return "mygroup";
 
     }
 
-    public ArrayList<Group> getGroupDataInFireStore() throws ExecutionException, InterruptedException {
+    public ArrayList<GroupFordetail> getGroupDataInFireStore() throws ExecutionException, InterruptedException {
         Firestore db = firebaseInitializer.getDb();
-        ArrayList<Group> groupList = new ArrayList<>();
+        ArrayList<GroupFordetail> groupList = new ArrayList<>();
         db.collection("group").get().get().getDocuments().forEach((QueryDocumentSnapshot document) -> {
-            Group group = document.toObject(Group.class);
+            GroupFordetail group = document.toObject(GroupFordetail.class);
             groupList.add(group);
             //add document id to group object
             group.setDocumentId(document.getId());

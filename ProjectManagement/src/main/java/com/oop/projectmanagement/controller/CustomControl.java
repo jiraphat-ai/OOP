@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.oop.projectmanagement.model.Group;
+import com.oop.projectmanagement.model.GroupFordetail;
 import com.oop.projectmanagement.model.Subject;
 import com.oop.projectmanagement.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class CustomControl {
     @Autowired
-    private FirebaseInitializer firebaseInitializer = new FirebaseInitializer();
+    protected FirebaseInitializer firebaseInitializer = new FirebaseInitializer();
     //Get group detail from firestore by document id
-    public Group getGroupDetail(String documentId) {
+    public GroupFordetail getGroupDetail(String documentId) {
         Firestore db = firebaseInitializer.getDb();
         DocumentReference docRef = db.collection("group").document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
@@ -27,9 +28,9 @@ public class CustomControl {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        Group group = null;
+        GroupFordetail group = null;
         if (document.exists()) {
-            group = document.toObject(Group.class);
+            group = document.toObject(GroupFordetail.class);
             group.setDocumentId(documentId);
             return group;
         } else {
@@ -72,17 +73,22 @@ public class CustomControl {
         return userList;
     }
 
-//    public Subject getSubjectDetailBySubjectID(String subjectID) throws ExecutionException, InterruptedException {
-//        Firestore db = firebaseInitializer.getDb();
-//        AtomicReference<Subject> subject = new AtomicReference<>();
-//        db.collection("subject").get().get().getDocuments().forEach((QueryDocumentSnapshot document) -> {
-//            Subject subject1 = document.toObject(Subject.class);
-//            if (subject1.getSubjectID().equals(subjectID)) {
-//                subject.set(subject1);
-//            }
-//        });
-//        return subject.get();
-//    }
+   protected String getDocumentRefSubjectFromSubjectID(String subjectID){
+        Firestore db = firebaseInitializer.getDb();
+        String documentRef = null;
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = db.collection("subject").whereEqualTo("subjectID", subjectID).get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                documentRef = document.getReference().getPath();
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return documentRef;
+    }
+
+    
 
 
 }

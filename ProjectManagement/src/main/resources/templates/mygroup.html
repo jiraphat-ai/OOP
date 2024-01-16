@@ -40,10 +40,10 @@
             <a  class="nav-link link-dark">
                 <div class="row" >
                     <div class="col">
-                        <h3>Subject ID <span th:text="${group.subjectID}"></span></h3>
+                        <h3>Subject ID <span th:text="${group.subject.subjectID}"></span></h3>
                     </div>
                     <div class="col">
-                        <h3>Subject Name <span th:text="${group.subjectID}"></span></h3>
+                        <h3>Subject Name <span th:text="${group.subject.subjectName}"></span></h3>
                     </div>
                     <div class="col">
                         <h3>Members  <span th:text="${group.joinedMember}+'/'+${group.maxMember}"> </span></h3>

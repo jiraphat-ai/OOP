@@ -50,12 +50,15 @@ public class LoginController {
                         session.setAttribute("username", username);
                         session.setAttribute("firstName", firstName);
                         session.setAttribute("lastName", lastName);
+                        session.setAttribute("documentId", document.getId());
+                        System.out.println("documentId: " + document.getId());
                         return "redirect:/homestudent";
                     } else if ("staff".equals(userType)) {
                         model.addAttribute("message", "Login successful. User type: " + userType);
                         session.setAttribute("username", username);
                         session.setAttribute("firstName", firstName);
                         session.setAttribute("lastName", lastName);
+                        session.setAttribute("documentId", document.getId());
                         return "redirect:/homestaff";
                     }
                 }

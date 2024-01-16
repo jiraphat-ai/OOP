@@ -3,6 +3,7 @@ package com.oop.projectmanagement.controller;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.oop.projectmanagement.model.Group;
+import com.oop.projectmanagement.model.GroupFordetail;
 import com.oop.projectmanagement.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class GroupDetail extends CustomControl {
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
         System.out.println("documentId " + documentId);
-        Group group = getGroupDetail(documentId);
+        GroupFordetail group = getGroupDetail(documentId);
 
         model.addAttribute("group", group);
         // Now you can use the username, firstName, and lastName

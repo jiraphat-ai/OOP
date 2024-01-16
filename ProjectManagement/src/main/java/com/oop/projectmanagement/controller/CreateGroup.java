@@ -1,6 +1,7 @@
 package com.oop.projectmanagement.controller;
 
 import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Controller
-public class CreateGroup {
+public class CreateGroup extends CustomControl {
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
@@ -31,6 +32,8 @@ public class CreateGroup {
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
         model.addAttribute("tags", getTags());
+        model.addAttribute("subjectid", getSubjectID());
+        
         // Now you can use the username, firstName, and lastName
         return "creategroup";
 
@@ -51,14 +54,51 @@ public class CreateGroup {
         }
         return tags;
     }
+    private List<Map<String, Object>> getSubjectID() {
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> subjectid = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = db.collection("subject").get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                subjectid.add(document.getData());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return subjectid;
+    }
+
     @PostMapping("/createGroup")
     @ResponseBody
     public String createGroup(@ModelAttribute Group group, HttpSession session) {
+        System.out.println(group.getDocumentId());
+        System.out.println(group.getGroupDescription());
+        System.out.println(group.getGroupName());
+        System.out.println(group.getSubjectID());
+        System.out.println(group.getSection());
+        System.out.println(group.getTag());
+        System.out.println(group.getMaxMember());
+        // System.out.println(group.getMembers());
+
         try {
-            Firestore db = firebaseInitializer.getDb();
-            String username = (String) session.getAttribute("username");
-            group.setGroupOwner(username);
-            db.collection("group").add(group);
+                Firestore db = firebaseInitializer.getDb();
+                String username = (String) session.getAttribute("username");
+                group.setGroupOwner(username);
+                //add to group collection and update document in id to group object
+                ApiFuture<DocumentReference> documentReference = db.collection("group").add(group);
+                DocumentReference document = documentReference.get();
+                group.setSubjectRef(db.document(getDocumentRefSubjectFromSubjectID(group.getSubjectID())));
+                group.setDocumentId(document.getId());
+                document.set(group);
+                db.collection("group").document(document.getId()).collection("member").document().set(
+                    Map.of(
+                    "user", db.document("useraccount/" + session.getAttribute("documentId")), 
+                    "role", "owner")        
+                );
+
+                System.out.println("Data added successfully");
+            
             return "Group created successfully";
         } catch (Exception e) {
             return "Error creating group: " + e.getMessage();

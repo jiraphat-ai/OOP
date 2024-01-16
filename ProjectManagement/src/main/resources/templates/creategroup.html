@@ -36,7 +36,7 @@
                 <label for="subjectID" class="form-label">Subject ID</label>
                 <select class="form-select" id="subjectID" data-control="select2" data-placeholder="Select an option">
                     <div th:each="ID : ${subjectid}">
-                        <option th:text="${ID['subjectID']} + '&#10;' + ${ID['subjectName']}"></option>
+                        <option th:value="${ID['subjectID']}" th:text="${ID['subjectID']} + ' ' + ${ID['subjectName']}"></option>
                     </div>                    
                 </select>
             </div>

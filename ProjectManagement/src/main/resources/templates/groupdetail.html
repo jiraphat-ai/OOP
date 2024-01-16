@@ -12,10 +12,10 @@
             </p>
             <hr>
             <div class="row">
-                <div class="col-2">
-                    <p style="font-size: larger;"><strong>Subject ID:</strong> <span th:text="${group.subjectID}"></span></p>
+                <div class="col-9">
+                    <p style="font-size: larger;"><strong>Subject ID:</strong> <span th:text="${group.subjectID} + ' ' + ${group.subject.subjectName}"></span></p>
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     <p style="font-size: larger;"><strong>Section:</strong><span th:text="${group.section}"></span></p>
                 </div>
                 <div class="col">
@@ -23,18 +23,22 @@
                 </div>
             </div>
             <div class="row mb-5">
-                <div class="col">
+                <div class="col-9">
                     <p style="font-size: larger;"><strong>Group Description:</strong><span th:text="${group.groupDescription}"></span></p>
                 </div>
+            
+            <div class="col-3">
                 <p style="font-size: larger;"><strong>Tag:</strong><span th:each=" tag :${group.tag}">
                     <span th:text="${tag}"></span>
-                </span></p>
+                </span></p></div></div>
                 <div class="col">
                     <div class="row mb-5">
                         <div class="col">
-                            <p style="font-size: larger;"><strong>Group Member:</strong><span th:each=" member :${group.members}" >
-                               <br> <span th:text="${member.firstName}+' '+ ${member.lastName}"></span>
-                            </span></p>
+                            <p style="font-size: larger;"><strong>Group Member:</strong><br>
+                                <span th:each="member, iterStat :${group.members}">
+                                    <span th:text="${iterStat.index + 1} + ' ' + ${member.firstName} + ' ' + ${member.lastName} + ' ' + ${member.username}"></span>
+                                    <br/>
+                                </span></p>
                         </div>
                     </div>
                 </div>
