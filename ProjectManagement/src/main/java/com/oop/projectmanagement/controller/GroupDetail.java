@@ -64,5 +64,22 @@ public class GroupDetail extends CustomControl {
             return "Error deleting group: " + e.getMessage();
         }
     }
+
+    @PostMapping("/updateGroupInfo")
+    @ResponseBody
+    public String updateGroupInfo(@RequestParam String groupName, @RequestParam String groupDescription) {
+        Firestore firestore = firebaseInitializer.getDb();
+        DocumentReference groupRef = firestore.collection("group").document(groupName);
+
+        try {
+            // Update the group document with new information
+            ApiFuture<WriteResult> update = groupRef.update("groupDescription", groupDescription);
+            return "Group information updated successfully";
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return "Error updating group information: " + e.getMessage();
+        }
+    }
+
 }
 
