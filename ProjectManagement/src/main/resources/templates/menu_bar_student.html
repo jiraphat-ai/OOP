@@ -1,23 +1,31 @@
-<div class="profile">
-    <img src="/usericon.png" alt="Profile Picture">
-    <div>
-        <div class="student" th:text="${session.username}"> </div>
-        <div th:text="${session.firstName} + ' ' + ${session.lastName}"> </div>
+<a href="/profile" class="profile-link">
+    <div class="profile">
+        <img src="/usericon.png" alt="Profile Picture">
+        <div>
+            <div class="student" th:text="${session.username}"></div>
+            <div th:text="${session.firstName} + ' ' + ${session.lastName}"></div>
+        </div>
     </div>
-</div>
+</a>
+
+
 <div class="notification">
-    <button type="button" class="notification-button" onclick="toggleNomenu_bar_studenttifications()">
+    <button type="button" class="notification-button" onclick="toggleNotifications()">
         <i class="fas fa-bell"></i>
-        <span id="badge" class="badge"></span> <!-- Remove the hardcoded number of notifications -->
+        <span id="badge" class="badge">0</span>
     </button>
     <div id="notification-inbox" class="notification-inbox">
-        <!-- Add your notifications here -->
-        <p>Notification 1</p>
-        <p>Notification 2</p>
-        <p>Notification 3</p>
-        <!-- etc. -->
+        <div id="notification-header">
+            <span>Notifications</span>
+            <button onclick="clearNotifications()">Clear All</button>
+        </div>
+        <div id="notification-list">
+            <!-- Notifications will be dynamically added here -->
+        </div>
     </div>
 </div>
+
+
 <ul class="nav nav-pills flex-column mb-auto">
     <li class="nav-item">
         <a href="/homestudent" class="nav-link link-dark" aria-current="page">
