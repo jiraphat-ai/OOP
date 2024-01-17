@@ -39,8 +39,20 @@
                             <label for="tag"><b>Skills</b></label>
                             <div></div> <!-- Empty div for the submit button -->
 
-                            <input type="text" id="subjectId" name="subjectID" required>
-                            <input type="number" id="section" name="#" >
+                            <select class="form-select"  id="subjectID" data-control="select2" data-placeholder="Select an option"> 
+                            <option
+                              th:each="ID : ${subjectid}"
+                              th:value="${ID['subjectID']}"
+                              th:text="${ID['subjectID']} + ' ' + ${ID['subjectName']}"
+                            ></option>
+                          </select>
+                          <select id="section" name="#">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                          </select>
                             <div >
                                 <table  class="checkbox-group">
                                     <tr>
@@ -151,9 +163,9 @@
     function searchGroup(event) {
         event.preventDefault();
 
-        var subjectId = $('#subjectId').val();
-        var section = $('#section').val();
-        var skills = [];
+        let subjectId = $('#subjectID').val();
+        let section = $('#section').val();
+        let skills = [];
         $('.checkbox-group input:checked').each(function() {
             skills.push($(this).val());
         });

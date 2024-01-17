@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QueryDocumentSnapshot; 
 import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.google.cloud.firestore.Query;
@@ -24,10 +24,11 @@ public class JoinGroup {
     private FirebaseInitializer firebaseInitializer;
 
     @GetMapping("/joingroup")
-    public String getUserinfo(HttpSession session) {
+    public String getUserinfo(HttpSession session,Model model) {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
+        model.addAttribute("subjectid", getSubjectID());
         // Now you can use the username, firstName, and lastName
         return "joingroup";
     }
@@ -57,5 +58,19 @@ public class JoinGroup {
         }
 
         return groups;
+    }
+    private List<Map<String, Object>> getSubjectID() {
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> subjectid = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = db.collection("subject").get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                subjectid.add(document.getData());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return subjectid;
     }
 }
