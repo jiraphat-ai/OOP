@@ -3,9 +3,11 @@ package com.oop.projectmanagement.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.boot.autoconfigure.web.ServerProperties.Reactive.Session;
+import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -17,9 +19,10 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.google.cloud.firestore.Query;
 
+
 @Controller
 public class JoinGroup {
-
+    public List<Map<String, Object>> lastsearchgroup; 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
@@ -38,7 +41,7 @@ public class JoinGroup {
         model.addAttribute("groups", groups);
         return "/joingroup";  // return the name of the view that will display the groups
     }
-    private List<Map<String, Object>> getGroupsBySubjectId(String subjectID, int section ) {
+    public List<Map<String, Object>> getGroupsBySubjectId(String subjectID, int section ) {
         Firestore db = firebaseInitializer.getDb();
         List<Map<String, Object>> groups = new ArrayList<>();
         //i want to get the group that have the  same any text in subjectID and section
@@ -52,6 +55,7 @@ public class JoinGroup {
             List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
             for (QueryDocumentSnapshot document : documents) {
                 groups.add(document.getData());
+                lastsearchgroup = groups;
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -73,4 +77,58 @@ public class JoinGroup {
         }
         return subjectid;
     }
+    public List<Map<String , Object>> getlastsearch(HttpSession session)  {
+        session.setAttribute("lastsearchgroup", lastsearchgroup);
+        return lastsearchgroup;
+    }
+
+    @PostMapping("/sortGroupBySelection")
+    public String sortGroupBySelection(@RequestParam String sortOption, Model model, HttpSession session) {
+        getlastsearch(session);
+        sortGroupByGroupNameATOZ ATOZ = new sortGroupByGroupNameATOZ();
+        sortGroupByGroupNameZTOA ZTOA = new sortGroupByGroupNameZTOA();
+        //SortGroupByJoinedMembers sortGroupByJoinedMembers = new SortGroupByJoinedMembers();
+        List<Map<String, Object>> result;
+
+        switch (sortOption) {
+            //case "joinedMembers":
+              //  result = sortGroupByjoinedMember();
+                //break; 
+            case "groupNameAtoZ":
+                ATOZ.setGroup(session);
+                result = ATOZ.sortGroup();
+                break; 
+            case "groupNameZtoA":
+                ZTOA.setGroup(session);
+                result = ZTOA.sortGroup();
+                break; 
+            // add more cases as needed
+            default:
+                result = getlastsearch(session); // default case if the value doesn't match any known options
+        }
+        model.addAttribute("groups", result);
+        return "/joingroup"; // return the name of your view
+    }
+
+// SORT BY NUMBER OF JOINED MEMBERS
+    /*private List<Map<String, Object>> sortGroupByjoinedMember() {
+        List<Map<String, Object>> sortedGroups = new ArrayList<>(lastsearchgroup);
+        Collections.sort(sortedGroups, new Comparator<Map<String, Object>>() {
+            @Override
+            public int compare(Map<String, Object> group1, Map<String, Object> group2) {
+                int joinedMember1 =  (int) group1.get("joinedMember");
+                int joinedMember2 =  (int) group2.get("joinedMember");
+                return Integer.compare(joinedMember1, joinedMember2);
+            }
+        });
+        return sortedGroups;
+    }*/
+
+
+
+
+
 }
+
+
+
