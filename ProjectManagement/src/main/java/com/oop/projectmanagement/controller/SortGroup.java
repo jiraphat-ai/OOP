@@ -12,9 +12,6 @@ abstract public class SortGroup {
 
     public List<Map<String, Object>> groupSearchResult;
     
-
-
-
     public List<Map<String, Object>> setGroup(HttpSession session) {
         groupSearchResult = (List<Map<String, Object>>) session.getAttribute("lastsearchgroup");
         return groupSearchResult;    

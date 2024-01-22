@@ -21,7 +21,6 @@ public class MyGroup extends CustomControl{
     private FirebaseInitializer firebaseInitializer;
 
     @GetMapping("/mygroup")
-
     public String getUserinfo(HttpSession session , Model model) throws ExecutionException, InterruptedException {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");

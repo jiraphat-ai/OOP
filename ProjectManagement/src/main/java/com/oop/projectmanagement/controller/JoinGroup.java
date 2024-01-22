@@ -3,11 +3,9 @@ package com.oop.projectmanagement.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ServerProperties.Reactive.Session;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -17,34 +15,52 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot; 
 import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
+import com.oop.projectmanagement.model.GroupFordetail;
 import com.google.cloud.firestore.Query;
 
 
+
 @Controller
-public class JoinGroup {
+public class JoinGroup extends CustomControl {
     public List<Map<String, Object>> lastsearchgroup; 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
+
     @GetMapping("/joingroup")
-    public String getUserinfo(HttpSession session,Model model) {
+    public String getUserinfo(HttpSession session, Model model) throws ExecutionException, InterruptedException {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
         model.addAttribute("subjectid", getSubjectID());
+
         // Now you can use the username, firstName, and lastName
         return "joingroup";
+
     }
+    //SHOW GROUP DETAIL SECTION
+    @GetMapping("/moregroupdetail")
+    public String getGroupMoreDetail(@RequestParam String documentId, Model model) {
+        System.out.println("documentId " + documentId);
+        List<Map<String, Object>> groupdetail = searchDocumentById(documentId);
+        model.addAttribute("groupdetail", groupdetail);
+        return "/groupDetailFragment";
+    }
+ 
+
     @GetMapping("/searchgroup")
-    public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") int section  ,  Model model) {
-        List<Map<String, Object>> groups = getGroupsBySubjectId(subjectID , section);
+    public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") int section, Model model) {
+        List<Map<String, Object>> groups = getGroupsBySubjectId(subjectID, section);
+        for (Map<String, Object> group : groups) {
+            System.out.println("joinedMember: " + group.get("joinedMember"));
+        }
         model.addAttribute("groups", groups);
-        return "/joingroup";  // return the name of the view that will display the groups
+        return "/joingroup"; // return the name of the view that will display the groups
     }
-    public List<Map<String, Object>> getGroupsBySubjectId(String subjectID, int section ) {
+    public List<Map<String, Object>> getGroupsBySubjectId(String subjectID, int section) {
         Firestore db = firebaseInitializer.getDb();
         List<Map<String, Object>> groups = new ArrayList<>();
-        //i want to get the group that have the  same any text in subjectID and section
+        // i want to get the group that have the same any text in subjectID and section
         try {
             Query query = db.collection("group").whereEqualTo("subjectID", subjectID);
             if (section != 0) {
@@ -54,7 +70,9 @@ public class JoinGroup {
             ApiFuture<QuerySnapshot> querySnapshot = query.get();
             List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
             for (QueryDocumentSnapshot document : documents) {
-                groups.add(document.getData());
+                Map<String, Object> groupData = document.getData();
+                groupData.put("documentId", document.getId()); // Add document ID to the group data
+                groups.add(groupData);
                 lastsearchgroup = groups;
             }
         } catch (InterruptedException | ExecutionException e) {
@@ -87,13 +105,14 @@ public class JoinGroup {
         getlastsearch(session);
         sortGroupByGroupNameATOZ ATOZ = new sortGroupByGroupNameATOZ();
         sortGroupByGroupNameZTOA ZTOA = new sortGroupByGroupNameZTOA();
-        //SortGroupByJoinedMembers sortGroupByJoinedMembers = new SortGroupByJoinedMembers();
+        SortGroupByJoinedMembers JNM = new SortGroupByJoinedMembers();
         List<Map<String, Object>> result;
 
         switch (sortOption) {
-            //case "joinedMembers":
-              //  result = sortGroupByjoinedMember();
-                //break; 
+            case "joinedMembers":
+                JNM.setGroup(session);
+                result = JNM.sortGroup();
+                break;
             case "groupNameAtoZ":
                 ATOZ.setGroup(session);
                 result = ATOZ.sortGroup();
@@ -110,23 +129,29 @@ public class JoinGroup {
         return "/joingroup"; // return the name of your view
     }
 
-// SORT BY NUMBER OF JOINED MEMBERS
-    /*private List<Map<String, Object>> sortGroupByjoinedMember() {
-        List<Map<String, Object>> sortedGroups = new ArrayList<>(lastsearchgroup);
-        Collections.sort(sortedGroups, new Comparator<Map<String, Object>>() {
-            @Override
-            public int compare(Map<String, Object> group1, Map<String, Object> group2) {
-                int joinedMember1 =  (int) group1.get("joinedMember");
-                int joinedMember2 =  (int) group2.get("joinedMember");
-                return Integer.compare(joinedMember1, joinedMember2);
-            }
-        });
-        return sortedGroups;
-    }*/
 
+// SEARCH GROUP DETAIL BY DOC_ID SECTION
+  
+public List<Map<String, Object>> searchDocumentById(String documentId) {
+    System.out.println("Searching document with ID: " + documentId);
+    List<Map<String, Object>> groupDetail = new ArrayList<>();
+    Firestore db = firebaseInitializer.getDb();
+    try {
+        ApiFuture<QuerySnapshot> querySnapshot = db.collection("group").whereEqualTo("documentId", documentId).get();
+        List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+        for (QueryDocumentSnapshot document : documents) {
+            Map<String, Object> groupDetailInfo = document.getData();
+            groupDetailInfo.put("documentId", document.getId());
+            groupDetail.add(groupDetailInfo);
+        }
+    } catch (InterruptedException | ExecutionException e) {
+        e.printStackTrace();
+    }
+    System.out.println("Found " + groupDetail.size() + " documents");
+    return groupDetail;
+}     
 
-
-
+//test
 
 }
 

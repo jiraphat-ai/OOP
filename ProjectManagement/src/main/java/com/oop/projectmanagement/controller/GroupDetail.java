@@ -1,18 +1,12 @@
 package com.oop.projectmanagement.controller;
 
-import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
-import com.oop.projectmanagement.model.Group;
 import com.oop.projectmanagement.model.GroupFordetail;
-import com.oop.projectmanagement.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
@@ -43,6 +37,7 @@ public class GroupDetail extends CustomControl {
         return "groupdetail";
 
     }
+ 
 
 
 
