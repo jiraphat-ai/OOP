@@ -72,14 +72,7 @@ public class CreateGroup extends CustomControl {
     @PostMapping("/createGroup")
     @ResponseBody
     public String createGroup(@ModelAttribute Group group, HttpSession session) {
-        System.out.println(group.getDocumentId());
-        System.out.println(group.getGroupDescription());
-        System.out.println(group.getGroupName());
-        System.out.println(group.getSubjectID());
-        System.out.println(group.getSection());
-        System.out.println(group.getTag());
-        System.out.println(group.getMaxMember());
-        // System.out.println(group.getMembers());
+
 
         try {
                 Firestore db = firebaseInitializer.getDb();

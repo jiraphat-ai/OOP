@@ -1,5 +1,6 @@
 package com.oop.projectmanagement.controller;
 
+import com.google.cloud.firestore.*;
 import com.oop.projectmanagement.model.GroupFordetail;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,13 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot; 
-import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
-import com.google.cloud.firestore.Query;
-
 
 
 @Controller
@@ -218,7 +213,71 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
         System.out.println("Found " + groupFordetailList.size() + " documents");
         return groupFordetailList;
     }
-//test
+    @PostMapping("/joinGroup")
+    @ResponseBody
+    public String joinGroup(@RequestParam String documentId, HttpSession session) {
+        Firestore db = firebaseInitializer.getDb();
+        System.out.println("Joining group with ID: " + documentId);
+        try {
+            if(session.getAttribute("documentId") == null) {
+                return "Please login first";
+            }
+            else {
+                DocumentSnapshot requestSnapshot = db.collection("group").document(documentId).collection("request").document(session.getAttribute("documentId").toString()).get().get();
+                if(requestSnapshot.exists()) {
+                    return "You have already sent a request to join this group";
+                }
+                DocumentSnapshot memberSnapshot = db.collection("group").document(documentId).collection("member").document(session.getAttribute("documentId").toString()).get().get();
+                if(memberSnapshot.exists()) {
+                    return "You are already a member of this group";
+                }
+                DocumentSnapshot groupSnapshot = db.collection("group").document(documentId).get().get();
+                if(groupSnapshot.get("groupOwner").equals(session.getAttribute("username"))) {
+                    return "You are the owner of this group";
+                }
+                db.collection("group").document(documentId).collection("request").document(session.getAttribute("documentId").toString()).set(
+                            Map.of(
+                                    "user", db.document("useraccount/" + session.getAttribute("documentId")),
+                                    "role", "member")
+                    );
+                return "success";
+                // Rest of your code
+            }
+        } catch (Exception e) {
+            return "Error to join group: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/loadstatus")
+    @ResponseBody
+    public String joingroup(@RequestParam String documentId, HttpSession session) {
+        Firestore db = firebaseInitializer.getDb();
+        System.out.println("Joining group with ID: " + documentId);
+        try {
+            if(session.getAttribute("documentId") == null) {
+                return "Please login first";
+            }
+            else {
+                DocumentSnapshot requestSnapshot = db.collection("group").document(documentId).collection("request").document(session.getAttribute("documentId").toString()).get().get();
+                if(requestSnapshot.exists()) {
+                    return "You have already sent a request to join this group";
+                }
+                DocumentSnapshot memberSnapshot = db.collection("group").document(documentId).collection("member").document(session.getAttribute("documentId").toString()).get().get();
+                if(memberSnapshot.exists()) {
+                    return "You are already a member of this group";
+                }
+                DocumentSnapshot groupSnapshot = db.collection("group").document(documentId).get().get();
+                if(groupSnapshot.get("groupOwner").equals(session.getAttribute("username"))) {
+                    return "You are the owner of this group";
+                }
+                return "success";
+                // Rest of your code
+            }
+        } catch (Exception e) {
+            return "Error to join group: " + e.getMessage();
+        }
+    }
+
 
 }
 
