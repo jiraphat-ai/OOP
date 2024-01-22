@@ -1,5 +1,7 @@
 package com.oop.projectmanagement.controller;
 
+import com.oop.projectmanagement.model.GroupFordetail;
+
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
@@ -8,12 +10,12 @@ import javax.servlet.http.HttpSession;
 abstract public class SortGroup {
 
     
-    abstract public List<Map<String, Object>> sortGroup();
+    abstract public List<GroupFordetail> sortGroup();
 
-    public List<Map<String, Object>> groupSearchResult;
+    public List<GroupFordetail> groupSearchResult;
     
-    public List<Map<String, Object>> setGroup(HttpSession session) {
-        groupSearchResult = (List<Map<String, Object>>) session.getAttribute("lastsearchgroup");
+    public List<GroupFordetail> setGroup(HttpSession session) {
+        groupSearchResult = (List<GroupFordetail>) session.getAttribute("lastsearchgroup");
         return groupSearchResult;    
     }
     

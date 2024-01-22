@@ -104,46 +104,45 @@
                             <td th:text="${group['section']}"></td>
                             <td th:text="${group['tag']}"></td>
                             <td th:text="${group['joinedMember']} + '/'+ ${group['maxMember']}"></td>
+                            <td class="d-none" th:text="${group.documentId}"></td>
                             <td>
                                 <!-- <button type="button" class="btn btn-primary more-detail" th:data-document-id="${group.documentId}" onclick="getGroupDetail(this)">More Detail</button> -->
-                              <button type="button" class="btn btn-primary more-detail" onclick="getGroupDetail(this)" th:data-document-id="${group.documentId}" id="moreDetailButton" >More Detail</button> 
+                              <button type="button" class="btn btn-primary more-detail"
+                                      onclick="getGroupDetail(this)"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#modal_detail" >More Detail</button>
                               <!-- MODAL--> 
                                 
-                              <div class="modal fade" id="GroupDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                  <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    </div>
-                                        <div class="modal-body">
-                                            <table class="detail-table" id="groupdetailtable">
-                                                <tr th:each="groupde : ${groupdetail}">
-                                                    <td><span th:text="${groupde.groupName}"></span></td>
-                                                    <td>Subject ID<span th:text="${groupde.subject.subjectID}"></span></td>
-                                                    <td>Member<span th:text="${groupde.joinedMember}"></span></td>
-                                                    <td>Section<span th:text="${groupde.section}"></span></td>
-                                                    <td><span th:text="${groupde.groupOwner}"></span></td>
-                                                    <td>Group Member<span th:text="${groupde.joinedMember}+'/'+${groupde.maxMember}"></span></td>
-                                                    <td>
-                                                        <div th:each="tag : ${groupde.tag}">
-                                                            <span th:text="${tag}"></span>
-                                                        </div>
-                                                    </td>
-                                                    <td><span th:text="${groupde.groupDescription}"></span></td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-primary">Join Group</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+
                             
                             </td>  
                         </tr>
                         </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="modal_detail">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Group Detail</h5>
+
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+
+                <div class="modal-body" id="detail_body">
+                    <p>Modal body text goes here.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="joinGroup" class="btn btn-primary">Join</button>
+                </div>
             </div>
         </div>
     </div>
@@ -232,24 +231,23 @@
         });
       }
 // FUNC SHOW GROUP DETAIL
-      function getGroupDetail(element){
-    var docId = element.getAttribute('data-document-id');
-    console.log("docId: " + docId);
-    $.ajax({
-        url: "/moregroupdetail",
-        type: "GET",
-        data: {documentId: docId},
-        success: function (data) {
-            // Parse the data to HTML
-            console.log("data: " + data)
-            $("#GroupDetailModal .modal-body").html(data);
-            $("#GroupDetailModal").modal("show");
-        },
-        error: function (data) {
-            //console.log("error: " + data)
-        },
-    });
-}
+    function getGroupDetail(element){
+          var ele = $(element).parent().parent();
+        var docId = ele.find(".d-none").text();
+        console.log("docId: " + docId)
+        $.ajax({
+            url: "/groupdetail",
+            type: "GET",
+            data: {documentId: docId},
+            success: function (data) {
+                //get data specific detail
+                $("#detail_body").html(data);
+                $("#detail_body").find("button").each(function(){
+                    $(this).hide();
+                });
+            }
+        });
+    }
 
 </script>
 </body>

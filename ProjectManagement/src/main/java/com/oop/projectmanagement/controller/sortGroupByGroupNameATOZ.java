@@ -1,5 +1,7 @@
 package com.oop.projectmanagement.controller;
 
+import com.oop.projectmanagement.model.GroupFordetail;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,15 +15,15 @@ public class sortGroupByGroupNameATOZ extends SortGroup {
     
 
 
-    public List<Map<String, Object>> sortGroup() 
+    public List<GroupFordetail> sortGroup()
     {
         
-        List<Map<String, Object>> sortedGroups = new ArrayList<>(groupSearchResult);
-        Collections.sort(sortedGroups, new Comparator<Map<String, Object>>() {
+        List<GroupFordetail> sortedGroups = new ArrayList<>(groupSearchResult);
+        Collections.sort(sortedGroups, new Comparator<GroupFordetail>() {
             @Override
-            public int compare(Map<String, Object> group1, Map<String, Object> group2) {
-                String groupName1 = (String) group1.get("groupName");
-                String groupName2 = (String) group2.get("groupName");
+            public int compare(GroupFordetail group1, GroupFordetail group2) {
+                String groupName1 = (String) group1.getGroupName();
+                String groupName2 = (String) group2.getGroupName();
                 return groupName1.compareToIgnoreCase(groupName2);
             }
         });
