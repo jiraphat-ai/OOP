@@ -27,7 +27,7 @@
     </style>
 </head>
 <body>
-<div class="row" >
+<div class="row" > 
     <!-- สำหรับรับค่า Menubar -->
     <div class="sidebar col-3"></div>
     <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
@@ -38,7 +38,7 @@
                     <h2 class="header"><b>Join Group</b></h2>
                     <hr>
 
-                    <form action="/searchgroup" method="post">
+                    <form action="/searchgroup" method="get">
                         <div class="form-grid">
                             <label for="subjectId"><b>Subject ID</b></label>
                             <label for="section"><b>Section:</b></label>
@@ -61,16 +61,16 @@
                             <option value="4">4</option>
                           </select>
                             <div >
-                                <table  class="checkbox-group">
+                                <table  class="checkbox-group" id="tag">
                                     <tr>
-                                        <td><input type="checkbox" name="dev" value="developer">Developer</td>
+                                        <td><input type="checkbox" name="tag" value="Developer">Developer</td>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                        <td><input type="checkbox" name="manager" value="manager">Manager</td>
+                                        <td><input type="checkbox" name="tag" value="Manager">Manager</td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" name="designer" value="tester">Tester</td>
+                                        <td><input type="checkbox" name="tag" value="Tester">Tester</td>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                        <td><input type="checkbox" name="tester" value="designer">Designer</td>
+                                        <td><input type="checkbox" name="tag" value="Designer">Designer</td>
                                     </tr>
                                 </table>
                             </div >
@@ -90,14 +90,14 @@
                         <th class="fixed-column">Action</th>
                     </tr>
                     </thead>
-                    <!-- Sort ssearch zone -->
+                    <!-- Sort search zone -->
                     <select name="sortOption" id="sortsearch">
                     <option value="#">Default</option>
                      <option value="joinedMembers">Sort by Joined Members</option>
                     <option value="groupNameAtoZ">Sort by Groupname A-Z</option>
                     <option value="groupNameZtoA">Sort by Groupname Z-A</option>
                     </select>
-                   <!-- Sort ssearch zone -->
+
                         <tbody >
                         <tr th:each="group : ${groups}">
                             <td th:text="${group['groupName']}"></td>
@@ -187,31 +187,31 @@
     var notifications = 5; // Replace with the actual number of notifications
 
 
-    function searchGroup(event) {
-        event.preventDefault();
+ function searchGroup(event) {
+    event.preventDefault();
 
-        let subjectId = $('#subjectID').val();
-        let section = $('#section').val();
-        let skills = [];
-        $('.checkbox-group input:checked').each(function() {
-            skills.push($(this).val());
-        });
-
-        $.ajax({
-            url: '/searchgroup',
-            type: 'GET',
-            data: {
-                subjectID: subjectId,
-                section: section,
-                skills: skills
-            },
-            success: function(data) {
-                //console.log('data:', data);
-                let table = $(data).find('#user-table');
-                $('#user-table').replaceWith(table);
-            }
-        });
-    }
+    let subjectId = $('#subjectID').val();
+    let section = $('#section').val();
+    let tag = [];
+    $('#tag input:checked').each(function() {
+        tag.push($(this).val());
+    });
+    tag = tag.join(','); // Convert the array to a comma-separated string
+    //console.log('Tag:', tag);
+    $.ajax({
+        url: '/searchgroup',
+        type: 'GET',
+        data: {
+            subjectID: subjectId,
+            section: section,
+            tag: tag
+        },
+        success: function(data) {
+            let table = $(data).find('#user-table');
+            $('#user-table').replaceWith(table);
+        }
+    });
+}
     $("#sortsearch").change(function(sortOption) {
             sort(this);
         });
@@ -225,7 +225,7 @@
             sortOption: sortOption,
           },
           success: function (data) {
-            console.log("sortlog:", data);
+            //console.log("sortlog:", data);
             let table = $(data).find("#user-table");
             $("#user-table").replaceWith(table);
           },
@@ -246,7 +246,7 @@
             $("#GroupDetailModal").modal("show");
         },
         error: function (data) {
-            console.log("error: " + data)
+            //console.log("error: " + data)
         },
     });
 }
