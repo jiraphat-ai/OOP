@@ -16,6 +16,17 @@
     <link href="/styles.css" rel="stylesheet"  type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-timepicker@0.5.2/dist/css/bootstrap-timepicker.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-timepicker@0.5.2/dist/js/bootstrap-timepicker.min.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- Add these links for the clockpicker CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.js"></script>
+
+
+
 
     <title>Home</title>
     <style>
@@ -198,6 +209,74 @@
         .confirmation-popup button.cancel:hover {
             opacity: 0.8;
         }
+
+        .delete-button {
+        float: right; /* Float the delete button to the right */
+        margin-left: 10px; /* Adjust margin as needed for spacing */
+        border: none; /* Remove border */
+        background-color: transparent; /* Set background color to transparent */
+        font-size: 16px; /* Set font size */
+        color: red; /* Set text color to red (adjust as needed) */
+        cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        .column#todo {
+    background-color: #FFCACA; /* Set color for tasks in 'To Do' column */
+        }
+
+        .column#doing {
+            background-color: #CAE3FF; /* Set color for tasks in 'Doing' column */
+        }
+
+        .column#checking {
+            background-color: #F8FFCA; /* Set color for tasks in 'Checking' column */
+        }
+
+        .column#done {
+            background-color: #CAFFDC; /* Set color for tasks in 'Done' column */
+        }
+
+        /* Add this CSS to your stylesheet or in a style tag in your HTML */
+.task-details-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    text-align: center;
+}
+
+.task-details-popup h3 {
+    color: #333333;
+    font-size: 20px; /* Set the font size for the heading */
+}
+
+.task-details-popup p {
+    color: #666666;
+    font-size: 16px; /* Set the font size for paragraphs */
+}
+
+.task-details-popup button {
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-top: 10px;
+    font-size: 16px; /* Set the font size for the button */
+}
+
+.task-details-popup button:hover {
+    background-color: #2980b9;
+}
+
+
     </style>
 </head>
 <body>
@@ -239,10 +318,7 @@
                 <input type="text" placeholder="Enter Member Name" name="member" required th:value="${session.firstName + ' ' + session.lastName}">
 
                 <label for="deadline"><b>Deadline</b></label>
-                <input type="date" name="deadline" required>
-
-                <label for="time"><b>Time</b></label>
-                <input type="text" placeholder="Enter Time Estimate" name="time" required>
+                <input type="datetime-local" name="deadline" required>
 
                 <label for="description"><b>Description</b></label>
                 <textarea placeholder="Enter Task Description" name="description" required></textarea>
@@ -252,9 +328,9 @@
             </form>
         </div>
         <div class="overlay" id="overlay" onclick="closeForm()"></div>
-
     </div>
 </div>
+
 <script src="assets/plugins/global/plugins.bundle.js"></script>
 <script src="assets/js/scripts.bundle.js"></script>
 <!--end::Global Javascript Bundle-->
@@ -266,16 +342,9 @@
 
 <!-- Confirmation Popup HTML -->
 <div class="confirmation-popup" id="confirmationPopup">
-    <p>Are you sure you want to change the status of this task?</p>
+    <p>confirmationTask</p>
     <button onclick="changeStatus()">OK</button>
     <button class="cancel" onclick="cancelStatusChange()">Cancel</button>
-</div>
-
-<!-- Confirmation Popup for 'Checking' Status Change -->
-<div class="confirmation-popup" id="confirmationCheckingPopup">
-    <p>Are you sure you want to move this task to the 'Checking' column?</p>
-    <button onclick="changeToChecking()">OK</button>
-    <button class="cancel" onclick="cancelCheckingStatusChange()">Cancel</button>
 </div>
 
 <script>
@@ -316,33 +385,52 @@
     const taskName = document.getElementsByName('taskName')[0].value;
     const member = document.getElementsByName('member')[0].value;
     const deadline = document.getElementsByName('deadline')[0].value;
-    const time = document.getElementsByName('time')[0].value;
     const description = document.getElementsByName('description')[0].value;
 
-    if (taskName && member && deadline && time && description) {
+    if (taskName && member && deadline && description) {
         const todoColumn = document.getElementById('todo');
         const newTask = document.createElement('div');
         newTask.className = 'task';
         newTask.setAttribute('data-status', 'todo'); // Set initial status to 'todo'
         newTask.setAttribute('data-deadline', deadline); // Set task deadline
-        newTask.setAttribute('data-time', time); // Set task time estimate
         newTask.setAttribute('data-description', description); // Set task description
-        newTask.innerHTML = `<h3>${taskName}</h3><p>${member}</p>`;
 
-        // Add "Accept" button to change status to "Doing"
-        const acceptButton = document.createElement('button');
-        acceptButton.innerText = 'Accept';
-        acceptButton.onclick = function(event) {
-            event.stopPropagation(); // Prevent task click when accepting
-            confirmAcceptTask(newTask);
+        // Format the deadline using toLocaleString
+        const formattedDeadline = new Date(deadline).toLocaleString('en-US', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+        });
+
+        newTask.innerHTML = `<h3>${taskName}</h3><p>${member}</p><p>${formattedDeadline}</p>`;
+
+        // Create a "Details" button
+        const detailsButton = document.createElement('button');
+        detailsButton.innerText = 'Details';
+        detailsButton.onclick = function (event) {
+            event.stopPropagation(); // Prevent task click when details button is clicked
+            showTaskDetails(newTask);
         };
 
+        // Create a "Delete" button with an icon
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button'; // Add a class for styling
+        deleteButton.innerHTML = '<iconify-icon icon="material-symbols:delete-outline"></iconify-icon>';
+        deleteButton.onclick = function (event) {
+        event.stopPropagation(); // Prevent task click when delete button is clicked
+        deleteTask(newTask);
+};
 
-        newTask.appendChild(acceptButton);
+        // Append the "Details" and "Delete" buttons to the new task element
+        newTask.appendChild(detailsButton);
+        newTask.appendChild(deleteButton);
 
         // Add click event listener to the task element
-        newTask.addEventListener('click', function() {
-            showTaskDetails(newTask);
+        newTask.addEventListener('click', function () {
+            moveToNextStatus(newTask);
         });
 
         todoColumn.appendChild(newTask);
@@ -352,218 +440,79 @@
     }
 }
 
-    function confirmAcceptTask(taskElement) {
-        const confirmationPopup = document.getElementById('confirmationPopup');
-        confirmationPopup.style.display = 'block';
-        confirmationPopup.taskElement = taskElement;
-    }
+    function moveToNextStatus(taskElement) {
+        const currentStatus = taskElement.getAttribute('data-status');
+        let nextStatus;
 
-    function acceptTask(taskElement) {
-        // Move the task to the "Doing" column
-        const doingColumn = document.getElementById('doing');
+        switch (currentStatus) {
+            case 'todo':
+                nextStatus = 'doing';
+                break;
+            case 'doing':
+                nextStatus = 'checking';
+                break;
+            case 'checking':
+                nextStatus = 'done';
+                break;
+            // Add more cases as needed
 
-        // Remove the "Accept" button
-        taskElement.querySelector('button').remove();
-
-        // Ensure the presence of the "status-buttons" element
-        let statusButtons = taskElement.querySelector('.status-buttons');
-        if (!statusButtons) {
-            statusButtons = document.createElement('div');
-            statusButtons.className = 'status-buttons';
-            taskElement.appendChild(statusButtons);
+            default:
+                // Handle other cases if needed
+                break;
         }
 
-        // Add a single button for transitioning between statuses
-        const statusButton = createStatusButton('Next Status', taskElement);
-        statusButtons.appendChild(statusButton);
+        const nextColumn = document.getElementById(nextStatus);
 
-        doingColumn.appendChild(taskElement);
-    }
+        if (nextColumn) {
+            // Show a confirmation pop-up before moving to the next status
+            const confirmed = confirm(`Are you sure you want to move the task to "${nextStatus.toUpperCase()}"?`);
 
-    function createStatusButton(label, taskElement) {
-    const button = document.createElement('button');
-    button.innerText = label;
-    button.onclick = function() {
-        confirmStatusChange(taskElement);
-    };
-    return button;
-    }
-
-    function confirmStatusChange(taskElement) {
-        const confirmationPopup = document.getElementById('confirmationPopup');
-        confirmationPopup.style.display = 'block';
-        confirmationPopup.taskElement = taskElement;
-    }
-
-    function changeStatus() {
-    const confirmationPopup = document.getElementById('confirmationPopup');
-    const taskElement = confirmationPopup.taskElement;
-
-    // Close the confirmation popup
-    confirmationPopup.style.display = 'none';
-
-    // Determine the next status based on the current status
-    const currentStatus = taskElement.getAttribute('data-status');
-    let nextStatus;
-
-    switch (currentStatus) {
-        case 'todo':
-            nextStatus = 'doing';
-            break;
-        case 'doing':
-            nextStatus = 'checking';  // Change to 'checking' instead of 'done'
-            break;
-        case 'checking':
-            nextStatus = 'done';
-            break;
-        default:
-            // Handle other cases if needed
-            break;
-    }
-
-    // Move the task to the corresponding column based on the next status
-    const columnId = nextStatus;
-    const column = document.getElementById(columnId);
-
-    if (column) {
-        // Clone the task element before moving
-        const clonedTask = taskElement.cloneNode(true);
-
-        // Update the status attribute of the task element
-        taskElement.setAttribute('data-status', nextStatus);
-
-        // Remove the original task element from the current column
-        taskElement.remove();
-
-        // Append the cloned task to the new column
-        column.appendChild(clonedTask);
-
-        // Call acceptTask to handle additional changes
-        acceptTask(clonedTask);
-
-        // Log some details for debugging
-        console.log('Task moved successfully. Current Status:', currentStatus, 'Next Status:', nextStatus);
-        console.log('Original Task Element Details:', taskElement.outerHTML);
-        console.log('Cloned Task Element Details:', clonedTask.outerHTML);
-        console.log('Column Details:', column.outerHTML);
-    } else {
-        // Handle the case where the next status column is not found
-        console.error('Column not found for the next status: ' + nextStatus);
-    }
+            if (confirmed) {
+                taskElement.setAttribute('data-status', nextStatus);
+                nextColumn.appendChild(taskElement);
+            }
+        } else {
+            console.error('Column not found for the Next Status: ' + nextStatus);
+        }
 }
 
-    function cancelStatusChange() {
-        const confirmationPopup = document.getElementById('confirmationPopup');
-        confirmationPopup.style.display = 'none';
-    }
+        function showTaskDetails(taskElement) {
+        const taskName = taskElement.querySelector('h3').innerText;
+        const member = taskElement.querySelector('p:nth-child(2)').innerText;
 
-    function closeConfirmationPopup() {
-        const confirmationPopup = document.getElementById('confirmationPopup');
-        const taskElement = confirmationPopup.taskElement;
+        // Parse the deadline string and format it
+        const deadlineString = taskElement.querySelector('p:nth-child(3)').innerText;
+        const deadline = new Date(deadlineString);
+        const formattedDeadline = deadline.toLocaleString('en-US', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+        });
 
-        // Close the confirmation popup
-        confirmationPopup.style.display = 'none';
+    // Create the task details popup
+    const popup = document.createElement('div');
+    popup.className = 'task-details-popup';
+    popup.innerHTML = `<h3>${taskName}</h3><p>Member: ${member}</p><p>Deadline: ${formattedDeadline}</p><button onclick="closeTaskDetails()">Close</button>`;
 
-        // Perform the operations to accept the task outside the function
-        acceptTask(taskElement);
-    }
+    // Append the popup to the body
+    document.body.appendChild(popup);
 
-    function cancelCheckingStatusChange() {
-        const confirmationCheckingPopup = document.getElementById('confirmationCheckingPopup');
-        confirmationCheckingPopup.style.display = 'none';
-    }
+    // Display the popup
+    popup.style.display = 'block';
+}
 
-    <!-- Updated --><!-- Updated --><!-- Updated --><!-- Updated --><!-- Updated --><!-- Updated -->
+    function closeTaskDetails() {
+    // Close the task details popup
+    const popup = document.querySelector('.task-details-popup');
+    popup.style.display = 'none';
 
-    function moveToNextColumn(columnId) {
-            const column = document.getElementById(columnId);
-            const tasks = column.getElementsByClassName('task');
+    // Remove the popup from the DOM
+    popup.remove();
+}
 
-            // Loop through tasks in the column
-            for (const task of tasks) {
-                task.onclick = function () {
-                    // Display task details or move task to the next column based on its status
-                    const currentStatus = task.getAttribute('data-status');
-                    switch (currentStatus) {
-                        case 'todo':
-                            moveTaskTo(columnId, 'doing');
-                            break;
-                        case 'doing':
-                            moveTaskTo(columnId, 'checking');
-                            break;
-                        case 'checking':
-                            moveTaskTo(columnId, 'done');
-                            break;
-                        // Add more cases if needed
-                    }
-                };
-            }
-        }
-
-        function moveTaskTo(currentColumnId, nextColumnId) {
-            const currentColumn = document.getElementById(currentColumnId);
-            const nextColumn = document.getElementById(nextColumnId);
-            const tasks = currentColumn.getElementsByClassName('task');
-
-            // Loop through tasks in the current column
-            for (const task of tasks) {
-                const taskStatus = task.getAttribute('data-status');
-                if (taskStatus === currentColumnId) {
-                    // Update task status and move it to the next column
-                    task.setAttribute('data-status', nextColumnId);
-
-                    // Clone the task element before moving
-                    const clonedTask = task.cloneNode(true);
-
-                    // Remove the original task element from the current column
-                    task.remove();
-
-                    // Append the cloned task to the next column
-                    nextColumn.appendChild(clonedTask);
-
-                    // Update the task button (e.g., 'Accept' button) based on the new status
-                    updateTaskButton(clonedTask);
-
-                    // Add click event listener to the cloned task
-                    clonedTask.onclick = function () {
-                        // Display task details or move task to the next column based on its status
-                        moveTaskTo(nextColumnId, 'done'); // Modify this based on your needs
-                    };
-                }
-            }
-        }
-
-     // New function to update task button based on its status
-        function updateTaskButton(taskElement) {
-            const statusButtons = taskElement.querySelector('.status-buttons');
-            if (statusButtons) {
-                const currentStatus = taskElement.getAttribute('data-status');
-                const buttonLabel = getNextStatusLabel(currentStatus);
-                statusButtons.innerHTML = ''; // Clear existing buttons
-
-                // Add a single button for transitioning between statuses
-                const statusButton = createStatusButton(buttonLabel, taskElement);
-                statusButtons.appendChild(statusButton);
-            }
-        }
-
-        // New function to get the label for the next status
-        function getNextStatusLabel(currentStatus) {
-            let nextStatusLabel;
-            switch (currentStatus) {
-                case 'todo':
-                    nextStatusLabel = 'Move to Doing';
-                    break;
-                case 'doing':
-                    nextStatusLabel = 'Move to Checking';
-                    break;
-                case 'checking':
-                    nextStatusLabel = 'Move to Done';
-                    break;
-                // Add more cases if needed
-            }
-            return nextStatusLabel;
-        }
 </script>
 <script>
     // Your existing script content here

@@ -50,7 +50,7 @@ public class ProfileController {
                 String firstName = document.getString("firstName");
                 String lastName = document.getString("lastName");
                 String bio = document.getString("bio");
-                String tag = document.getString("tag");
+                model.addAttribute("tags", getTags());
                 String facebook = document.getString("facebook"); // Fetching Facebook URL
                 String instagram = document.getString("instagram"); // Fetching IG URL
 
@@ -60,7 +60,6 @@ public class ProfileController {
                 model.addAttribute("firstName", firstName);
                 model.addAttribute("lastName", lastName);
                 model.addAttribute("bio", bio);
-                model.addAttribute("tag", tag);
                 model.addAttribute("facebook", facebook); // Adding Facebook URL to the model
                 model.addAttribute("instagram", instagram); // Adding IG URL to the model
             } else {
@@ -98,6 +97,7 @@ public class ProfileController {
                 DocumentReference documentRef = document.getReference();
                 documentRef.update(data);
 
+
                 // Update session attributes with new information
                 session.setAttribute("bio", (String) data.get("bio"));
                 session.setAttribute("facebook", (String) data.get("facebook"));
@@ -112,6 +112,22 @@ public class ProfileController {
             e.printStackTrace();
             return new ResponseEntity<>("Error updating profile", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    //get Tags from database firestore
+    private List<Map<String, Object>> getTags() {
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> tags = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = db.collection("tags").get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                tags.add(document.getData());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return tags;
     }
 
 }

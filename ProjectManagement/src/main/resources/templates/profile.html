@@ -328,10 +328,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class ="content">
-                        <h4>Tag:</h4>
-                        <span th:text="${tag}"></span></div>
-                    </div>
+
                 </div>
             </div>
 
@@ -359,11 +356,6 @@
                                        placeholder="Facebook" th:value="${session.facebook}" />
                                 <input type="text" class="form-control" id="instagramName" name="instagramName"
                                        placeholder="Instagram" th:value="${session.instagram}" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="tag" class="form-label">Tag</label>
-                                <input type="text" class="form-control" id="tag" name="tag"
-                                       placeholder="Enter tag" th:value="${tag}" />
                             </div>
 
                             <div class="modal-footer">
@@ -476,7 +468,8 @@
                         const bio = document.getElementById('bio').value;
                         const facebook = document.getElementById('facebookName').value;
                         const instagram = document.getElementById('instagramName').value;
-                        const tag = document.getElementById('tag').value;
+                        <!-- const tag = document.getElementById('tag').value; -->
+                        let tag = getTagInSelect();
 
                         const data = {
                             bio: bio,
@@ -511,26 +504,54 @@
                     }
                 }
 
+                function getTagInSelect() {
+                    let tag = [];
+                    $('#mutiselect option:selected').each(function() {
+                        tag.push($(this).val());
+                    });
+                    console.log(tag);
+                    return tag;
+    }
     </script>
 
             <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    // Add click event listener to all elements with the class 'social-link'
-                    document.querySelectorAll('.social-link').forEach(function (icon) {
-                        icon.addEventListener('click', function () {
-                            // Fetch data and open a new tab with the link from 'data-link' attribute
-                            var link = icon.getAttribute('data-link');
-                            if (link) {
-                                fetchDataAndOpenNewTab(link);
-                            }
-                        });
-                    });
+                function populateTagOptions() {
+                   var tagSelect = document.getElementById('mutiselect');
 
-                    function fetchDataAndOpenNewTab(link) {
-                        // Open a new tab with the fetched link
-                        window.open(link, '_blank');
-                    }
-                });
+                   // Reference to the 'tags' node in your Firebase database
+                   var tagsRef = database.ref('tags');
+
+                   // Fetch data from Firebase and populate options
+                   tagsRef.once('value', function(snapshot) {
+                     snapshot.forEach(function(childSnapshot) {
+                       var tag = childSnapshot.key; // Use the key as the tag name
+                       var option = document.createElement('option');
+                       option.value = tag;
+                       option.text = tag;
+                       tagSelect.appendChild(option);
+                     });
+                   });
+                 }
+
+
+               document.addEventListener('DOMContentLoaded', function () {
+                   // Add click event listener to all elements with the class 'social-link'
+                   document.querySelectorAll('.social-link').forEach(function (icon) {
+                       icon.addEventListener('click', function () {
+                           // Fetch data and open a new tab with the link from 'data-link' attribute
+                           var link = icon.getAttribute('data-link');
+                           if (link) {
+                               fetchDataAndOpenNewTab(link);
+                           }
+                       });
+                   });
+
+                   function fetchDataAndOpenNewTab(link) {
+                       // Open a new tab with the fetched link
+                       window.open(link, '_blank');
+                   }
+                    populateTagOptions();
+               });
             </script>
 
 
