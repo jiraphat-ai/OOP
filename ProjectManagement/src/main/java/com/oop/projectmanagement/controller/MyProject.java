@@ -51,6 +51,7 @@ String documentId;
                 GroupFordetail group = document.toObject(GroupFordetail.class);
                 group.setDocumentId(document.getId());
                 userGroups.add(group);
+                break;
             }
         }
     }
