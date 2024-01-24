@@ -33,35 +33,29 @@ String documentId;
         return "myproject";
 
     }
-    public ArrayList<GroupFordetail> getUserGroupsByUsername(String documentId) throws ExecutionException, InterruptedException {
-        Firestore db = firebaseInitializer.getDb();
-        ArrayList<GroupFordetail> userGroups = new ArrayList<>();
-        // Get all groups
-        ApiFuture<QuerySnapshot> future = db.collection("group").get();
-        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-        for (QueryDocumentSnapshot document : documents) {
-            // For each group, check if the user is in the 'member' sub-collection
-            ApiFuture<QuerySnapshot> memberFuture = document.getReference().collection("member").get();
-            List<QueryDocumentSnapshot> memberDocuments = memberFuture.get().getDocuments();
-            //get data from member collection
-            Boolean isMember = false;
-            for (QueryDocumentSnapshot memberDocument : memberDocuments) {
-                //get field from member collection
-                DocumentReference memberDocumentId = memberDocument.get("user" , DocumentReference.class);
-                String memberDocumentIdString = memberDocumentId.getId();
-                if (memberDocumentIdString.equals(documentId)) {
-                    isMember = true;
-                }
-            }
-            if (!memberDocuments.isEmpty() && isMember) {
-
+ public ArrayList<GroupFordetail> getUserGroupsByUsername(String documentId) throws ExecutionException, InterruptedException {
+    Firestore db = firebaseInitializer.getDb();
+    ArrayList<GroupFordetail> userGroups = new ArrayList<>();
+    // Get all groups
+    ApiFuture<QuerySnapshot> future = db.collection("group").get();
+    List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+    for (QueryDocumentSnapshot document : documents) {
+        // For each group, check if the user is in the 'member' sub-collection
+        ApiFuture<QuerySnapshot> memberFuture = document.getReference().collection("member").get();
+        List<QueryDocumentSnapshot> memberDocuments = memberFuture.get().getDocuments();
+        for (QueryDocumentSnapshot memberDocument : memberDocuments) {
+            //get field from member collection
+            DocumentReference memberDocumentId = memberDocument.get("user" , DocumentReference.class);
+            String memberDocumentIdString = memberDocumentId.getId();
+            if (memberDocumentIdString.equals(documentId)) {
                 GroupFordetail group = document.toObject(GroupFordetail.class);
                 group.setDocumentId(document.getId());
                 userGroups.add(group);
             }
         }
-        System.out.println("userGroups " + userGroups);
-        return userGroups;
     }
+    System.out.println("userGroups " + userGroups);
+    return userGroups;
+}
 
 }
