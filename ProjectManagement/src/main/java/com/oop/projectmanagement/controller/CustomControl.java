@@ -87,6 +87,16 @@ public class CustomControl {
         }
         return documentRef;
     }
+
+    public String getDocumentIdByDocRef(String docRef) throws ExecutionException, InterruptedException {
+        Firestore db = firebaseInitializer.getDb();
+        String documentId = "";
+        DocumentSnapshot document = db.document(docRef).get().get();
+        if (document.exists()) {
+            documentId = document.getId();
+        }
+        return documentId;
+    }
     
 
 
