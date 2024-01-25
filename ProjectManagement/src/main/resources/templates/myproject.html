@@ -14,6 +14,7 @@
     <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
     <link href="/styles.css" rel="stylesheet"  type="text/css">
+    <link href="/srum.css" rel="stylesheet"  type="text/css">
     <title>My Project</title>
     <style>
         .btn-group {
@@ -37,7 +38,7 @@
     <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
     <div class="col-9 main-content">
         <p class="text-center" style="font-size: x-large; font-weight: bolder;">My Project</p><hr>
-        <button class="table" onclick="getGroupDetail(this)" th:each="group : ${groupList}" style="border-radius: 10px;">
+        <button class="table" onclick="getScrumboard(this)" th:each="group : ${groupList}" style="border-radius: 10px;">
             <a  class="nav-link link-dark">
                 <div class="row" >
                     <div class="col">
@@ -70,6 +71,16 @@
             </a>
         </button>
     </div>
+
+  
+
+
+
+
+
+
+
+
 </div>
 <script src="assets/plugins/global/plugins.bundle.js"></script>
 <script src="assets/js/scripts.bundle.js"></script>
@@ -105,11 +116,11 @@
             }
         });
     }
-    function getGroupDetail(element){
+    function getScrumboard(element){
         var docId = $(element).find(".doc_id").val();
         console.log("docId: " + docId)
         $.ajax({
-            url: "/groupdetail",
+            url: "/groupscrumbord",
             type: "GET",
             data: {documentId: docId},
             success: function (data) {
@@ -118,6 +129,15 @@
             }
         });
     }
+
+
+    
+
+        
+  
+       
+
+
 
 </script>
 </body>

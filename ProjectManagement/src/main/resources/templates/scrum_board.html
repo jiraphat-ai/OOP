@@ -1,0 +1,317 @@
+<div class="main-content" style="border-radius: 10px;">
+    <p class="text-center" style="font-size: x-large; font-weight: bolder;">
+        <span th:text="${group.groupName}"></span>
+            <span class="float-end"></span>
+            <!-- new scrum -->
+            <div class ="headertest">
+                <div class="create-task-btn">
+                    <button onclick="openForm()">Create Task</button>
+                </div>
+            <div class="navigation-btn">
+                <button data-bs-toggle="modal" data-bs-target="#modal_detail"  th:value="${group.documentId}">Group</button> 
+           
+            </div>
+            </div>
+        <!-- END HEAD -->
+            <div class="scrum-board">
+                <div class="column" id="todo" onclick="moveToNextColumn('todo')"> <!-- Updated -->
+                    <h2>To Do</h2>
+                </div>
+            <div class="column" id="doing" onclick="moveToNextColumn('doing')"> <!-- Updated -->
+                    <h2>Doing</h2>
+            </div>
+            <div class="column" id="checking" onclick="moveToNextColumn('checking')"> <!-- Updated -->
+                    <h2>Checking</h2>
+            </div>
+            <div class="column" id="done">
+                    <h2>Done</h2>
+            </div>
+            </div>
+    </div>
+
+
+      <!-- Group modal  -->
+      <div class="modal fade" tabindex="-1" id="modal_detail">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title"><span th:text="${group.groupName}"></span></h2>
+    
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+    
+                <div class="modal-body" id="detail_body">
+                    
+                    <table class="detail-table" id="groupdetailtable">
+                        <div class="row"> 
+                            <!-- 50:50 col -->
+                            <div class="col"> 
+                                <h3>
+                              
+                                    Subject ID : <span th:text="${group.subject.subjectID}"></span>
+                                </h3>
+                                <h3>
+                                    Section : <span th:text="${group.section}"></span>
+                                </h3>
+                                <h3>
+                                    Member :<span th:text="${group.maxMember}"></span>
+                                </h3>
+                                <h3>
+                                    Group Owner : <span th:text="${group.groupOwner}"></span>
+                                </h3>    
+                                <h3>
+                                    Tag : <div th:each="tag : ${group.tag}">
+                                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${tag}"></span></div>
+                                </h3>
+                                <h3>
+                                    Group Description </br>
+                                    <span th:text="${group.groupDescription}"></span>
+                                </h3>
+                            </div>
+                            <div class="col">
+                          
+                                <h3>
+                                    Group Member &nbsp; <span th:text="${group.joinedMember}+'/'+${group.maxMember}"></span>
+                                </h3>
+                                <!-- ใส่ละพัง -->
+                                <!-- <div th:each="member : ${group.member}">
+                                    <h3>
+                                        <span th:text="${member}"></span>
+                                    </h3>
+                                </div> -->
+                            </div>
+                        </div>
+                    </table>
+            </div>
+    
+                <div class="modal-footer"></div>
+            </div>
+        </div>
+    
+    
+    
+    
+    
+    
+    
+    <!-- task form -->
+        <div class="form-popup" id="taskForm">
+            <form class="form-container">
+                <label for="taskName"><b>Task Name</b></label>
+                <input type="text" placeholder="Enter Task Name" name="taskName" required>
+
+                <label for="member"><b>Member</b></label>
+                <input type="text" placeholder="Enter Member Name" name="member" required th:value="${session.firstName + ' ' + session.lastName}">
+
+                <label for="deadline"><b>Deadline</b></label>
+                <input type="datetime-local" name="deadline" required>
+
+                <label for="description"><b>Description</b></label>
+                <textarea placeholder="Enter Task Description" name="description" required></textarea>
+
+                <button type="button" class="btn" onclick="saveTask()">Save</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">Cancel</button>
+            </form>
+        </div>
+    
+
+    
+    
+    </div>
+    <!-- Confirmation Popup HTML -->
+<div class="confirmation-popup" id="confirmationPopup">
+    <p>confirmationTask</p>
+    <button onclick="changeStatus()">OK</button>
+    <button class="cancel" onclick="cancelStatusChange()">Cancel</button>
+</div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+var filename = window.location.pathname.split("/").pop();
+$(document).ready(function () {
+    getSideBar();
+});
+
+function getSideBar() {
+    console.log("filename: " + filename);
+    $.ajax({
+        url: "/menu_bar_student",
+        type: "GET",
+        success: function (data) {
+            $(".sidebar").html(data);
+            $(".nav-link").each(function () {
+                if ($(this).attr("href") == filename) {
+                    $(this).addClass("active");
+                } else {
+                    $(this).removeClass("active");
+                }
+            });
+        },
+    });
+
+}
+// TASK ZONE BUT JAVA SCRIPT
+function openForm() {
+        document.getElementById('taskForm').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeForm() {
+        document.getElementById('taskForm').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+     function saveTask() {
+    const taskName = document.getElementsByName('taskName')[0].value;
+    const member = document.getElementsByName('member')[0].value;
+    const deadline = document.getElementsByName('deadline')[0].value;
+    const description = document.getElementsByName('description')[0].value;
+
+    if (taskName && member && deadline && description) {
+        const todoColumn = document.getElementById('todo');
+        const newTask = document.createElement('div');
+        newTask.className = 'task';
+        newTask.setAttribute('data-status', 'todo'); // Set initial status to 'todo'
+        newTask.setAttribute('data-deadline', deadline); // Set task deadline
+        newTask.setAttribute('data-description', description); // Set task description
+
+        // Format the deadline using toLocaleString
+        const formattedDeadline = new Date(deadline).toLocaleString('en-US', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+        });
+
+        newTask.innerHTML = `<h3>${taskName}</h3><p>${member}</p><p>${formattedDeadline}</p>`;
+
+        // Create a "Details" button
+        const detailsButton = document.createElement('button');
+        detailsButton.innerText = 'Details';
+        detailsButton.onclick = function (event) {
+            event.stopPropagation(); // Prevent task click when details button is clicked
+            showTaskDetails(newTask);
+        };
+
+        // Create a "Delete" button with an icon
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button'; // Add a class for styling
+        deleteButton.innerHTML = '<iconify-icon icon="material-symbols:delete-outline"></iconify-icon>';
+        deleteButton.onclick = function (event) {
+        event.stopPropagation(); // Prevent task click when delete button is clicked
+        deleteTask(newTask);
+};
+
+        // Append the "Details" and "Delete" buttons to the new task element
+        newTask.appendChild(detailsButton);
+        newTask.appendChild(deleteButton);
+
+        // Add click event listener to the task element
+        newTask.addEventListener('click', function () {
+            moveToNextStatus(newTask);
+        });
+
+        todoColumn.appendChild(newTask);
+        closeForm();
+    } else {
+        alert('Please fill in all task details');
+    }
+}
+
+    function moveToNextStatus(taskElement) {
+        const currentStatus = taskElement.getAttribute('data-status');
+        let nextStatus;
+
+        switch (currentStatus) {
+            case 'todo':
+                nextStatus = 'doing';
+                break;
+            case 'doing':
+                nextStatus = 'checking';
+                break;
+            case 'checking':
+                nextStatus = 'done';
+                break;
+            // Add more cases as needed
+
+            default:
+                // Handle other cases if needed
+                break;
+        }
+
+        const nextColumn = document.getElementById(nextStatus);
+
+        if (nextColumn) {
+            // Show a confirmation pop-up before moving to the next status
+            const confirmed = confirm(`Are you sure you want to move the task to "${nextStatus.toUpperCase()}"?`);
+
+            if (confirmed) {
+                taskElement.setAttribute('data-status', nextStatus);
+                nextColumn.appendChild(taskElement);
+            }
+        } else {
+            console.error('Column not found for the Next Status: ' + nextStatus);
+        }
+}
+
+        function showTaskDetails(taskElement) {
+        const taskName = taskElement.querySelector('h3').innerText;
+        const member = taskElement.querySelector('p:nth-child(2)').innerText;
+
+        // Parse the deadline string and format it
+        const deadlineString = taskElement.querySelector('p:nth-child(3)').innerText;
+        const deadline = new Date(deadlineString);
+        const formattedDeadline = deadline.toLocaleString('en-US', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+        });
+
+    // Create the task details popup
+    const popup = document.createElement('div');
+    popup.className = 'task-details-popup';
+    popup.innerHTML = `<h3>${taskName}</h3><p>Member: ${member}</p><p>Deadline: ${formattedDeadline}</p><button onclick="closeTaskDetails()">Close</button>`;
+
+    // Append the popup to the body
+    document.body.appendChild(popup);
+
+    // Display the popup
+    popup.style.display = 'block';
+}
+
+    function closeTaskDetails() {
+    // Close the task details popup
+    const popup = document.querySelector('.task-details-popup');
+    popup.style.display = 'none';
+
+    // Remove the popup from the DOM
+    popup.remove();
+}
+
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,249 @@
+
+body {
+    font-family: 'Sunflower', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.scrum-board {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.column {
+    flex: 1;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 0 10px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.column h2 {
+    text-align: center;
+    color: #333;
+}
+
+.task {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.task:hover {
+    background-color: #e0e0e0;
+}
+
+.task h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.headertest {
+    display: flex;
+    justify-content: space-between; /* Add space between the buttons */
+    align-items: center; /* Align items vertically in the center */
+    padding: 10px; /* Add some padding */
+    background-color: #f4f4f4;
+    border-radius: 10px; /* Set background color */
+}
+
+.headertest button {
+    /* Common styles for buttons */
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px; /* Add rounded corners */
+}
+
+.create-task-btn button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.navigation-btn button {
+    background-color: #3498db;
+    color: white;
+    margin-left: 10px; /* Add space between navigation buttons */
+}
+
+.create-task-btn button:hover,
+.navigation-btn button:hover {
+    opacity: 0.8; /* Reduce opacity on hover for a subtle effect */
+}
+
+.form-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999; /* Higher z-index to appear on top of the overlay */
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+.confirmation-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999; /* Higher z-index to appear on top of the overlay */
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+.form-container input,
+.form-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 6px 0 12px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.form-container button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.form-container button.cancel {
+    background-color: #f44336;
+}
+
+.form-container button:hover,
+.form-container button.cancel:hover {
+    opacity: 0.8;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    z-index: 998; /* Higher z-index to appear on top of the form popup */
+}
+
+/* Add styles for the confirmation popup */
+.confirmation-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.confirmation-popup p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.confirmation-popup button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.confirmation-popup button.cancel {
+    background-color: #f44336;
+}
+
+.confirmation-popup button:hover,
+.confirmation-popup button.cancel:hover {
+    opacity: 0.8;
+}
+
+.delete-button {
+float: right; /* Float the delete button to the right */
+margin-left: 10px; /* Adjust margin as needed for spacing */
+border: none; /* Remove border */
+background-color: transparent; /* Set background color to transparent */
+font-size: 16px; /* Set font size */
+color: red; /* Set text color to red (adjust as needed) */
+cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.column#todo {
+background-color: #FFCACA; /* Set color for tasks in 'To Do' column */
+}
+
+.column#doing {
+    background-color: #CAE3FF; /* Set color for tasks in 'Doing' column */
+}
+
+.column#checking {
+    background-color: #F8FFCA; /* Set color for tasks in 'Checking' column */
+}
+
+.column#done {
+    background-color: #CAFFDC; /* Set color for tasks in 'Done' column */
+}
+
+/* Add this CSS to your stylesheet or in a style tag in your HTML */
+.task-details-popup {
+display: none;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+padding: 20px;
+background-color: #ffffff;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+border-radius: 5px;
+z-index: 1000;
+text-align: center;
+}
+
+.task-details-popup h3 {
+color: #333333;
+font-size: 20px; /* Set the font size for the heading */
+}
+
+.task-details-popup p {
+color: #666666;
+font-size: 16px; /* Set the font size for paragraphs */
+}
+
+.task-details-popup button {
+background-color: #3498db;
+color: #ffffff;
+border: none;
+padding: 8px 16px;
+cursor: pointer;
+border-radius: 3px;
+margin-top: 10px;
+font-size: 16px; /* Set the font size for the button */
+}
+
+.task-details-popup button:hover {
+background-color: #2980b9;
+}
+
+
