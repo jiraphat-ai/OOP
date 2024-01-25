@@ -244,6 +244,11 @@
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
         </div>
 
+        <div>
+            <button id="sortAZButton" onclick="sortAZ()">Sort A-Z</button>
+            <button id="sortZAButton" onclick="sortZA()">Sort Z-A</button>
+        </div>
+
         <!-- Modal -->
         <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -444,9 +449,54 @@
                                         row.style.display = (matchUsername && matchName) ? '' : 'none';
                                     });
                                 }
+                                    function sortAZ() {
+                                        $.ajax({
+                                            url: '/sortuser/sorta-z',
+                                            type: 'GET',
+                                            success: function(data) {
+                                                updateTable(data);
+                                            },
+                                            error: function(error) {
+                                                console.log(error);
+                                            }
+                                        });
+                                    }
 
+                                    function sortZA() {
+                                        $.ajax({
+                                            url: '/sortuser/sortz-a',
+                                            type: 'GET',
+                                            success: function(data) {
+                                                updateTable(data);
+                                            },
+                                            error: function(error) {
+                                                console.log(error);
+                                            }
+                                        });
+                                    }
 
+                                    function updateTable(data) {
+                                        // Get the table
+                                        var table = document.getElementById("user-table");
 
+                                        // Remove all rows from the table
+                                        while (table.rows.length > 1) {
+                                            table.deleteRow(1);
+                                        }
+
+                                        // Add new rows to the table
+                                        for (var i = 0; i < data.length; i++) {
+                                            var row = table.insertRow(-1);
+                                            var cell1 = row.insertCell(0);
+                                            var cell2 = row.insertCell(1);
+                                            // Add more cells if you have more columns
+
+                                            cell1.innerHTML = data[i].username;
+                                            cell2.innerHTML = data[i].firstName;
+                                            // Set the cell values to the data values
+                                        }
+                                    }
+            
                         </script>
                     </body>
                     </html>
