@@ -244,10 +244,11 @@
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
         </div>
 
-        <div>
-            <button id="sortAZButton" onclick="sortAZ()">Sort A-Z</button>
-            <button id="sortZAButton" onclick="sortZA()">Sort Z-A</button>
-        </div>
+        <select name="sortOption" id="sortsearch">
+            <option value="#">Default</option>
+            <option value="groupNameAtoZ">Sort by Username A-Z</option>
+            <option value="groupNameZtoA">Sort by Username Z-A</option>
+        </select>
 
         <!-- Modal -->
         <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
@@ -449,32 +450,6 @@
                                         row.style.display = (matchUsername && matchName) ? '' : 'none';
                                     });
                                 }
-                                    function sortAZ() {
-                                        $.ajax({
-                                            url: '/sortuser/sorta-z',
-                                            type: 'GET',
-                                            success: function(data) {
-                                                updateTable(data);
-                                            },
-                                            error: function(error) {
-                                                console.log(error);
-                                            }
-                                        });
-                                    }
-
-                                    function sortZA() {
-                                        $.ajax({
-                                            url: '/sortuser/sortz-a',
-                                            type: 'GET',
-                                            success: function(data) {
-                                                updateTable(data);
-                                            },
-                                            error: function(error) {
-                                                console.log(error);
-                                            }
-                                        });
-                                    }
-
                                     function updateTable(data) {
                                         // Get the table
                                         var table = document.getElementById("user-table");
@@ -496,7 +471,36 @@
                                             // Set the cell values to the data values
                                         }
                                     }
-            
+                                    $(document).ready(function() {
+                                        $("#sortsearch").change(function() {
+                                            var sortOption = $(this).val();
+                                            console.log("sortlog:", sortOption);
+                                            sortMembers(sortOption);
+                                        });
+
+                                        function sortMembers(order) {
+                                            let section = $('#section').val();
+                                            let tag = [];
+                                            $('#tag input:checked').each(function() {
+                                                tag.push($(this).val());
+                                            });
+                                            tag = tag.join(','); // Convert the array to a comma-separated string
+
+                                            $.ajax({
+                                                url: '/sortMembers',
+                                                type: 'GET',
+                                                data: {
+                                                    section: section,
+                                                    tag: tag,
+                                                    order: order
+                                                },
+                                                success: function(data) {
+                                                    let table = $(data).find('#user-table');
+                                                    $('#user-table').replaceWith(table);
+                                                }
+                                            });
+                                        }
+                                    });
                         </script>
                     </body>
                     </html>
