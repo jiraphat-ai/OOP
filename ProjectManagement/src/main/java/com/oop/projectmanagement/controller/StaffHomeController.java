@@ -57,6 +57,30 @@ public class StaffHomeController {
         return "homestaff";
     }
 
+    
+    @PostMapping("/sortUserBySelection")
+    public String sortUserBySelection(@RequestParam String sortOption, Model model, HttpSession session) {
+        sortMemberAtoZ memberAtoZ = new sortMemberAtoZ();
+        sortMemberZtoA memberZtoA = new sortMemberZtoA();
+        List<User> result;
+
+        switch (sortOption) {
+            case "memberAtoZ":
+                memberAtoZ.setMember(session);
+                result = memberAtoZ.sortMember();
+                break; 
+            case "memberZtoA":
+                memberZtoA.setMember(session);
+                result = memberZtoA.sortMember();
+                break; 
+            default:
+                result = null;
+                break;
+        }
+        model.addAttribute("users", result);
+        return "/homestaff"; // return the name of your view
+    }
+
     @PostMapping("/addUser")
     public String addUser(User user) {
         Firestore db = firebaseInitializer.getDb(); // Get the database
