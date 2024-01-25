@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -40,7 +41,7 @@ public class MenubarController extends CustomControl {
         String lastName = (String) session.getAttribute("lastName");
         // Now you can use the username, firstName, and lastName
         //show data in notificationList
-        ArrayList<Notification> notificationList2 = getRequest();
+        ArrayList<Notification> notificationList2 = getRequest(session);
         
         //loop for show data in notificationList
         for (int i = 0; i < notificationList2.size(); i++) {
@@ -53,11 +54,12 @@ public class MenubarController extends CustomControl {
         return "menu_bar_student";
 
     }
-    ArrayList<Notification> notificationList = new ArrayList<>();
-    public ArrayList<Notification> getRequest() throws ExecutionException, InterruptedException {
+    
+    public ArrayList<Notification> getRequest(HttpSession session) throws ExecutionException, InterruptedException {
          //get subject_id in collection group in frist loop  and username in sub-collection request in second loop
-        db = firebaseInitializer.getDb();
-        ApiFuture<QuerySnapshot> future = db.collection("group").get();
+         ArrayList<Notification> notificationList = new ArrayList<>();
+         db = firebaseInitializer.getDb();
+        ApiFuture<QuerySnapshot> future = db.collection("group").whereEqualTo("groupOwner", session.getAttribute("username")).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         for (QueryDocumentSnapshot document : documents) {
             System.out.println("document " + document.getId() + " => " + document.getData());
@@ -70,6 +72,8 @@ public class MenubarController extends CustomControl {
                 Notification notification = new Notification();
                 notification.setSubject_id(subject_id);
                 notification.setUsername(getDocumentFeildByDocRef(userRef, "username"));
+                notification.setRequest_id(document2.getId());
+                notification.setGroup_id(document.getId());
                 notificationList.add(notification);
             }
         }
@@ -78,4 +82,41 @@ public class MenubarController extends CustomControl {
 
     }
 
+
+    @PostMapping("/rejectrequest")
+    @ResponseBody
+    public String rejectRequest(@RequestParam("request_id") String request_id ,@RequestParam("group_id") String group_id) {
+        //delete request in sub-collection request
+        db = firebaseInitializer.getDb();
+        db.collection("group").document(group_id).collection("request").document(request_id).delete();
+        return "success";
+    }
+    @PostMapping("/acceptrequest")
+    @ResponseBody
+    public String acceptRequest(@RequestParam("request_id") String request_id ,@RequestParam("group_id") String group_id) {
+        try {
+            //copy data in sub-collection request to sub-collection member
+            db = firebaseInitializer.getDb();
+            ApiFuture<QuerySnapshot> future = db.collection("group").document(group_id).collection("request").get();
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                System.out.println("document " + document.getId() + " => " + document.getData());
+                DocumentReference userRef = (DocumentReference) document.get("user");
+                Map<String, Object> member = new HashMap<>();
+                member.put("user", userRef);
+                member.put("role", "member");
+                db.collection("group").document(group_id).collection("member").add(member);
+            }
+            //delete request in sub-collection request
+            db.collection("group").document(group_id).collection("request").document(request_id).delete();
+            //update status in collection group
+            DocumentReference groupRef = db.collection("group").document(group_id);
+            //set field joinedMember = joinedMember + 1
+            groupRef.update("joinedMember", FieldValue.increment(1));
+            return "success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
 }

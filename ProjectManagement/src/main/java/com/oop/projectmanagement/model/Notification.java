@@ -9,6 +9,8 @@ import com.oop.projectmanagement.controller.CustomControl;
 public class Notification extends CustomControl {
     private String username;
     private String subject_id;
+    private String request_id;
+    private String group_id;
 
     // no-arg constructor
     public Notification() {}
@@ -28,5 +30,21 @@ public class Notification extends CustomControl {
 
     public void setSubject_id(String subjectID) {
         this.subject_id = subjectID;
+    }
+
+    public String getRequest_id() {
+        return request_id;
+    }
+
+    public void setRequest_id(String requestID) {
+        this.request_id = requestID;
+    }
+
+    public String getGroup_id() {
+        return group_id;
+    }
+
+    public void setGroup_id(String groupID) {
+        this.group_id = groupID;
     }
 }
