@@ -1,18 +1,18 @@
 package com.oop.projectmanagement.controller;
 
-import com.oop.projectmanagement.model.Member;
+import com.oop.projectmanagement.model.User;
 
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
-abstract public class SortMember {
+abstract public class sortMember {
 
-    abstract public List<Member> sortMember();
+    abstract public List<User> sortMember();
 
-    public List<Member> memberSearchResult;
+    public List<User> memberSearchResult;
 
-    public List<Member> setMember(HttpSession session) {
-        memberSearchResult = (List<Member>) session.getAttribute("lastsearchmember");
+    public List<User> setMember(HttpSession session) {
+        memberSearchResult = (List<User>) session.getAttribute("lastsearchmember");
         return memberSearchResult;
     }
 }

@@ -244,11 +244,12 @@
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
         </div>
 
-        <select name="sortOption" id="sortsearch">
+        <select name="sortOption" id="sortOption">
             <option value="#">Default</option>
-            <option value="groupNameAtoZ">Sort by Username A-Z</option>
-            <option value="groupNameZtoA">Sort by Username Z-A</option>
+            <option value="AtoZ">Sort by Username A-Z</option>
+            <option value="ZtoA">Sort by Username Z-A</option>
         </select>
+        
 
         <!-- Modal -->
         <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
@@ -472,35 +473,23 @@
                                         }
                                     }
                                     $(document).ready(function() {
-                                        $("#sortsearch").change(function() {
+                                        $("#sortOption").change(function() {
                                             var sortOption = $(this).val();
-                                            console.log("sortlog:", sortOption);
                                             sortMembers(sortOption);
                                         });
 
                                         function sortMembers(order) {
-                                            let section = $('#section').val();
-                                            let tag = [];
-                                            $('#tag input:checked').each(function() {
-                                                tag.push($(this).val());
-                                            });
-                                            tag = tag.join(','); // Convert the array to a comma-separated string
-
                                             $.ajax({
-                                                url: '/sortMembers',
+                                                url: '/sortMembers',  // Update the endpoint URL
                                                 type: 'GET',
-                                                data: {
-                                                    section: section,
-                                                    tag: tag,
-                                                    order: order
-                                                },
+                                                data: { order: order },
                                                 success: function(data) {
-                                                    let table = $(data).find('#user-table');
-                                                    $('#user-table').replaceWith(table);
+                                                    updateTable(data);  // Update the table with sorted data
                                                 }
                                             });
                                         }
                                     });
+
                         </script>
                     </body>
                     </html>
