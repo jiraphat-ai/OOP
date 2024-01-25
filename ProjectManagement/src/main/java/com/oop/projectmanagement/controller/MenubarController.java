@@ -34,7 +34,7 @@ public class MenubarController extends CustomControl {
 
     @GetMapping("/menu_bar_student")
 
-    public String getBar(HttpSession session) throws ExecutionException, InterruptedException {
+    public String getBar(HttpSession session ,Model model) throws ExecutionException, InterruptedException {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
@@ -47,7 +47,7 @@ public class MenubarController extends CustomControl {
             System.out.println("notificationList2 " + notificationList2.get(i).getSubject_id());
             System.out.println("notificationList2 " + notificationList2.get(i).getUsername());
         }
-        session.setAttribute("notificationList", notificationList2);
+        model.addAttribute("notificationList", notificationList2);
 
     
         return "menu_bar_student";
