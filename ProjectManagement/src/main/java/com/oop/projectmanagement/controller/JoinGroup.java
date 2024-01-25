@@ -254,22 +254,34 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
         Firestore db = firebaseInitializer.getDb();
         System.out.println("Joining group with ID: " + documentId);
         try {
-            if(session.getAttribute("documentId") == null) {
+            if (session.getAttribute("documentId") == null) {
                 return "Please login first";
-            }
-            else {
-                DocumentSnapshot requestSnapshot = db.collection("group").document(documentId).collection("request").document(session.getAttribute("documentId").toString()).get().get();
-                if(requestSnapshot.exists()) {
+            } else {
+                DocumentSnapshot requestSnapshot = db.collection("group").document(documentId)
+                        .collection("request").document(session.getAttribute("documentId").toString()).get().get();
+                if (requestSnapshot.exists()) {
                     return "You have already sent a request to join this group";
                 }
-                DocumentSnapshot memberSnapshot = db.collection("group").document(documentId).collection("member").document(session.getAttribute("documentId").toString()).get().get();
-                if(memberSnapshot.exists()) {
+                DocumentSnapshot memberSnapshot = db.collection("group").document(documentId)
+                        .collection("member").document(session.getAttribute("documentId").toString()).get().get();
+                if (memberSnapshot.exists()) {
                     return "You are already a member of this group";
                 }
                 DocumentSnapshot groupSnapshot = db.collection("group").document(documentId).get().get();
-                if(groupSnapshot.get("groupOwner").equals(session.getAttribute("username"))) {
+                if (groupSnapshot.get("groupOwner").equals(session.getAttribute("username"))) {
                     return "You are the owner of this group";
                 }
+                
+                // Check if the user has already joined a group with the same subject
+                // String subjectId = groupSnapshot.getString("subjectId");
+                // QuerySnapshot joinedGroupsSnapshot = db.collection("group")
+                //         .whereEqualTo("subjectId", subjectId)
+                //         .whereArrayContains("members", session.getAttribute("documentId").toString())
+                //         .get().get();
+                // if (!joinedGroupsSnapshot.isEmpty()) {
+                //     return "You can't join more than 1 group in the same subject";
+                // }
+                
                 return "success";
                 // Rest of your code
             }
@@ -277,7 +289,33 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
             return "Error to join group: " + e.getMessage();
         }
     }
+    @PostMapping("/cancelRequest")
+    @ResponseBody
+    public String cancelRequest(@RequestParam String documentId, HttpSession session) {
+        Firestore db = firebaseInitializer.getDb();
+        System.out.println("Canceling request to join group with ID: " + documentId);
+        try {
+            if (session.getAttribute("documentId") == null) {
+                return "Please login first";
+            } else {
+                // Check if the user has already sent a request
+                DocumentSnapshot requestSnapshot = db.collection("group").document(documentId)
+                        .collection("request").document(session.getAttribute("documentId").toString()).get().get();
 
+                if (requestSnapshot.exists()) {
+                    // Delete the request
+                    db.collection("group").document(documentId).collection("request")
+                            .document(session.getAttribute("documentId").toString()).delete();
+
+                    return "success";
+                } else {
+                    return "You haven't sent a request to join this group";
+                }
+            }
+        } catch (Exception e) {
+            return "Error canceling join request: " + e.getMessage();
+        }
+    }
 
 }
 
