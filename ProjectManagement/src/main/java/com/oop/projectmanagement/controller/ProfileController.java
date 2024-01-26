@@ -18,15 +18,13 @@ import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.google.cloud.firestore.QuerySnapshot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class ProfileController extends CustomControl{
-    private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
+
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
