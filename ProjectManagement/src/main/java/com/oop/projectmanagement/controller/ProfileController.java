@@ -6,63 +6,51 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import java.util.HashMap;
-import java.util.Map;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
-import com.oop.projectmanagement.FirebaseInitializer;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.oop.projectmanagement.FirebaseInitializer;
 import com.google.cloud.firestore.QuerySnapshot;
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class ProfileController {
-
+public class ProfileController extends CustomControl{
+    private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
 
     @GetMapping("/profile")
-    public String getUserinfo(HttpSession session,Model model) {
+    public String getUserinfo(HttpSession session, Model model) {
+        model.addAttribute("tags", getTags());
         Firestore db = firebaseInitializer.getDb();
-        String Username = (String) session.getAttribute("username");
-        Query documentRef = db.collection("useraccount").whereEqualTo("username", Username);
+        String username = (String) session.getAttribute("username");
+        Query documentRef = db.collection("useraccount").whereEqualTo("username", username);
 
         try {
             ApiFuture<QuerySnapshot> documentSnapshotFuture = documentRef.get();
             QuerySnapshot document = documentSnapshotFuture.get();
             DocumentSnapshot documentSnapshot = document.getDocuments().get(0);
-            String username = (String) documentSnapshot.get("username");
-            String firstName = (String) documentSnapshot.get("firstName");
-            String lastName = (String) documentSnapshot.get("lastName");
-            String bio = (String) documentSnapshot.get("bio");
-            String tag = (String) documentSnapshot.get("tag");
-            String facebook = (String) documentSnapshot.get("facebook");
-            String instagram = (String) documentSnapshot.get("instagram");
-            
 
-                // Add the fields to the model
-                model.addAttribute("username", username);
-                model.addAttribute("firstName", firstName);
-                model.addAttribute("lastName", lastName);
-                model.addAttribute("bio", bio);
-                model.addAttribute("tag", tag);
-                model.addAttribute("facebook", facebook); // Adding Facebook URL to the model
-                model.addAttribute("instagram", instagram); // Adding IG URL to the model
-       
+            // Get all the data in the document
+            Map<String, Object> userData = documentSnapshot.getData();
+
+            // Add the data to the model
+            model.addAttribute("userData", userData);
+            List<String> userTags = (List<String>) userData.get("tag");
+            model.addAttribute("userTags", userTags);
+
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -70,7 +58,10 @@ public class ProfileController {
         return "profile";
     }
 
-    @PutMapping("/updateUserProfile")
+
+
+    @PostMapping("/updateUserProfile")
+    @ResponseBody
     public ResponseEntity<String> updateUserProfile(@RequestBody Map<String, Object> data, HttpSession session) {
         Firestore db = firebaseInitializer.getDb();
 
@@ -81,7 +72,6 @@ public class ProfileController {
         if (username == null) {
             return new ResponseEntity<>("User not authenticated", HttpStatus.UNAUTHORIZED);
         }
-
         // Fetch the document based on the username
         ApiFuture<QuerySnapshot> querySnapshotFuture = db.collection("useraccount").whereEqualTo("username", username).limit(1).get();
 
@@ -95,9 +85,6 @@ public class ProfileController {
                 documentRef.update(data);
 
                 // Update session attributes with new information
-                session.setAttribute("bio", (String) data.get("bio"));
-                session.setAttribute("facebook", (String) data.get("facebook"));
-                session.setAttribute("instagram", (String) data.get("instagram"));
 
                 return new ResponseEntity<>("Profile updated successfully", HttpStatus.OK);
             } else {
@@ -108,6 +95,22 @@ public class ProfileController {
             e.printStackTrace();
             return new ResponseEntity<>("Error updating profile", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    
+    
+        private List<Map<String, Object>> getTags() {
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> tags = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = db.collection("tags").get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                tags.add(document.getData());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return tags;
     }
 
 }

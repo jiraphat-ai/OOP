@@ -19,264 +19,11 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-
+    <link href="/styles.css" rel="stylesheet"  type="text/css">
+    <link href="/profile.css" rel="stylesheet"  type="text/css">
 
     <title>homestudent</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Sunflower, sans-serif;
-            background: linear-gradient(to right, #1F2863, #003b7a);
-            color: #000000;
-            /* สีข้อความ */
-            display: flex;
-        }
-
-        .sidebar {
-            padding: 20px;
-            width: 250px;
-            height: 100vh;
-            background-color: #fff;
-            /* สีขาว */
-            position: flex;
-            left: 0;
-            top: 0;
-            padding-top: 20px;
-        }
-
-        .profile {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .profile img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .profile .staff {
-            font-weight: bold;
-        }
-
-        .menu {
-            margin-bottom: 20px;
-        }
-
-        .menu ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .menu ul li {
-            margin-bottom: 10px;
-        }
-
-        .menu ul li a {
-            display: block;
-            padding: 5px;
-            background-color: transparent;
-            border: none;
-            color: inherit;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        .menu ul li a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .content {
-            flex-grow: 1;
-            padding: 25px;
-            & span {
-            max-height: 50px;
-            overflow-y: auto;
-            }
-        }
-
-        .header {
-            display: flex;
-            justify-content: center;
-            /* แก้ตรงนี้ */
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .header h2 {
-            margin: 0;
-        }
-
-        .search {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .search input[type="text"] {
-            margin-right: 10px;
-        }
-
-        .add-user {
-            margin-bottom: 20px;
-        }
-
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .user-table th,
-        .user-table td {
-            padding: 10px;
-            border: 1px solid black;
-        }
-
-        .user-table th {
-            background-color: #f1f1f1;
-        }
-
-        .user-table td button {
-            margin-right: 5px;
-        }
-
-        .white-frame {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: auto;
-            height: 500px;
-            background-color: #fff;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 25px;
-        }
-
-        .card {
-            display: flex;
-            flex: 1;
-            text-align: center;
-            border-right: 1px solid black;
-            height: 500px;
-            justify-content: center;
-        }
-
-        .card2 {
-            display: flex;
-            flex: 2;
-            flex-direction: column;
-            text-align: left;
-            border: none;
-            margin: 100px;
-        }
-
-        a {
-            text-decoration: none;
-            color: black;
-        }
-
-        button:hover,
-        a:hover {
-            opacity: 0.7;
-        }
-
-        .detail {
-            display: grid;
-            text-align: left;
-            grid-template-columns: 600px;
-        }
-
-        .search {
-            display: flex;
-            align-items: left;
-            justify-content: center;
-            margin-top: 20px;
-
-        }
-
-        .search input[type="text"] {
-            width: 1590px;
-            box-sizing: border-box;
-            border: 2px solid #ccc;
-            border-radius: 20px;
-            font-size: 16px;
-            background-color: white;
-            background-image: url('searching.png');
-            background-position: 10px 10px;
-            background-repeat: no-repeat;
-            padding: 12px 20px 12px 40px;
-
-        }
-
-        .bio-input {
-            width: 100%;
-            height: 100px;
-            box-sizing: border-box;
-            border: 2px solid #ccc;
-            /* Border style */
-            border-radius: 4px;
-            font-size: 16px;
-            background-color: white;
-            background-image: url('searching.png');
-            background-position: 10px 10px;
-            background-repeat: no-repeat;
-            padding: 12px 20px 12px 40px;
-            margin-top: 10px;
-            /* Adjust margin as needed */
-        }
-
-        .icon-wrap {
-            display: flex;
-            flex-direction: row;
-            border-radius: 1rem;
-            gap: 12px;
-            padding: 4px;
-
-            & p {
-                height: 100% ;
-            }
-        }
-
-        .social-icon {
-            aspect-ratio: 1;
-            width: 25px;
-            height: 25px;
-        }
-
-        .button {
-            background-color: #04AA6D;
-            /* Green */
-            border: none;
-            color: white;
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            transition-duration: 0.4s;
-            cursor: pointer;
-        }
-
-        .button2 {
-            background-color: white;
-            color: black;
-            border: 2px solid #008CBA;
-        }
-
-        .button2:hover {
-            background-color: #008CBA;
-            color: white;
-        }
-
-        .main-content {
-            background: none; /* turn off the background */
-        }
-
-    </style>
+   
 </head>
 
 <body>
@@ -297,31 +44,32 @@
                 <div class="infoNL">
                     <div>
                         <H3>
-                            <span th:text="${username}"></span><br>
-                            <span th:text="${firstName + ' ' + lastName}"></span>
+                            <span th:text="${userData.username}" ></span><br>
+                            <span th:text="${userData.firstName + ' ' + userData.lastName}"></span>
                         </H3>
                     </div>
                 </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <div class="add-user mt-3">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubjectModal" onclick="submitUserProfileForm()">Edit Profile</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateProfileModal">Edit Profile</button>
                     </div>
                 </div>
 
                 </div>
                 <div class="card2">
                     <div class ="content">
-                        <h4>Bio</h4><span th:text="${bio}"></span>
+                        <p>Bio</p><span th:text="${userData.bio}"></span>
                     </div>
 
                     <div class ="content"><br>
-                        <h4>Contact</h4>
-                        <a th:href="${facebook}" target="_blank" rel="noopener noreferrer" class="icon-wrap" name="facebookName" placeholder="Facebook">
+                        <p>Contact</p>
+                        <a th:href="${userData.facebook}" target="_blank" rel="noopener noreferrer" class="icon-wrap" name="facebookName" placeholder="Facebook">
                             <div>
                                 <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png" alt="facebook">
                                 Facebook
                             </div>
                         </a>
-                        <a th:href="${instagram}" target="_blank" rel="noopener noreferrer" class="icon-wrap">
+                        <a th:href="${userData.instagram}" target="_blank" rel="noopener noreferrer" class="icon-wrap">
                             <div>
                                 <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="instagram">
                                 Instagram
@@ -329,19 +77,21 @@
                         </a>
                     </div>
                     <div class ="content">
-                        <h4>Tag:</h4>
-                        <span th:text="${tag}"></span></div>
+                        <p>Tag:</p>
+                        <div th:each="tag : ${userData.tag}" >
+                            <span th:text="${tag}"></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
         <!-- edit Modal -->
-        <div class="modal fade" id="addSubjectModal" tabindex="-1"
-             aria-labelledby="addSubjectModalLabel" aria-hidden="true">
+        <div class="modal fade" id="updateProfileModal" tabindex="-1"
+             aria-labelledby="updateProfileModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addSubjectModalLabel">Edit Profile</h5>
+                        <h5 class="modal-title" id="updateProfileModal">Edit Profile</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                     </div>
@@ -351,25 +101,29 @@
                             <div class="mb-3">
                                 <label for="bio" class="form-label">Bio</label>
                                 <input type="text" class="form-control" id="bio" name="bio"
-                                       placeholder="Enter bio" th:value="${session.bio}" />
+                                       placeholder="Enter bio" th:value="${userData.bio}" />
                             </div>
                             <div class="mb-3">
                                 <label for="facebookName" class="form-label">Contact</label>
                                 <input type="text" class="form-control" id="facebookName" name="facebookName"
-                                       placeholder="Facebook" th:value="${session.facebook}" />
+                                       placeholder="Facebook" th:value="${userData.facebook}" />
                                 <input type="text" class="form-control" id="instagramName" name="instagramName"
-                                       placeholder="Instagram" th:value="${session.instagram}" />
+                                       placeholder="Instagram" th:value="${userData.instagram}" />
                             </div>
                             <div class="mb-3">
                                 <label for="tag" class="form-label">Tag</label>
-                                <input type="text" class="form-control" id="tag" name="tag"
-                                       placeholder="Enter tag" th:value="${tag}" />
+                                <select class="form-select form-select-solid" id="mutiselect" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" >
+                                    <div th:each="tag : ${tags}">
+                                        <option th:text="${tag['tagname']}" th:value="${tag['tagname']}" th:selected="${userTags.contains(tag['tagname'])}"></option>
+                                    </div>
+                                </select>
+                                <input type="hidden" class="username" id="username" th:value="${userData.username}"> 
                             </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <!-- Update onclick attribute to call JavaScript function -->
-                                <button type="button" class="btn btn-primary" onclick="updateUserProfile()">Save</button>
+                                <button type="button" class="btn btn-primary" onclick="updateUserProfile(this)">Save</button>
                             </div>
                         </div>
                     </form>
@@ -393,59 +147,9 @@
 
 
     <script>
-        $(document).ready(function() {
-            // Check if the table exists
-            if ($('.table').length) {
-                // Initialize DataTable
-                $('.table').DataTable({
 
-                });
-            } else {
-                console.error('Table #user-table does not exist');
-            }
-        });
-        function addUserToFirestore() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const bio = document.getElementById('bio').value;
-            const facebook = document.getElementById('facebook').value;
-            const instagram = document.getElementById('instagram').value;
-
-            const formData = new FormData();
-            formData.append('username', username);
-            formData.append('password', password);
-            formData.append('firstName', firstName);
-            formData.append('lastName', lastName);
-            formData.append('bio', bio);
-            formData.append('facebook', facebook);
-            formData.append('instagram', instagram);
-
-            fetch('/addUser', {
-                method: 'POST',
-                body: formData,
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('User added successfully');
-                        location.reload(); // Refresh the page after adding a user
-                    } else {
-                        alert('Error adding user: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-
-        var filename = window.location.pathname.split("/").pop();
+        
+    var filename = window.location.pathname.split("/").pop();
     $(document).ready(function() {
         getSideBar()
     });
@@ -459,7 +163,7 @@
             success: function (data) {
                 $(".sidebar").html(data);
                 $(".nav-link").each(function () {
-                    if ($(this).attr("href") == "/" + filename) {
+                    if ($(this).attr("href") == "/"+filename) {
                         $(this).addClass("active");
                     }
                     else {
@@ -469,51 +173,63 @@
             }
         });
     }
+    
+    
+function updateUserProfile(element) {
+    event.preventDefault();
+
+    let username = $('#username').val(); //
+    let bio = $('#bio').val();
+    let facebook = $('#facebookName').val();
+    let instagram = $('#instagramName').val();
+    let tag = $('#mutiselect').val();
+    $.ajax({
+    url: '/updateUserProfile',
+    type: 'POST',
+    data: JSON.stringify({
+        username: username,
+        bio: bio,
+        facebook: facebook,
+        instagram: instagram,
+        tag: tag
+    }),
+    contentType: 'application/json; charset=utf-8',
+    success: function(response) {
+        // Handle the success response
+        alert('Profile updated successfully.');
+        location.reload();
+    },
+    error: function(xhr, status, error) {
+        // Handle the error response
+        console.error('Error updating profile', error);
+        alert('Error updating profile. Please try again.');
+    }
+});
+}
 
 
-        async function updateUserProfile() {
-                    try {
-                        const bio = document.getElementById('bio').value;
-                        const facebook = document.getElementById('facebookName').value;
-                        const instagram = document.getElementById('instagramName').value;
-                        const tag = document.getElementById('tag').value;
 
-                        const data = {
-                            bio: bio,
-                            facebook: facebook,
-                            instagram: instagram,
-                            tag: tag
-                        };
 
-                        const response = await fetch('/updateUserProfile', {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data)
-                        });
 
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
 
-                        // Update DOM elements with new information
-                            document.getElementById('bio').innerText = bio;
-                            document.getElementById('facebookName').innerText = facebook;
-                            document.getElementById('instagramName').innerText = instagram;
-                            document.getElementById('tag').innerText = tag;
 
-                        alert('Profile updated successfully');
-                        location.reload(); // Refresh the page
-                    } catch (error) {
-                        console.error('Error updating profile:', error);
-                        alert('Error updating profile. Please try again.');
-                    }
-                }
 
     </script>
 
-            <script>
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     // Add click event listener to all elements with the class 'social-link'
                     document.querySelectorAll('.social-link').forEach(function (icon) {
