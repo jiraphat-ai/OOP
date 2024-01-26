@@ -93,56 +93,6 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
         return groups;
     }
 
-//    public List<Map<String, Object>> getGroupsBySubjectId(String subjectID, int section, List<String> tag) {
-//        Firestore db = firebaseInitializer.getDb();
-//        List<Map<String, Object>> groups = new ArrayList<>();
-//
-//
-//        try {
-//            Query query = db.collection("group").whereEqualTo("subjectID", subjectID);
-//
-//            if (section != 0) {
-//                query = query.whereEqualTo("section", section);
-//            }
-//
-//            if (tag != null && !tag.isEmpty()) {
-//                List<QuerySnapshot> snapshots = new ArrayList<>();
-//                    for (String t : tag) {
-//                    Query tagQuery = query.whereArrayContains("tag", t);
-//                    //System.out.println("tagQuery: " + tagQuery);
-//                    snapshots.add(tagQuery.get().get());
-//                    }
-//
-//                // Combine the results of the tag queries
-//                for (QuerySnapshot snapshot : snapshots) {
-//                    for (DocumentSnapshot document : snapshot.getDocuments()) {
-//                        Map<String, Object> groupData = document.getData();
-//                        groupData.put("documentId", document.getId());
-//                        groups.add(groupData);
-//                        //System.out.println("groupData: " + groupData);
-//                        lastsearchgroup = groups;
-//                        }
-//                    }
-//                } else {
-//                ApiFuture<QuerySnapshot> querySnapshot = query.get();
-//                List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
-//
-//                for (QueryDocumentSnapshot document : documents) {
-//                    Map<String, Object> groupData = document.getData();
-//                    groupData.put("documentId", document.getId());
-//                    groups.add(groupData);
-//                    //System.out.println("groupData: " + groupData);
-//                    lastsearchgroup = groups;
-//                    }
-//                }
-//
-//
-//        } catch (InterruptedException | ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return groups;
-//    }
 
     private List<Map<String, Object>> getSubjectID() {
         Firestore db = firebaseInitializer.getDb();

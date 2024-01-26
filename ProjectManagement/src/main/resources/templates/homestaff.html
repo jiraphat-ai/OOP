@@ -472,23 +472,24 @@
                                             // Set the cell values to the data values
                                         }
                                     }
-                                    $(document).ready(function() {
-                                        $("#sortOption").change(function() {
-                                            var sortOption = $(this).val();
-                                            sortMembers(sortOption);
+                                    $("#sortOption").change(function(sortOption) {
+                                        sort(this);
                                         });
-
-                                        function sortMembers(order) {
-                                            $.ajax({
-                                                url: '/sortMembers',  // Update the endpoint URL
-                                                type: 'GET',
-                                                data: { order: order },
-                                                success: function(data) {
-                                                    updateTable(data);  // Update the table with sorted data
-                                                }
-                                            });
-                                        }
-                                    });
+                                    function sort(select) {
+                                    var sortOption = select.value;
+                                    $.ajax({
+                                    url: "/sortUserBySelection",
+                                    type: "POST",
+                                    data: {
+                                    sortOption: sortOption,
+                                        },
+                                    success: function(data) {
+                                    let table = $(data).find("#user-table");
+                                    $("#user-table").replaceWith(table);  // Update the table with sorted data
+                                        },
+                                        });
+                                    }
+                                    
 
                         </script>
                     </body>

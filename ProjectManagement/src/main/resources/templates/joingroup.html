@@ -77,7 +77,16 @@
                             <input class="btn btn-primary search doc_id " type="submit" value="Search"> 
                         </div>
                     </form>
-                </div>
+  
+                    <div class="sortGroup">
+           
+                        <select name="sortOption" id="sortsearch" class="form-select ">
+                        <option value="#">Default Sort</option>
+                         <option value="joinedMembers">Sort by Joined Members</option>
+                        <option value="groupNameAtoZ">Sort by Groupname A-Z</option>
+                        <option value="groupNameZtoA">Sort by Groupname Z-A</option>
+                        </select>  
+                    </div>
             </div>
             <div class="white-frame2 p-3 mt-3">
                 <table class="table" id="user-table">
@@ -90,13 +99,7 @@
                         <th class="fixed-column">Action</th>
                     </tr>
                     </thead>
-                    <!-- Sort search zone -->
-                    <select name="sortOption" id="sortsearch">
-                    <option value="#">Default</option>
-                     <option value="joinedMembers">Sort by Joined Members</option>
-                    <option value="groupNameAtoZ">Sort by Groupname A-Z</option>
-                    <option value="groupNameZtoA">Sort by Groupname Z-A</option>
-                    </select>
+                 
 
                         <tbody >
                         <tr th:each="group : ${groups}">
@@ -225,7 +228,7 @@
             sortOption: sortOption,
           },
           success: function (data) {
-            //console.log("sortlog:", data);
+            //console.log("sortlog:", data); 
             let table = $(data).find("#user-table");
             $("#user-table").replaceWith(table);
           },

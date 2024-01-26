@@ -43,7 +43,7 @@ import com.oop.projectmanagement.FirebaseInitializer;
 
 @Controller
 public class StaffHomeController {
-    public List<User> lastsearchmember;
+    public List<Map<String, Object>> lastsearchmember;
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
@@ -54,6 +54,7 @@ public class StaffHomeController {
         String username = (String) session.getAttribute("username"); // Get the username from the session
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
+        // getalluser(session);
         List<Map<String, Object>> users = new ArrayList<>();
         try {
 
@@ -62,6 +63,7 @@ public class StaffHomeController {
             List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments(); // Get the documents as a list
             for (QueryDocumentSnapshot document : documents) { // Loop through the documents
                 users.add(document.getData());
+                lastsearchmember = users;
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -70,34 +72,28 @@ public class StaffHomeController {
         return "homestaff";
     }
 
-    public List<User> getUserByUsername(String username) {
-        Firestore db = firebaseInitializer.getDb();
-        List<User> users = new ArrayList<>();
 
-        try {
-            Query query = db.collection("useraccount").whereEqualTo("username", username);
-            List<QuerySnapshot> snapshots = new ArrayList<>();
-                for (QuerySnapshot snapshot : snapshots) {
-                    for (DocumentSnapshot document : snapshot.getDocuments()) {
-                        User userData = document.toObject(User.class);
-                        users.add(userData);
-                        lastsearchmember = users;
-                    }
-                }
-                ApiFuture<QuerySnapshot> querySnapshot = query.get();
-                List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
-                for (QueryDocumentSnapshot document : documents) {
-                    User userData = document.toObject(User.class);
-                    users.add(userData);
-                    lastsearchmember = users;
-              }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
 
-        return users;
+    // public List<Map<String,Object>> getalluser(HttpSession session){
+    //     Firestore db = firebaseInitializer.getDb(); // Get the database
+    //     List<Map<String, Object>> users = new ArrayList<>();
+    //     try {
 
-    }
+    //         ApiFuture<QuerySnapshot> query = db.collection("useraccount").get(); // Get all the documents from the collection
+    //         QuerySnapshot querySnapshot = query.get(); // Get the documents
+    //         List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments(); // Get the documents as a list
+    //         for (QueryDocumentSnapshot document : documents) { // Loop through the documents
+    //             users.add(document.getData());
+    //             lastsearchmember = users;
+    //         }
+    //     } catch (InterruptedException | ExecutionException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return users;
+        
+    // }
+        
+    
 
     private List<Map<String, Object>> getUername() {
         Firestore db = firebaseInitializer.getDb();
@@ -114,7 +110,7 @@ public class StaffHomeController {
         return username;
     }
 
-      public List<User> getlastsearch(HttpSession session)  {
+      public List<Map<String, Object>> getlastsearch(HttpSession session)  {
         session.setAttribute("lastsearchmember", lastsearchmember);
         return lastsearchmember;
     }
@@ -123,14 +119,14 @@ public class StaffHomeController {
     public String sortUserBySelection(@RequestParam String sortOption, Model model, HttpSession session) {
         sortMemberAtoZ memberAtoZ = new sortMemberAtoZ();
         sortMemberZtoA memberZtoA = new sortMemberZtoA();
-        List<User> result;
+        List<Map<String, Object>> result;
 
         switch (sortOption) {
-            case "memberAtoZ":
+            case "AtoZ":
                 memberAtoZ.setMember(session);
                 result = memberAtoZ.sortMember();
                 break; 
-            case "memberZtoA":
+            case "ZtoA":
                 memberZtoA.setMember(session);
                 result = memberZtoA.sortMember();
                 break; 

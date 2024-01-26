@@ -266,3 +266,13 @@ body {
 .student {
     font-weight: bold;
 }
+.sortGroup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    right: 10;
+    margin-top: 20px;
+
+    width: 250px;
+    margin-left: auto;
+}
