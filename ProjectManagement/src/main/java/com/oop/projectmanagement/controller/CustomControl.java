@@ -17,9 +17,10 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CustomControl {
     @Autowired
     protected FirebaseInitializer firebaseInitializer = new FirebaseInitializer();
+    protected Firestore db = firebaseInitializer.getDb();
     //Get group detail from firestore by document id
     public GroupFordetail getGroupDetail(String documentId) {
-        Firestore db = firebaseInitializer.getDb();
+         db = firebaseInitializer.getDb();
         DocumentReference docRef = db.collection("group").document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
         DocumentSnapshot document = null;
@@ -39,7 +40,7 @@ public class CustomControl {
         }
     }
     public ArrayList<User> getAllUsersFromMembers(String docId ) {
-        Firestore db = firebaseInitializer.getDb();
+         db = firebaseInitializer.getDb();
         ArrayList<User> userList = new ArrayList<>();
         try {
             ApiFuture<QuerySnapshot> future = db.collection("group")
@@ -74,7 +75,7 @@ public class CustomControl {
     }
 
    protected String getDocumentRefSubjectFromSubjectID(String subjectID){
-        Firestore db = firebaseInitializer.getDb();
+         db = firebaseInitializer.getDb();
         String documentRef = null;
         try {
             ApiFuture<QuerySnapshot> querySnapshot = db.collection("subject").whereEqualTo("subjectID", subjectID).get();
@@ -89,7 +90,7 @@ public class CustomControl {
     }
 
     public String getDocumentIdByDocRef(String docRef) throws ExecutionException, InterruptedException {
-        Firestore db = firebaseInitializer.getDb();
+         db = firebaseInitializer.getDb();
         String documentId = "";
         DocumentSnapshot document = db.document(docRef).get().get();
         if (document.exists()) {
@@ -97,7 +98,15 @@ public class CustomControl {
         }
         return documentId;
     }
-    
 
+    public String getDocumentFeildByDocRef(DocumentReference docRef ,String field) throws ExecutionException, InterruptedException {
+            db = firebaseInitializer.getDb();
+            String documentId = "";
+            DocumentSnapshot document = docRef.get().get();
+            if (document.exists()) {
+                documentId = document.getString(field);
+            }
+       return documentId;
+   }
 
 }

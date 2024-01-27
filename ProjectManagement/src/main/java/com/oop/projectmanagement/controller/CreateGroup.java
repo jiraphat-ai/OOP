@@ -84,7 +84,8 @@ public class CreateGroup extends CustomControl {
                 group.setSubjectRef(db.document(getDocumentRefSubjectFromSubjectID(group.getSubjectID())));
                 group.setDocumentId(document.getId());
                 document.set(group);
-                db.collection("group").document(document.getId()).collection("member").document().set(
+                db.collection("group").document(document.getId()).collection("member")
+                        .document(session.getAttribute("documentId").toString()).set(
                     Map.of(
                     "user", db.document("useraccount/" + session.getAttribute("documentId")), 
                     "role", "owner")        

@@ -257,48 +257,132 @@
         });
     }
 
-    // FUNC JOIN GROUP
-    function joinGroupAlert(){
-        let documentId = $('#docId').text();
+    function joinGroupAlert() {
+    let documentId = $('#docId').text();
+    let buttonText = $("#joinGroup").text().trim();
+
+    if (buttonText === "Join") {
+        // Display the confirmation to join
         Swal.fire({
-            html: `Are you sure to join group?`,
+            html: `Are you sure to join the group?`,
             icon: "info",
             buttonsStyling: false,
             showCancelButton: true,
-            confirmButtonText: "Ok, got it!",
-            cancelButtonText: 'Nope, cancel it',
+            confirmButtonText: "Yes, join",
+            cancelButtonText: 'No, cancel',
             customClass: {
                 confirmButton: "btn btn-primary",
-                cancelButton: 'btn btn-danger'
+                cancelButton: 'btn btn-secondary'
             }
-        }).then((result) =>{
+        }).then((result) => {
             if (result.isConfirmed) {
-                joinGroup();
+                joinGroup(documentId);
+            }
+        });
+    } else if (buttonText === "Already Sent Request") {
+        // Display the confirmation to cancel the request
+        cancelRequestAlert();
+    }
+}
+
+// Modify the joinGroup function to handle both joining and canceling requests
+function joinGroup(documentId) {
+    // Perform AJAX request to join the group
+    $.ajax({
+        url: "/joinGroup",
+        type: "POST",
+        data: { documentId: documentId },
+        success: function (data) {
+            console.log(data);
+
+            if (data == "success") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Join Group Success',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                // Change the join button to "Send Request"
+                $("#joinGroup").text("Send Request");
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: data,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+    });
+}
+
+
+    function loadstatus(){
+          let documentId = $('#docId').text();
+        $.ajax({
+            url: "/loadstatus",
+            type: "GET",
+            data: {documentId: documentId},
+            success: function (data) {
+                if(data == "You have already sent a request to join this group"){
+                    $("#joinGroup").text("Already Sent Request");
+                    //change color to yellow
+                    $("#joinGroup").css("background-color", "#orange");
+                }
+                else{
+                    $("#joinGroup").text("Join");
+                }
             }
         });
     }
 
-    function joinGroup(){
+    
+    // Add an event listener for the Cancel Request button
+    $("#cancelRequest").click(function () {
+        cancelRequestAlert()
+    });
+
+    function cancelRequestAlert() {
         let documentId = $('#docId').text();
+        Swal.fire({
+            html: `Are you sure to cancel the join request?`,
+            icon: "warning",
+            buttonsStyling: false,
+            showCancelButton: true,
+            confirmButtonText: "Yes, cancel it",
+            cancelButtonText: 'No, keep it',
+            customClass: {
+                confirmButton: "btn btn-danger",
+                cancelButton: 'btn btn-secondary'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                cancelRequest(documentId);
+            }
+        });
+    }
+
+    function cancelRequest(documentId) {
+        // Perform AJAX request to cancel the join request
         $.ajax({
-            url: "/joinGroup",
+            url: "/cancelRequest",
             type: "POST",
-            data: {documentId: documentId},
+            data: { documentId: documentId },
             success: function (data) {
                 console.log(data);
 
-                if(data == "success"){
+                if (data == "success") {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Join Group Success',
+                        title: 'Request Canceled',
                         showConfirmButton: false,
                         timer: 1500
                     });
 
-                    // Change the join button to "Send Request"
-                    $("#joinGroup").text("Send Request");
-                }
-                else{
+                    // Change the join button back to "Join"
+                    $("#joinGroup").text("Join");
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: data,
@@ -309,25 +393,7 @@
             }
         });
     }
-
-    function loadstatus(){
-          let documentId = $('#docId').text();
-        $.ajax({
-            url: "/loadstatus",
-            type: "GET",
-            data: {documentId: documentId},
-            success: function (data) {
-                if(data == "You have already sent a request to join this group"){
-                    $("#joinGroup").text("Send Request...");
-                    //change color to yellow
-                    $("#joinGroup").css("background-color", "#FFD700");
-                }
-                else{
-                    $("#joinGroup").text("Join");
-                }
-            }
-        });
-    }
+    
 </script>
 </body>
 
