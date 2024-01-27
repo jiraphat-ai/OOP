@@ -72,29 +72,6 @@ public class StaffHomeController {
         return "homestaff";
     }
 
-
-
-    // public List<Map<String,Object>> getalluser(HttpSession session){
-    //     Firestore db = firebaseInitializer.getDb(); // Get the database
-    //     List<Map<String, Object>> users = new ArrayList<>();
-    //     try {
-
-    //         ApiFuture<QuerySnapshot> query = db.collection("useraccount").get(); // Get all the documents from the collection
-    //         QuerySnapshot querySnapshot = query.get(); // Get the documents
-    //         List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments(); // Get the documents as a list
-    //         for (QueryDocumentSnapshot document : documents) { // Loop through the documents
-    //             users.add(document.getData());
-    //             lastsearchmember = users;
-    //         }
-    //     } catch (InterruptedException | ExecutionException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return users;
-        
-    // }
-        
-    
-
     private List<Map<String, Object>> getUername() {
         Firestore db = firebaseInitializer.getDb();
         List<Map<String, Object>> username = new ArrayList<>();

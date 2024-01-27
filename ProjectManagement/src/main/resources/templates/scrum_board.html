@@ -1,36 +1,78 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
+    <!--end::Page Vendor Stylesheets-->
+    <!--begin::Global Stylesheets Bundle(used by all pages)-->
+    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="/styles.css" rel="stylesheet"  type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="/styles.css" rel="stylesheet"  type="text/css">
+    <link href="/styles.css" rel="stylesheet"  type="text/css">
+</head>
+<style>
+.modal-backdrop
+{
+    opacity:0.5 !important;
+}
+</style>
 <div class="main-content" style="border-radius: 10px;">
     <p class="text-center" style="font-size: x-large; font-weight: bolder;">
         <span th:text="${group.groupName}"></span>
             <span class="float-end"></span>
-            <!-- new scrum -->
             <div class ="headertest">
                 <div class="create-task-btn">
-                    <button onclick="openForm()">Create Task</button>
+                    <button data-bs-toggle="modal" data-bs-target="#modal_create"  >Create Task
+                    
+                    </button> 
                 </div>
-            <div class="navigation-btn">
-                <button data-bs-toggle="modal" data-bs-target="#modal_detail"  th:value="${group.documentId}">Group</button> 
-           
+                <div class="navigation-btn">
+                    <button data-bs-toggle="modal" data-bs-target="#modal_detail">Group</button> 
+                </div>
             </div>
-            </div>
-        <!-- END HEAD -->
+
             <div class="scrum-board">
-                <div class="column" id="todo" onclick="moveToNextColumn('todo')"> <!-- Updated -->
+                <div class="column" id="todo" > <!-- Updated -->
                     <h2>To Do</h2>
+                    <div class="row" id="todotask">
+
+                    </div>     
                 </div>
-            <div class="column" id="doing" onclick="moveToNextColumn('doing')"> <!-- Updated -->
+            <div class="column" id="doing" > <!-- Updated -->
                     <h2>Doing</h2>
+                    <div class="row" id="todotask">
+
+                    </div>
+                    
             </div>
-            <div class="column" id="checking" onclick="moveToNextColumn('checking')"> <!-- Updated -->
+            <div class="column" id="checking" > <!-- Updated -->
                     <h2>Checking</h2>
+                    <div class="row" id="checkingtask">
+
+                    </div>
             </div>
             <div class="column" id="done">
                     <h2>Done</h2>
+                    <div class="row" id="donetask">
+
+                    </div>
             </div>
             </div>
     </div>
+<!-- END MAIN PAGE -->
 
-
-      <!-- Group modal  -->
+<!-- MODAL ZONEEEE -->
+      <!-- Group detail modal  -->
       <div class="modal fade" tabindex="-1" id="modal_detail">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -43,19 +85,17 @@
                     </div>
                     <!--end::Close-->
                 </div>
-    
                 <div class="modal-body" id="detail_body">
-                    
                     <table class="detail-table" id="groupdetailtable">
                         <div class="row"> 
                             <!-- 50:50 col -->
                             <div class="col"> 
                                 <h3>
-                              
                                     Subject ID : <span th:text="${group.subject.subjectID}"></span>
                                 </h3>
                                 <h3>
                                     Section : <span th:text="${group.section}"></span>
+                                    
                                 </h3>
                                 <h3>
                                     Member :<span th:text="${group.maxMember}"></span>
@@ -77,12 +117,15 @@
                                 <h3>
                                     Group Member &nbsp; <span th:text="${group.joinedMember}+'/'+${group.maxMember}"></span>
                                 </h3>
-                                <!-- ใส่ละพัง -->
-                                <!-- <div th:each="member : ${group.member}">
+
+                               <div th:each="member : ${members}">
                                     <h3>
-                                        <span th:text="${member}"></span>
-                                    </h3>
-                                </div> -->
+                                        <span th:text="${member.username}"></span>
+                                     <span th:text="${member.firstName}"></span>
+                                       <span th:text="${member.lastName}"></span>
+
+                                 </h3>
+                                </div>
                             </div>
                         </div>
                     </table>
@@ -91,54 +134,80 @@
                 <div class="modal-footer"></div>
             </div>
         </div>
-    
-    
-    
-    
-    
-    
-    
-    <!-- task form -->
-        <div class="form-popup" id="taskForm">
-            <form class="form-container">
-                <label for="taskName"><b>Task Name</b></label>
-                <input type="text" placeholder="Enter Task Name" name="taskName" required>
-
-                <label for="member"><b>Member</b></label>
-                <input type="text" placeholder="Enter Member Name" name="member" required th:value="${session.firstName + ' ' + session.lastName}">
-
-                <label for="deadline"><b>Deadline</b></label>
-                <input type="datetime-local" name="deadline" required>
-
-                <label for="description"><b>Description</b></label>
-                <textarea placeholder="Enter Task Description" name="description" required></textarea>
-
-                <button type="button" class="btn" onclick="saveTask()">Save</button>
-                <button type="button" class="btn cancel" onclick="closeForm()">Cancel</button>
-            </form>
-        </div>
-    
-
-    
-    
     </div>
-    <!-- Confirmation Popup HTML -->
-<div class="confirmation-popup" id="confirmationPopup">
-    <p>confirmationTask</p>
-    <button onclick="changeStatus()">OK</button>
-    <button class="cancel" onclick="cancelStatusChange()">Cancel</button>
-</div>
+    <!-- task form -->
+  
+  <!-- Create task Modal -->
+  <div class="modal fade" id="modal_create" tabindex="-2" aria-labelledby="modal_create" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal_createLabel">Create Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="createTaskForm" class="form-container">  
+          
+            <label for="taskName"><b>Task Name</b></label>
+            <input type="text" placeholder="Enter Task Name" id="taskName" required>
+          
+          
+            <label for="member"><b>Member</b></label>
+            <select class="form-select form-select-solid" id="mutiselect" data-control="select2" required aria-label="select member"  data-allow-clear="true" multiple="multiple" >
+                <div th:each="memlist : ${members}">
+                    <option th:text="${memlist['username']+' '+ memlist['firstName']+' '+ memlist['lastName'] }" th:value="${memlist['username']}"></option>
+                </div>
+            </select>
+            
+           
+            <label for="deadline"><b>Deadline</b></label>
+            <input type="datetime-local" id="deadline" >
+          
+            
+            <label for="description"><b>Description</b></label>
+            <textarea placeholder="Enter Task Description" id="description"></textarea>
+            
+            <input type="hidden" id="doc_id" th:value="${group['documentId']}"></input>
+               
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+          <button type="button" class="btn btn-primary" onclick="saveTask()" >Create task</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- group detail modal -->
+  <div class="modal fade" id="modal_taskdetail" tabindex="-1" aria-labelledby="modal_taskdetail" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal_taskdetailLabel">task details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <!-- task detail from js func -->
+        
+        </div>
+        <div class="modal-footer">
+          
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+          <button type="button" class="btn btn-primary" onclick="changestatetoToDo()" >ToDo</button>
+          <button type="button" class="btn btn-primary" onclick="changestatetoDoing()" >Doing</button>
+          <button type="button" class="btn btn-primary" onclick="changestatetoChecking()" >checking</button>
+          <button type="button" class="btn btn-primary" onclick="changestatetoDone()" >Done</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
     
 
-
-
-
-
-
-
-
-
-
+<!-- END MODAL ZONEEEE -->
 
 
 
@@ -147,6 +216,7 @@ var filename = window.location.pathname.split("/").pop();
 $(document).ready(function () {
     getSideBar();
 });
+
 
 function getSideBar() {
     console.log("filename: " + filename);
@@ -166,147 +236,231 @@ function getSideBar() {
     });
 
 }
-// TASK ZONE BUT JAVA SCRIPT
-function openForm() {
-        document.getElementById('taskForm').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    }
 
-    function closeForm() {
-        document.getElementById('taskForm').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    }
 
-     function saveTask() {
-    const taskName = document.getElementsByName('taskName')[0].value;
-    const member = document.getElementsByName('member')[0].value;
-    const deadline = document.getElementsByName('deadline')[0].value;
-    const description = document.getElementsByName('description')[0].value;
 
-    if (taskName && member && deadline && description) {
-        const todoColumn = document.getElementById('todo');
-        const newTask = document.createElement('div');
-        newTask.className = 'task';
-        newTask.setAttribute('data-status', 'todo'); // Set initial status to 'todo'
-        newTask.setAttribute('data-deadline', deadline); // Set task deadline
-        newTask.setAttribute('data-description', description); // Set task description
-
-        // Format the deadline using toLocaleString
-        const formattedDeadline = new Date(deadline).toLocaleString('en-US', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-        });
-
-        newTask.innerHTML = `<h3>${taskName}</h3><p>${member}</p><p>${formattedDeadline}</p>`;
-
-        // Create a "Details" button
-        const detailsButton = document.createElement('button');
-        detailsButton.innerText = 'Details';
-        detailsButton.onclick = function (event) {
-            event.stopPropagation(); // Prevent task click when details button is clicked
-            showTaskDetails(newTask);
+    function saveTask() {
+        let taskName = $('#taskName').val(); //
+        let member = $('#mutiselect').val(); //
+        let description = $('#description').val(); //
+        let documentId = $('#doc_id').val(); //
+        let deadline = $('#deadline').val(); //
+        console.log("dead: " + deadline)
+        let task = {
+            taskName: taskName,
+            member: member,
+            deadline: deadline,
+            description: description,
+            documentId : documentId
         };
-
-        // Create a "Delete" button with an icon
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'delete-button'; // Add a class for styling
-        deleteButton.innerHTML = '<iconify-icon icon="material-symbols:delete-outline"></iconify-icon>';
-        deleteButton.onclick = function (event) {
-        event.stopPropagation(); // Prevent task click when delete button is clicked
-        deleteTask(newTask);
-};
-
-        // Append the "Details" and "Delete" buttons to the new task element
-        newTask.appendChild(detailsButton);
-        newTask.appendChild(deleteButton);
-
-        // Add click event listener to the task element
-        newTask.addEventListener('click', function () {
-            moveToNextStatus(newTask);
-        });
-
-        todoColumn.appendChild(newTask);
-        closeForm();
-    } else {
-        alert('Please fill in all task details');
-    }
-}
-
-    function moveToNextStatus(taskElement) {
-        const currentStatus = taskElement.getAttribute('data-status');
-        let nextStatus;
-
-        switch (currentStatus) {
-            case 'todo':
-                nextStatus = 'doing';
-                break;
-            case 'doing':
-                nextStatus = 'checking';
-                break;
-            case 'checking':
-                nextStatus = 'done';
-                break;
-            // Add more cases as needed
-
-            default:
-                // Handle other cases if needed
-                break;
-        }
-
-        const nextColumn = document.getElementById(nextStatus);
-
-        if (nextColumn) {
-            // Show a confirmation pop-up before moving to the next status
-            const confirmed = confirm(`Are you sure you want to move the task to "${nextStatus.toUpperCase()}"?`);
-
-            if (confirmed) {
-                taskElement.setAttribute('data-status', nextStatus);
-                nextColumn.appendChild(taskElement);
+        console.log("task: " + task)
+        $.ajax({
+            url: "/createTask",
+            type: "POST",
+            data: JSON.stringify(task),
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                console.log("data: " + data)
             }
-        } else {
-            console.error('Column not found for the Next Status: ' + nextStatus);
-        }
-}
-
-        function showTaskDetails(taskElement) {
-        const taskName = taskElement.querySelector('h3').innerText;
-        const member = taskElement.querySelector('p:nth-child(2)').innerText;
-
-        // Parse the deadline string and format it
-        const deadlineString = taskElement.querySelector('p:nth-child(3)').innerText;
-        const deadline = new Date(deadlineString);
-        const formattedDeadline = deadline.toLocaleString('en-US', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
         });
-
-    // Create the task details popup
-    const popup = document.createElement('div');
-    popup.className = 'task-details-popup';
-    popup.innerHTML = `<h3>${taskName}</h3><p>Member: ${member}</p><p>Deadline: ${formattedDeadline}</p><button onclick="closeTaskDetails()">Close</button>`;
-
-    // Append the popup to the body
-    document.body.appendChild(popup);
-
-    // Display the popup
-    popup.style.display = 'block';
+    }
+function getTaskDetail(taskName, deadline, member, description) {
+    $('#modal_taskdetail .modal-body').html(
+        '<h3>Task Name: ' + taskName + '</h3>' +
+        '<p>Deadline: ' + deadline + '</p>' +
+        '<p>Member: ' + member + '</p>' +
+        '<p>Description: ' + description + '</p>' +
+        '<input type="hidden" id="taskdoc_id" th:value="${task.documentId}">' 
+    );
 }
 
-    function closeTaskDetails() {
-    // Close the task details popup
-    const popup = document.querySelector('.task-details-popup');
-    popup.style.display = 'none';
+$(document).ready(function() {
+    let doc_id = $('#doc_id').val();
+    $.ajax({
+        url: "/getTasks",
+        type: "GET",
+        data: { status: "To Do",
+                doc_Id : doc_id },
+        success: function(tasks) {
+            console.log("Returned tasks: ", tasks); // Log the returned tasks
+            for (let i = 0; i < tasks.length; i++) {
+                let task = tasks[i];
+                let taskElement = '<button class="task" data-bs-toggle="modal" data-bs-target="#modal_taskdetail" onclick="getTaskDetail(\'' + task.taskName + '\', \'' + task.deadline + '\', \'' + task.member + '\', \'' + task.description + '\')">' +
+                    '<input type="hidden" id="taskdoc_id" value="' + task.documentId + '">' +              
+                    '<h3>' + task.taskName + '</h3>' +
+                                  '<p>' + task.deadline + '</p>' +
+                                  '<p>' + task.member + '</p>' +
+                                  '</button>';
+                $('#todotask').append(taskElement);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
+        }
+    });
+});
+$(document).ready(function() {
+    let doc_id = $('#doc_id').val();
+    $.ajax({
+        url: "/getTasks",
+        type: "GET",
+        data: { status: "Done",
+                doc_Id : doc_id },
+        success: function(tasks) {
+            console.log("Returned tasks: ", tasks); // Log the returned tasks
+            for (let i = 0; i < tasks.length; i++) {
+                let task = tasks[i];
+                let taskElement = '<button class="task" data-bs-toggle="modal" data-bs-target="#modal_taskdetail" onclick="getTaskDetail(\'' + task.taskName + '\', \'' + task.deadline + '\', \'' + task.member + '\', \'' + task.description + '\')">' +
+                    '<input type="hidden" id="taskdoc_id" value="' + task.documentId + '">' +              
+                    '<h3>' + task.taskName + '</h3>' +
+                                  '<p>' + task.deadline + '</p>' +
+                                  '<p>' + task.member + '</p>' +
+                                  '</button>';
+                $('#donetask').append(taskElement);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
+        }
+    });
+});
+$(document).ready(function() {
+    let doc_id = $('#doc_id').val();
+    $.ajax({
+        url: "/getTasks",
+        type: "GET",
+        data: { status: "Checking",
+                doc_Id : doc_id },
+        success: function(tasks) {
+            console.log("Returned tasks: ", tasks); // Log the returned tasks
+            for (let i = 0; i < tasks.length; i++) {
+                let task = tasks[i];
+                let taskElement = '<button class="task" data-bs-toggle="modal" data-bs-target="#modal_taskdetail" onclick="getTaskDetail(\'' + task.taskName + '\', \'' + task.deadline + '\', \'' + task.member + '\', \'' + task.description + '\')">' +
+                    '<input type="hidden" id="taskdoc_id" value="' + task.documentId + '">' +
+                                    '<h3>' + task.taskName + '</h3>' +
+                                  '<p>' + task.deadline + '</p>' +
+                                  '<p>' + task.member + '</p>' +
+                                  '</button>';
+                $('#doingtask').append(taskElement);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
+        }
+    });
+});
+$(document).ready(function() {
+    let doc_id = $('#doc_id').val();
+    $.ajax({
+        url: "/getTasks",
+        type: "GET",
+        data: { status: "Doing",
+                doc_Id : doc_id },
+        success: function(tasks) {
+            console.log("Returned tasks: ", tasks); // Log the returned tasks
+            for (let i = 0; i < tasks.length; i++) {
+                let task = tasks[i];
+                let taskElement = '<button class="task" data-bs-toggle="modal" data-bs-target="#modal_taskdetail" onclick="getTaskDetail(\'' + task.taskName + '\', \'' + task.deadline + '\', \'' + task.member + '\', \'' + task.description + '\')">' +
+                    '<input type="hidden" id="taskdoc_id" value="' + task.documentId + '">' +              
+                    '<h3>' + task.taskName + '</h3>' +
+                                  '<p>' + task.deadline + '</p>' +
+                                  '<p>' + task.member + '</p>' +
+                                  '</button>';
+                $('#checkingtask').append(taskElement);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
+        }
+    });
+});
 
-    // Remove the popup from the DOM
-    popup.remove();
+
+
+
+function changestatetoDone(){
+    let taskdoc_Id = $('#taskdoc_id').val();
+    let documentId = $('#doc_id').val(); //
+    console.log("doc_id: " + documentId)
+    console.log("taskdoc_id: " + taskdoc_Id)
+    $.ajax({
+        url: "/changeState",
+        type: "POST",
+        data: { status: "Done",
+        taskdoc_Id : taskdoc_Id,
+        documentId : documentId  
+    },
+        success: function(tasks) {
+            console.log("Returned tasks: ", tasks); // Log the returned tasks
+            location.reload();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
+        }
+    });
+}
+function changestatetoDoing(){
+    let taskdoc_Id = $('#taskdoc_id').val();
+    let documentId = $('#doc_id').val(); //
+    console.log("doc_id: " + documentId)
+    console.log("taskdoc_id: " + taskdoc_Id)
+    $.ajax({
+        url: "/changeState",
+        type: "POST",
+        data: { status: "Doing",
+        taskdoc_Id : taskdoc_Id,
+        documentId : documentId  
+    },
+        success: function(tasks) {
+            console.log("Returned tasks: ", tasks); // Log the returned tasks
+            location.reload();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
+        }
+    });
+}
+function changestatetoChecking(){
+    let taskdoc_Id = $('#taskdoc_id').val();
+    let documentId = $('#doc_id').val(); //
+    console.log("doc_id: " + documentId)
+    console.log("taskdoc_id: " + taskdoc_Id)
+    $.ajax({
+        url: "/changeState",
+        type: "POST",
+        data: { status: "Checking",
+        taskdoc_Id : taskdoc_Id,
+        documentId : documentId  
+    },
+        success: function(tasks) {
+            console.log("Returned tasks: ", tasks); // Log the returned tasks
+            location.reload();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
+        }
+    });
+}
+function changestatetoToDo(){
+    let taskdoc_Id = $('#taskdoc_id').val();
+    let documentId = $('#doc_id').val(); //
+    console.log("doc_id: " + documentId)
+    console.log("taskdoc_id: " + taskdoc_Id)
+    $.ajax({
+        url: "/changeState",
+        type: "POST",
+        data: { status: "To Do",
+        taskdoc_Id : taskdoc_Id,
+        documentId : documentId  
+    },
+        success: function(tasks) {
+            console.log("Returned tasks: ", tasks); // Log the returned tasks
+            location.reload();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
+        }
+    });
 }
 
 
@@ -314,4 +468,6 @@ function openForm() {
 </script>
 </body>
 
+
 </html>
+

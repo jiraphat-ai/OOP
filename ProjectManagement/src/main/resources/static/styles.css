@@ -304,3 +304,6 @@ span {
 button {
     margin-left: auto;
 }
+.modal-backdrop {
+    opacity: 0.1 !important; /* Change this to the opacity you want */
+}

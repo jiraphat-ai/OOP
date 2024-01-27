@@ -1,18 +1,22 @@
 package com.oop.projectmanagement.model;
 
+import java.util.concurrent.ExecutionException;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.google.cloud.Timestamp;
+import com.oop.projectmanagement.controller.CustomControl;
 
-public class User {
+public class User extends CustomControl{
     private String username;
     private String first_name;
     private String last_name;
     private String password;
     private String user_type;
+
 
     // no-arg constructor
     public User() {}
@@ -65,5 +69,7 @@ public class User {
     public Timestamp getRegDate() {
         return Timestamp.now();
     }
+
+
 
 }
