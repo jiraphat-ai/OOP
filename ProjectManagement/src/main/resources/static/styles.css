@@ -276,3 +276,31 @@ body {
     width: 250px;
     margin-left: auto;
 }
+.notification-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.notification-text {
+    margin: 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+strong {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+span {
+    margin-right: 5px;
+}
+
+button {
+    margin-left: auto;
+}

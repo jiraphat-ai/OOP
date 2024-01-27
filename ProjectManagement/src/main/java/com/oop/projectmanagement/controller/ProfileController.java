@@ -49,6 +49,29 @@ public class ProfileController extends CustomControl{
             List<String> userTags = (List<String>) userData.get("tag");
             model.addAttribute("userTags", userTags);
 
+            // Add the missing fields if they don't exist
+            boolean updateNeeded = false;
+            if (!userData.containsKey("bio")) {
+                userData.put("bio", null);
+                updateNeeded = true;
+            }
+            if (!userData.containsKey("instagram")) {
+                userData.put("instagram", null);
+                updateNeeded = true;
+            }
+            if (!userData.containsKey("facebook")) {
+                userData.put("facebook", null);
+                updateNeeded = true;
+            }
+            if (!userData.containsKey("tag")) {
+                userData.put("tag", new ArrayList<String>());
+                updateNeeded = true;
+            }
+            // If any fields were missing, update the document in Firebase
+            if (updateNeeded) {
+                documentSnapshot.getReference().set(userData);
+            }
+
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
