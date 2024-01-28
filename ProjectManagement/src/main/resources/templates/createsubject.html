@@ -180,42 +180,38 @@
                                     data-bs-target="#addSubjectModal">Add Subject</button>
                             </div>
                             <!-- Add Subject Modal -->
-                            <div class="modal fade" id="addSubjectModal" tabindex="-1"
-                                aria-labelledby="addSubjectModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="addSubjectModal" tabindex="-1" aria-labelledby="addSubjectModalLabel"
+                                aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="addSubjectModalLabel">Add Subject</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <form th:action="@{/addsubject}" method="post">
+                                        <form th:action="@{/addsubject}" method="post" onsubmit="return validateSubjectForm()">
                                             <div class="modal-body">
                                                 <div class="mb-3">
                                                     <label for="subjectID" class="form-label">Subject ID</label>
-                                                    <input type="text" class="form-control" id="subjectID"
-                                                        name="subjectID" placeholder="Enter subject ID">
+                                                    <input type="text" class="form-control" id="subjectID" name="subjectID"
+                                                        placeholder="Enter subject ID" required>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="subjectName" class="form-label">Subject Name</label>
-                                                    <input type="text" class="form-control" id="subjectName"
-                                                        name="subjectName" placeholder="Enter subject name">
+                                                    <input type="text" class="form-control" id="subjectName" name="subjectName"
+                                                        placeholder="Enter subject name" required>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                     <button type="submit" class="btn btn-primary">Save</button>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
-
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            </div>
+                            </div>
+                            </div>
             <div class="modal fade" id="deleteSubjectModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
@@ -235,6 +231,7 @@
                     </div>
                 </div>
             </div>
+            
             <!-- FILEPATH: /c:/Users/Mayme/Downloads/OOP-20240108T134845Z-001/OOP/ProjectManagement/src/main/resources/templates/createsubject.html -->
 
             <div class="p-3" style="width: 100%;  background-color: white;border-radius: 10px;">
@@ -268,6 +265,31 @@
     </div>
     </div>
 
+    <script>
+    function validateSubjectForm() {
+        var subjectId = document.getElementById('subjectID').value;
+        var subjectName = document.getElementById('subjectName').value;
+
+        if (!subjectId || !subjectName) {
+            alert('All fields are required!');
+            return false;
+        }
+
+        var subjectIdPattern = /^\d{7}$/;
+        if (!subjectIdPattern.test(subjectId)) {
+            alert('Subject ID must be 7 digits.');
+            return false;
+        }
+
+        var subjectNamePattern = /^[A-Za-z\s]+$/;
+        if (!subjectNamePattern.test(subjectName)) {
+            alert('Subject Name must contain only English letters.');
+            return false;
+        }
+
+        return true;
+    }
+    </script>
     <script th:inline="javascript">
         /*<![CDATA[*/
         $(document).ready(function() {

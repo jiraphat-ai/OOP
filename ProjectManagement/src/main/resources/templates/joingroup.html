@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html> 
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,13 +15,19 @@
     <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
     <link href="/styles.css" rel="stylesheet"  type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   
     <title>Join Group</title>
     <style>
 
     </style>
 </head>
 <body>
-<div class="row" >
+<div class="row" > 
     <!-- สำหรับรับค่า Menubar -->
     <div class="sidebar col-3"></div>
     <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
@@ -32,33 +38,55 @@
                     <h2 class="header"><b>Join Group</b></h2>
                     <hr>
 
-                    <form action="/searchgroup" method="post">
+                    <form action="/searchgroup" method="get">
                         <div class="form-grid">
                             <label for="subjectId"><b>Subject ID</b></label>
                             <label for="section"><b>Section:</b></label>
                             <label for="tag"><b>Skills</b></label>
-                            <div></div> <!-- Empty div for the submit button -->
+                            <div></div> 
+                            <!-- Empty div for the submit button -->
 
-                            <input type="text" id="subjectId" name="subjectID" required>
-                            <input type="number" id="section" name="#" >
+                            <select class="form-select"  id="subjectID" data-control="select2" data-placeholder="Select an option"> 
+                            <option
+                              th:each="ID : ${subjectid}"
+                              th:value="${ID['subjectID']}"
+                              th:text="${ID['subjectID']} + ' ' + ${ID['subjectName']}"
+                            ></option>
+                          </select>
+                          <select id="section" name="#">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                          </select>
                             <div >
-                                <table  class="checkbox-group">
+                                <table  class="checkbox-group" id="tag">
                                     <tr>
-                                        <td><input type="checkbox" name="dev" value="developer">Developer</td>
+                                        <td><input type="checkbox" name="tag" value="Developer">Developer</td>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                        <td><input type="checkbox" name="manager" value="manager">Manager</td>
+                                        <td><input type="checkbox" name="tag" value="Manager">Manager</td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" name="designer" value="tester">Tester</td>
+                                        <td><input type="checkbox" name="tag" value="Tester">Tester</td>
                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                        <td><input type="checkbox" name="tester" value="designer">Designer</td>
+                                        <td><input type="checkbox" name="tag" value="Designer">Designer</td>
                                     </tr>
                                 </table>
-                            </div>
-                            <input class="btn btn-primary search" type="submit" value="Search">
+                            </div >
+                            <input class="btn btn-primary search doc_id " type="submit" value="Search"> 
                         </div>
                     </form>
-                </div>
+  
+                    <div class="sortGroup">
+           
+                        <select name="sortOption" id="sortsearch" class="form-select ">
+                        <option value="#">Default Sort</option>
+                         <option value="joinedMembers">Sort by Joined Members</option>
+                        <option value="groupNameAtoZ">Sort by Groupname A-Z</option>
+                        <option value="groupNameZtoA">Sort by Groupname Z-A</option>
+                        </select>  
+                    </div>
             </div>
             <div class="white-frame2 p-3 mt-3">
                 <table class="table" id="user-table">
@@ -71,19 +99,53 @@
                         <th class="fixed-column">Action</th>
                     </tr>
                     </thead>
+                 
 
                         <tbody >
                         <tr th:each="group : ${groups}">
-                            <td th:text="${group.groupName}"><span th:text="${group['groupName']}"></span></td>
+                            <td th:text="${group['groupName']}"></td>
                             <td th:text="${group['section']}"></td>
                             <td th:text="${group['tag']}"></td>
                             <td th:text="${group['joinedMember']} + '/'+ ${group['maxMember']}"></td>
+                            <td class="d-none" th:text="${group.documentId}"></td>
                             <td>
-                                <button type="button" class="btn btn-primary">More Detail</button>
-                            </td>
+                                <!-- <button type="button" class="btn btn-primary more-detail" th:data-document-id="${group.documentId}" onclick="getGroupDetail(this)">More Detail</button> -->
+                              <button type="button" class="btn btn-primary more-detail"
+                                      onclick="getGroupDetail(this)"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#modal_detail" >More Detail</button>
+                              <!-- MODAL--> 
+                                
+
+                            
+                            </td>  
                         </tr>
                         </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="modal_detail">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Group Detail</h5>
+
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+
+                <div class="modal-body" id="detail_body">
+                    <p>Modal body text goes here.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="joinGroup" class="btn btn-primary">Join</button>
+                </div>
             </div>
         </div>
     </div>
@@ -98,10 +160,12 @@
 <script src="assets/js/custom/documentation/documentation.js"></script>
 
 <script>
+
     var filename = window.location.pathname.split("/").pop();
     $(document).ready(function() {
 
         getSideBar()
+
     });
     $('form[action="/searchgroup"]').submit(searchGroup);
 
@@ -125,56 +189,211 @@
     }
     var notifications = 5; // Replace with the actual number of notifications
 
-    // Update the badge when the page loads
-    window.onload = function() {
-        updateBadge();
-    };
 
-    function updateBadge() {
-        var badge = document.getElementById('badge');
-        if (notifications > 0) {
-            badge.textContent = notifications;
-            badge.style.display = 'inline';
-        } else {
-            badge.style.display = 'none';
+ function searchGroup(event) {
+    event.preventDefault();
+
+    let subjectId = $('#subjectID').val();
+    let section = $('#section').val();
+    let tag = [];
+    $('#tag input:checked').each(function() {
+        tag.push($(this).val());
+    });
+    tag = tag.join(','); // Convert the array to a comma-separated string
+    //console.log('Tag:', tag);
+    $.ajax({
+        url: '/searchgroup',
+        type: 'GET',
+        data: {
+            subjectID: subjectId,
+            section: section,
+            tag: tag
+        },
+        success: function(data) {
+            let table = $(data).find('#user-table');
+            $('#user-table').replaceWith(table);
         }
-    }
-
-    function toggleNotifications() {
-        var inbox = document.getElementById('notification-inbox');
-        if (inbox.style.display === 'none') {
-            inbox.style.display = 'block';
-        } else {
-            inbox.style.display = 'none';
-        }
-    }
-    function searchGroup(event) {
-        event.preventDefault();
-
-        var subjectId = $('#subjectId').val();
-        var section = $('#section').val();
-        var skills = [];
-        $('.checkbox-group input:checked').each(function() {
-            skills.push($(this).val());
+    });
+}
+    $("#sortsearch").change(function(sortOption) {
+            sort(this);
         });
-
+      function sort(select) {
+        var sortOption = select.value;
+        console.log("sortlog:", sortOption);
         $.ajax({
-            url: '/searchgroup',
-            type: 'GET',
-            data: {
-                subjectID: subjectId,
-                section: section,
-                skills: skills
-            },
-            success: function(data) {
-                console.log('data:', data);
-                let table = $(data).find('#user-table');
-                $('#user-table').replaceWith(table);
+          url: "/sortGroupBySelection",
+          type: "POST",
+          data: {
+            sortOption: sortOption,
+          },
+          success: function (data) {
+            //console.log("sortlog:", data); 
+            let table = $(data).find("#user-table");
+            $("#user-table").replaceWith(table);
+          },
+        });
+      }
+// FUNC SHOW GROUP DETAIL
+    function getGroupDetail(element){
+          var ele = $(element).parent().parent();
+        var docId = ele.find(".d-none").text();
+        console.log("docId: " + docId)
+        $.ajax({
+            url: "/groupdetail",
+            type: "GET",
+            data: {documentId: docId},
+            success: function (data) {
+                //get data specific detail
+                $("#detail_body").html(data);
+                $("#detail_body").find("button").each(function(){
+                    $(this).hide();
+                    loadstatus();
+                });
+                $("#joinGroup").click(function () {
+                    joinGroupAlert();
+                });
             }
         });
     }
 
+    function joinGroupAlert() {
+    let documentId = $('#docId').text();
+    let buttonText = $("#joinGroup").text().trim();
 
+    if (buttonText === "Join") {
+        // Display the confirmation to join
+        Swal.fire({
+            html: `Are you sure to join the group?`,
+            icon: "info",
+            buttonsStyling: false,
+            showCancelButton: true,
+            confirmButtonText: "Yes, join",
+            cancelButtonText: 'No, cancel',
+            customClass: {
+                confirmButton: "btn btn-primary",
+                cancelButton: 'btn btn-secondary'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                joinGroup(documentId);
+            }
+        });
+    } else if (buttonText === "Already Sent Request") {
+        // Display the confirmation to cancel the request
+        cancelRequestAlert();
+    }
+}
+
+// Modify the joinGroup function to handle both joining and canceling requests
+function joinGroup(documentId) {
+    // Perform AJAX request to join the group
+    $.ajax({
+        url: "/joinGroup",
+        type: "POST",
+        data: { documentId: documentId },
+        success: function (data) {
+            console.log(data);
+
+            if (data == "success") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Join Group Success',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                // Change the join button to "Send Request"
+                $("#joinGroup").text("Send Request");
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: data,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+    });
+}
+
+
+    function loadstatus(){
+          let documentId = $('#docId').text();
+        $.ajax({
+            url: "/loadstatus",
+            type: "GET",
+            data: {documentId: documentId},
+            success: function (data) {
+                if(data == "You have already sent a request to join this group"){
+                    $("#joinGroup").text("Already Sent Request");
+                    //change color to yellow
+                    $("#joinGroup").css("background-color", "#orange");
+                }
+                else{
+                    $("#joinGroup").text("Join");
+                }
+            }
+        });
+    }
+
+    
+    // Add an event listener for the Cancel Request button
+    $("#cancelRequest").click(function () {
+        cancelRequestAlert()
+    });
+
+    function cancelRequestAlert() {
+        let documentId = $('#docId').text();
+        Swal.fire({
+            html: `Are you sure to cancel the join request?`,
+            icon: "warning",
+            buttonsStyling: false,
+            showCancelButton: true,
+            confirmButtonText: "Yes, cancel it",
+            cancelButtonText: 'No, keep it',
+            customClass: {
+                confirmButton: "btn btn-danger",
+                cancelButton: 'btn btn-secondary'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                cancelRequest(documentId);
+            }
+        });
+    }
+
+    function cancelRequest(documentId) {
+        // Perform AJAX request to cancel the join request
+        $.ajax({
+            url: "/cancelRequest",
+            type: "POST",
+            data: { documentId: documentId },
+            success: function (data) {
+                console.log(data);
+
+                if (data == "success") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Request Canceled',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    // Change the join button back to "Join"
+                    $("#joinGroup").text("Join");
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: data,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            }
+        });
+    }
+    
 </script>
 </body>
 

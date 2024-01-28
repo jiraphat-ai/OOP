@@ -1,0 +1,196 @@
+<div class="main-content" style="border-radius: 10px;">
+        <p class="text-center" style="font-size: x-large; font-weight: bolder;">
+            <span th:text="${group.groupName}"></span>
+                <span class="float-end">
+                    <button class="btn btn-primary" style="font-size: 1.5vh;" data-bs-toggle="modal" data-bs-target="#editGroupModal" onclick="openEditGroupModal()">
+                        <i class="fas fa-edit fa-lg"></i> Edit
+                     </button>                     
+                    <button id="deleteGroupButton" type="button" class="btn btn-danger" style="font-size: 1.5vh;" onclick="showDeleteGroupModal()">
+                        <i class="fas fa-trash fa-lg"></i> Delete
+                    </button>
+            </span>
+            <div class="d-none" id="docId" th:text="${group.documentId}" ></div> <!-- Add this line to store the document ID -->
+            </p>
+            <hr>
+            <div class="row">
+                <div class="col-9">
+                    <p style="font-size: larger;"><strong>Subject ID:</strong> <span th:text="${group.subjectID} + ' ' + ${group.subject.subjectName}"></span></p>
+                </div>
+                <div class="col-3">
+                    <p style="font-size: larger;"><strong>Section:</strong><span th:text="${group.section}"></span></p>
+                </div>
+                <div class="col">
+                    <div class="row mb-5"></div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-9">
+                    <p style="font-size: larger;"><strong>Group Description:</strong><span th:text="${group.groupDescription}"></span></p>
+                </div>
+            
+            <div class="col-3">
+                <p style="font-size: larger;"><strong>Tag:</strong><span th:each=" tag :${group.tag}">
+                    <span th:text="${tag}"></span>
+                </span></p></div></div>
+                <div class="col">
+                    <div class="row mb-5">
+                        <div class="col">
+                            <p style="font-size: larger;"><strong>Group Member:</strong><br>
+                                <span th:each="member, iterStat :${group.members}">
+                                    <span th:text="${iterStat.index + 1} + ' ' + ${member.firstName} + ' ' + ${member.lastName} + ' ' + ${member.username}"></span>
+                                    <br/>
+                                </span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+            </div>
+        </form>
+
+    </div>
+
+<!-- Modal Edit -->
+<div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="editGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editGroupModalLabel">Edit Group Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="editGroupName" class="form-label">Group Name:</label>
+                <input type="text" class="form-control" id="editGroupName" placeholder="Enter group name">
+                <label for="editGroupDescription" class="form-label">Group Description:</label>
+                <textarea class="form-control" id="editGroupDescription" placeholder="Enter group description"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveEditedGroup()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteGroupModal" tabindex="-1" aria-labelledby="deleteGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteGroupModalLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this group?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteGroup">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+    var filename = window.location.pathname.split("/").pop();
+    $(document).ready(function () {
+        getSideBar();
+    });
+
+    function getSideBar() {
+        console.log("filename: " + filename);
+        $.ajax({
+            url: "/menu_bar_student",
+            type: "GET",
+            success: function (data) {
+                $(".sidebar").html(data);
+                $(".nav-link").each(function () {
+                    if ($(this).attr("href") == filename) {
+                        $(this).addClass("active");
+                    } else {
+                        $(this).removeClass("active");
+                    }
+                });
+            },
+        });
+    }
+
+    function showDeleteGroupModal() {
+        $('#deleteGroupModal').modal('show');
+    }
+
+    function openEditGroupModal() {
+        let documentId = $('#docId').text(); // Get the document ID from the HTML
+        let groupName = $('#editGroupName'); // Get the group name element from the modal
+        let groupDescription = $('#editGroupDescription'); // Get the group description element from the modal
+
+        // You can use the retrieved data to pre-fill the modal inputs if needed
+        // groupName.val(''); // Set the value for the group name input
+        // groupDescription.val(''); // Set the value for the group description textarea
+
+        $('#editGroupModal').modal('show'); // Open the "Edit Group" modal
+    }
+
+    function saveEditedGroup() {
+        let documentId = $('#docId').text(); // Get the document ID from the HTML
+        let groupName = $('#editGroupName').val(); // Get the edited group name
+        let groupDescription = $('#editGroupDescription').val(); // Get the edited group description
+
+        // Perform an AJAX request or any logic needed to save the edited group information
+        $.ajax({
+            type: 'POST',
+            url: '/editGroup', // Adjust the endpoint based on your server-side logic
+            data: {
+                documentId: documentId,
+                groupName: groupName,
+                groupDescription: groupDescription,
+            },
+            success: function (response) {
+                console.log(response);
+                // Handle success, for example, show a message or refresh the page
+                location.reload();
+            },
+            error: function (error) {
+                console.error(error);
+                // Handle error, show an alert or log the error
+            },
+        });
+
+        // Close the modal
+        $('#editGroupModal').modal('hide');
+    }
+
+    // Add this function to handle the delete confirmation button click
+    $('#confirmDeleteGroup').click(function () {
+        let documentId = $('#docId').text(); // Get the document ID from the HTML
+        // Get the group name from the HTML or your data
+        var groupName = 'group1';
+        // Call the deleteGroup function with the group name
+        deleteGroup(documentId);
+
+        // Close the modal
+        $('#deleteGroupModal').modal('hide');
+    });
+
+    // Add this function to perform the AJAX request to delete the group
+    function deleteGroup(documentId) {
+        $.ajax({
+            type: 'POST',
+            url: '/deleteGroup',
+            data: { documentId: documentId },
+            success: function (response) {
+                console.log(response);
+                // Handle success, for example, show a message or refresh the page
+                location.reload();
+            },
+            error: function (error) {
+                console.error(error);
+                // Handle error, show an alert or log the error
+            },
+        });
+    }
+</script>
+</body>
+
+</html>

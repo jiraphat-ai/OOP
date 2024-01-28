@@ -161,6 +161,9 @@
                                 Create New Subject</p>
                         </div>
                     </div>
+                    <div class="add-user mt-3">
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#moreinfomordal">How To Import ?</button>
+                    </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col">
@@ -190,6 +193,36 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="moreinfomordal" tabindex="-1" aria-labelledby="Importsubjectmordal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Importsubjectmordal">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                                    <div class="modal-body">
+                                        <ol>
+                                            <li>Prepare your subject file in the appropriate format (e.g., CSV, Excel).</li>
+                                            <li>Click on the "Drag and Drop here" area or browse for the file using the "Choose File" button.</li>
+                                            <li>If you choose to drag and drop, simply drag the file from your file explorer and drop it onto the designated area.</li>
+                                            <li>If you choose to browse, click on the "Choose File" button and select the subject file from your computer.</li>
+                                            <li>Once the file is selected, it will be automatically uploaded.</li>
+                                            <li>Wait for the upload process to complete.</li>
+                                            <li>Review the imported subject data and make any necessary adjustments.</li>
+                                            <li>Click on the "Save Changes" button to save the imported subject data.</li>
+                                        </ol>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <a href="/download/subject.csv" class="btn btn-success text-white" download>Download CSV Format</a>
+                                        </div>
+                                        </div>
+                                        </div>
+                                        
+                                </div>
+                            </div>
+                        </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -262,7 +295,36 @@
         }
         $('.file-upload').file_upload();
     </script>
-
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+crossorigin="anonymous"></script>
+<script>
+Dropzone.autoDiscover = false;
+var myDropzone = new Dropzone(".dropzone", {
+    url: "/uploadsubject",
+    paramName: "file",
+    maxFilesize: 2, // MB
+    maxFiles: 10,
+    acceptedFiles: 'image/*',
+    dictDefaultMessage: "Drag files here or click to upload.",
+    clickable: true,
+    acceptedFiles: ".csv",
+    init: function() {
+        this.on("sending", function(file, xhr, formData) {
+            formData.append("file", file);
+        });
+    },
+    success: function(file, response) {
+        // Display success message or perform any other actions
+    },
+    error: function(file, response) {
+        // Display error message or perform any other actions
+    }
+});
+</script>
 </body>
 
 </html>

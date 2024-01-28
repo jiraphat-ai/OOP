@@ -1,314 +1,104 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
-    <!--end::Page Vendor Stylesheets-->
-    <!--begin::Global Stylesheets Bundle(used by all pages)-->
-    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="/styles.css" rel="stylesheet"  type="text/css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-timepicker@0.5.2/dist/css/bootstrap-timepicker.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-timepicker@0.5.2/dist/js/bootstrap-timepicker.min.js"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-
-    <!-- Add these links for the clockpicker CSS and JS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.js"></script>
-
-
-
-
-    <title>Home</title>
-    <style>
-        body {
-            font-family: 'Sunflower', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        .scrum-board {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px;
-        }
-
-        .column {
-            flex: 1;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 0 10px;
-            padding: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .column h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        .task {
-            background-color: #f8f8f8;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-            cursor: pointer;
-        }
-
-        .task:hover {
-            background-color: #e0e0e0;
-        }
-
-        .task h3 {
-            margin: 0;
-            font-size: 16px;
-            color: #555;
-        }
-
-    .headertest {
-            display: flex;
-            justify-content: space-between; /* Add space between the buttons */
-            align-items: center; /* Align items vertically in the center */
-            padding: 10px; /* Add some padding */
-            background-color: #f4f4f4; /* Set background color */
-        }
-
-        .headertest button {
-            /* Common styles for buttons */
-            padding: 10px 15px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px; /* Add rounded corners */
-        }
-
-        .create-task-btn button {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .navigation-btn button {
-            background-color: #3498db;
-            color: white;
-            margin-left: 10px; /* Add space between navigation buttons */
-        }
-
-        .create-task-btn button:hover,
-        .navigation-btn button:hover {
-            opacity: 0.8; /* Reduce opacity on hover for a subtle effect */
-        }
-
-        .form-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 999; /* Higher z-index to appear on top of the overlay */
-            background-color: white;
-            padding: 20px;
-            border: 1px solid #ddd;
-        }
-
-        .confirmation-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 999; /* Higher z-index to appear on top of the overlay */
-            background-color: white;
-            padding: 20px;
-            border: 1px solid #ddd;
-        }
-
-        .form-container input,
-        .form-container textarea {
-            width: 100%;
-            padding: 8px;
-            margin: 6px 0 12px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        .form-container button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .form-container button.cancel {
-            background-color: #f44336;
-        }
-
-        .form-container button:hover,
-        .form-container button.cancel:hover {
-            opacity: 0.8;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-            z-index: 998; /* Higher z-index to appear on top of the form popup */
-        }
-
-        /* Add styles for the confirmation popup */
-        .confirmation-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            background-color: white;
-            padding: 20px;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .confirmation-popup p {
-            margin: 0;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .confirmation-popup button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .confirmation-popup button.cancel {
-            background-color: #f44336;
-        }
-
-        .confirmation-popup button:hover,
-        .confirmation-popup button.cancel:hover {
-            opacity: 0.8;
-        }
-
-        .delete-button {
-        float: right; /* Float the delete button to the right */
-        margin-left: 10px; /* Adjust margin as needed for spacing */
-        border: none; /* Remove border */
-        background-color: transparent; /* Set background color to transparent */
-        font-size: 16px; /* Set font size */
-        color: red; /* Set text color to red (adjust as needed) */
-        cursor: pointer; /* Change cursor to pointer on hover */
-        }
-
-        .column#todo {
-    background-color: #FFCACA; /* Set color for tasks in 'To Do' column */
-        }
-
-        .column#doing {
-            background-color: #CAE3FF; /* Set color for tasks in 'Doing' column */
-        }
-
-        .column#checking {
-            background-color: #F8FFCA; /* Set color for tasks in 'Checking' column */
-        }
-
-        .column#done {
-            background-color: #CAFFDC; /* Set color for tasks in 'Done' column */
-        }
-
-        /* Add this CSS to your stylesheet or in a style tag in your HTML */
-.task-details-popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    z-index: 1000;
-    text-align: center;
-}
-
-.task-details-popup h3 {
-    color: #333333;
-    font-size: 20px; /* Set the font size for the heading */
-}
-
-.task-details-popup p {
-    color: #666666;
-    font-size: 16px; /* Set the font size for paragraphs */
-}
-
-.task-details-popup button {
-    background-color: #3498db;
-    color: #ffffff;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: 3px;
-    margin-top: 10px;
-    font-size: 16px; /* Set the font size for the button */
-}
-
-.task-details-popup button:hover {
-    background-color: #2980b9;
-}
-
-
-    </style>
-</head>
-<body>
-<div class="row" >
-    <!-- สำหรับรับค่า Menubar -->
-    <div class="sidebar col-3"></div>
-    <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
-    <div class="col-9 main-content">
-        <div class ="headertest">
-            <div class="create-task-btn">
-            <button onclick="openForm()">Create Task</button>
+<div class="main-content" style="border-radius: 10px;">
+    <p class="text-center" style="font-size: x-large; font-weight: bolder;">
+        <span th:text="${group.groupName}"></span>
+            <span class="float-end"></span>
+            <!-- new scrum -->
+            <div class ="headertest">
+                <div class="create-task-btn">
+                    <button onclick="openForm()">Create Task</button>
                 </div>
             <div class="navigation-btn">
-            <button onclick="navigateToScrumBoard()">Scrum Board</button>
-            <button onclick="navigateToGroup()">Group</button>
-                </div>
-        </div>
-        <div class="scrum-board">
-            <div class="column" id="todo" onclick="moveToNextColumn('todo')"> <!-- Updated -->
-                <h2>To Do</h2>
+                <button data-bs-toggle="modal" data-bs-target="#modal_detail"  th:value="${group.documentId}">Group</button> 
+           
             </div>
+            </div>
+        <!-- END HEAD -->
+            <div class="scrum-board">
+                <div class="column" id="todo" onclick="moveToNextColumn('todo')"> <!-- Updated -->
+                    <h2>To Do</h2>
+                </div>
             <div class="column" id="doing" onclick="moveToNextColumn('doing')"> <!-- Updated -->
-                <h2>Doing</h2>
+                    <h2>Doing</h2>
             </div>
             <div class="column" id="checking" onclick="moveToNextColumn('checking')"> <!-- Updated -->
-                <h2>Checking</h2>
+                    <h2>Checking</h2>
             </div>
             <div class="column" id="done">
-                <h2>Done</h2>
+                    <h2>Done</h2>
+            </div>
+            </div>
+    </div>
+
+
+      <!-- Group modal  -->
+      <div class="modal fade" tabindex="-1" id="modal_detail">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title"><span th:text="${group.groupName}"></span></h2>
+    
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+    
+                <div class="modal-body" id="detail_body">
+                    
+                    <table class="detail-table" id="groupdetailtable">
+                        <div class="row"> 
+                            <!-- 50:50 col -->
+                            <div class="col"> 
+                                <h3>
+                              
+                                    Subject ID : <span th:text="${group.subject.subjectID}"></span>
+                                </h3>
+                                <h3>
+                                    Section : <span th:text="${group.section}"></span>
+                                </h3>
+                                <h3>
+                                    Member :<span th:text="${group.maxMember}"></span>
+                                </h3>
+                                <h3>
+                                    Group Owner : <span th:text="${group.groupOwner}"></span>
+                                </h3>    
+                                <h3>
+                                    Tag : <div th:each="tag : ${group.tag}">
+                                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${tag}"></span></div>
+                                </h3>
+                                <h3>
+                                    Group Description </br>
+                                    <span th:text="${group.groupDescription}"></span>
+                                </h3>
+                            </div>
+                            <div class="col">
+                          
+                                <h3>
+                                    Group Member &nbsp; <span th:text="${group.joinedMember}+'/'+${group.maxMember}"></span>
+                                </h3>
+                                <!-- ใส่ละพัง -->
+                                <!-- <div th:each="member : ${group.member}">
+                                    <h3>
+                                        <span th:text="${member}"></span>
+                                    </h3>
+                                </div> -->
+                            </div>
+                        </div>
+                    </table>
+            </div>
+    
+                <div class="modal-footer"></div>
             </div>
         </div>
-        <!-- Create Task form-popup -->
+    
+    
+    
+    
+    
+    
+    
+    <!-- task form -->
         <div class="form-popup" id="taskForm">
             <form class="form-container">
                 <label for="taskName"><b>Task Name</b></label>
@@ -327,51 +117,57 @@
                 <button type="button" class="btn cancel" onclick="closeForm()">Cancel</button>
             </form>
         </div>
-        <div class="overlay" id="overlay" onclick="closeForm()"></div>
+    
+
+    
+    
     </div>
-</div>
-
-<script src="assets/plugins/global/plugins.bundle.js"></script>
-<script src="assets/js/scripts.bundle.js"></script>
-<!--end::Global Javascript Bundle-->
-<!--begin::Page Vendors Javascript(used by this page)-->
-<script src="assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
-<!--end::Page Vendors Javascript-->
-<!--begin::Page Custom Javascript(used by this page)-->
-<script src="assets/js/custom/documentation/documentation.js"></script>
-
-<!-- Confirmation Popup HTML -->
+    <!-- Confirmation Popup HTML -->
 <div class="confirmation-popup" id="confirmationPopup">
     <p>confirmationTask</p>
     <button onclick="changeStatus()">OK</button>
     <button class="cancel" onclick="cancelStatusChange()">Cancel</button>
 </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
 
 <script>
-    var filename = window.location.pathname.split("/").pop();
-    $(document).ready(function() {
-        getSideBar()
+var filename = window.location.pathname.split("/").pop();
+$(document).ready(function () {
+    getSideBar();
+});
+
+function getSideBar() {
+    console.log("filename: " + filename);
+    $.ajax({
+        url: "/menu_bar_student",
+        type: "GET",
+        success: function (data) {
+            $(".sidebar").html(data);
+            $(".nav-link").each(function () {
+                if ($(this).attr("href") == filename) {
+                    $(this).addClass("active");
+                } else {
+                    $(this).removeClass("active");
+                }
+            });
+        },
     });
 
-    function getSideBar() {
-        console.log("filename: " + filename)
-        $.ajax({
-            url: "/menu_bar_student",
-            type: "GET",
-            success: function(data) {
-                $(".sidebar").html(data);
-                $(".nav-link").each(function() {
-                    if ($(this).attr("href") == "/" + filename) {
-                        $(this).addClass("active");
-                    } else {
-                        $(this).removeClass("active");
-                    }
-                });
-            }
-        });
-    }
-
-    function openForm() {
+}
+// TASK ZONE BUT JAVA SCRIPT
+function openForm() {
         document.getElementById('taskForm').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
     }
@@ -513,23 +309,9 @@
     popup.remove();
 }
 
-</script>
-<script>
-    // Your existing script content here
 
-    // Function to navigate to the Scrum Board page
-    function navigateToScrumBoard() {
-        window.location.href = '/scrum_board';  // Replace with your actual Scrum Board page URL
-    }
-
-    // Function to navigate to the Group page
-    function navigateToGroup() {
-        window.location.href = '/homestudent    ';  // Replace with your actual Group page URL
-    }
 
 </script>
-
 </body>
 
 </html>
-

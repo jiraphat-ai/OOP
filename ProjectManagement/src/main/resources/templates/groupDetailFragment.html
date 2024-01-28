@@ -1,0 +1,16 @@
+<table class="detail-table" id="groupdetailtable">
+    <tr th:each="groupde : ${groupdetail}">
+        <td><span th:text="${groupde.groupName}"></span></td>
+        <td>Subject ID<span th:text="${groupde.subject.subjectID}"></span></td>
+        <td>Member<span th:text="${groupde.joinedMember}"></span></td>
+        <td>Section<span th:text="${groupde.section}"></span></td>
+        <td><span th:text="${groupde.groupOwner}"></span></td>
+        <td>Group Member<span th:text="${groupde.joinedMember}+'/'+${groupde.maxMember}"></span></td>
+        <td>
+            <div th:each="tag : ${groupde.tag}">
+                <span th:text="${tag}"></span>
+            </div>
+        </td>
+        <td><span th:text="${groupde.groupDescription}"></span></td>
+    </tr>
+</table>

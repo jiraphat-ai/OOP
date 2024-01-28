@@ -6,66 +6,72 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import java.util.HashMap;
-import java.util.Map;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.oop.projectmanagement.FirebaseInitializer;
+import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.oop.projectmanagement.FirebaseInitializer;
 import com.google.cloud.firestore.QuerySnapshot;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class ProfileController {
+public class ProfileController extends CustomControl{
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
 
     @GetMapping("/profile")
-    public String getUserinfo(HttpSession session,Model model) {
+    public String getUserinfo(HttpSession session, Model model) {
+        model.addAttribute("tags", getTags());
         Firestore db = firebaseInitializer.getDb();
-
-        DocumentReference documentRef = db.collection("useraccount").document();
+        String username = (String) session.getAttribute("username");
+        Query documentRef = db.collection("useraccount").whereEqualTo("username", username);
 
         try {
-            ApiFuture<DocumentSnapshot> documentSnapshotFuture = documentRef.get();
-            DocumentSnapshot document = documentSnapshotFuture.get();
+            ApiFuture<QuerySnapshot> documentSnapshotFuture = documentRef.get();
+            QuerySnapshot document = documentSnapshotFuture.get();
+            DocumentSnapshot documentSnapshot = document.getDocuments().get(0);
 
-            if (document.exists()) {
-                // Document found, get required fields
-                String username = document.getString("username");
-                String firstName = document.getString("firstName");
-                String lastName = document.getString("lastName");
-                String bio = document.getString("bio");
-                model.addAttribute("tags", getTags());
-                String facebook = document.getString("facebook"); // Fetching Facebook URL
-                String instagram = document.getString("instagram"); // Fetching IG URL
+            // Get all the data in the document
+            Map<String, Object> userData = documentSnapshot.getData();
 
+            // Add the data to the model
+            model.addAttribute("userData", userData);
+            List<String> userTags = (List<String>) userData.get("tag");
+            model.addAttribute("userTags", userTags);
 
-                // Add the fields to the model
-                model.addAttribute("username", username);
-                model.addAttribute("firstName", firstName);
-                model.addAttribute("lastName", lastName);
-                model.addAttribute("bio", bio);
-                model.addAttribute("facebook", facebook); // Adding Facebook URL to the model
-                model.addAttribute("instagram", instagram); // Adding IG URL to the model
-            } else {
-                // Document not found
-                // Handle the case where the document does not exist
+            // Add the missing fields if they don't exist
+            boolean updateNeeded = false;
+            if (!userData.containsKey("bio")) {
+                userData.put("bio", null);
+                updateNeeded = true;
             }
+            if (!userData.containsKey("instagram")) {
+                userData.put("instagram", null);
+                updateNeeded = true;
+            }
+            if (!userData.containsKey("facebook")) {
+                userData.put("facebook", null);
+                updateNeeded = true;
+            }
+            if (!userData.containsKey("tag")) {
+                userData.put("tag", new ArrayList<String>());
+                updateNeeded = true;
+            }
+            // If any fields were missing, update the document in Firebase
+            if (updateNeeded) {
+                documentSnapshot.getReference().set(userData);
+            }
+
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -73,7 +79,10 @@ public class ProfileController {
         return "profile";
     }
 
-    @PutMapping("/updateUserProfile")
+
+
+    @PostMapping("/updateUserProfile")
+    @ResponseBody
     public ResponseEntity<String> updateUserProfile(@RequestBody Map<String, Object> data, HttpSession session) {
         Firestore db = firebaseInitializer.getDb();
 
@@ -84,7 +93,6 @@ public class ProfileController {
         if (username == null) {
             return new ResponseEntity<>("User not authenticated", HttpStatus.UNAUTHORIZED);
         }
-
         // Fetch the document based on the username
         ApiFuture<QuerySnapshot> querySnapshotFuture = db.collection("useraccount").whereEqualTo("username", username).limit(1).get();
 
@@ -97,11 +105,7 @@ public class ProfileController {
                 DocumentReference documentRef = document.getReference();
                 documentRef.update(data);
 
-
                 // Update session attributes with new information
-                session.setAttribute("bio", (String) data.get("bio"));
-                session.setAttribute("facebook", (String) data.get("facebook"));
-                session.setAttribute("instagram", (String) data.get("instagram"));
 
                 return new ResponseEntity<>("Profile updated successfully", HttpStatus.OK);
             } else {
@@ -113,9 +117,9 @@ public class ProfileController {
             return new ResponseEntity<>("Error updating profile", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    //get Tags from database firestore
-    private List<Map<String, Object>> getTags() {
+    
+    
+        private List<Map<String, Object>> getTags() {
         Firestore db = firebaseInitializer.getDb();
         List<Map<String, Object>> tags = new ArrayList<>();
         try {

@@ -1,56 +1,90 @@
 package com.oop.projectmanagement.controller;
 
+import com.google.cloud.firestore.*;
+import com.oop.projectmanagement.model.GroupFordetail;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
-import com.google.cloud.firestore.Query;
+
 
 @Controller
-public class JoinGroup {
-
+public class JoinGroup extends CustomControl {
+    public List<GroupFordetail> lastsearchgroup;
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
+
     @GetMapping("/joingroup")
-    public String getUserinfo(HttpSession session) {
+    public String getUserinfo(HttpSession session, Model model) throws ExecutionException, InterruptedException {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
+        model.addAttribute("subjectid", getSubjectID());
+
         // Now you can use the username, firstName, and lastName
         return "joingroup";
+
     }
-    @GetMapping("/searchgroup")
-    public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") int section  ,  Model model) {
-        List<Map<String, Object>> groups = getGroupsBySubjectId(subjectID , section);
-        model.addAttribute("groups", groups);
-        return "/joingroup";  // return the name of the view that will display the groups
+    //SHOW GROUP DETAIL SECTION
+    @GetMapping("/moreGroupFordetail")
+    public String getGroupMoreDetail(@RequestParam String documentId, Model model) {
+        //System.out.println("documentId " + documentId);
+        List<GroupFordetail> groupFordetail = searchDocumentById(documentId);
+        model.addAttribute("GroupFordetail", groupFordetail);
+        return "/GroupFordetailFragment";
     }
-    private List<Map<String, Object>> getGroupsBySubjectId(String subjectID, int section ) {
+
+
+  @GetMapping("/searchgroup")
+public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") int section, @RequestParam(value = "tag", required = false) String[] tag, Model model) {
+    List<String> tagList = tag != null ? Arrays.asList(tag) : null; // Convert the array to a list
+    List<GroupFordetail> groups = getGroupsBySubjectId(subjectID, section, tagList);
+    model.addAttribute("groups", groups);
+    return "/joingroup"; // return the name of the view that will display the groups
+}
+    public List<GroupFordetail> getGroupsBySubjectId(String subjectID, int section, List<String> tag) {
         Firestore db = firebaseInitializer.getDb();
-        List<Map<String, Object>> groups = new ArrayList<>();
-        //i want to get the group that have the  same any text in subjectID and section
+        List<GroupFordetail> groups = new ArrayList<>();
+
         try {
             Query query = db.collection("group").whereEqualTo("subjectID", subjectID);
+
             if (section != 0) {
                 query = query.whereEqualTo("section", section);
             }
 
-            ApiFuture<QuerySnapshot> querySnapshot = query.get();
-            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
-                groups.add(document.getData());
+            if (tag != null && !tag.isEmpty()) {
+                List<QuerySnapshot> snapshots = new ArrayList<>();
+                for (String t : tag) {
+                    Query tagQuery = query.whereArrayContains("tag", t);
+                    snapshots.add(tagQuery.get().get());
+                }
+
+                for (QuerySnapshot snapshot : snapshots) {
+                    for (DocumentSnapshot document : snapshot.getDocuments()) {
+                        GroupFordetail groupData = document.toObject(GroupFordetail.class);
+                        groups.add(groupData);
+                        lastsearchgroup = groups;
+                    }
+                }
+            } else {
+                ApiFuture<QuerySnapshot> querySnapshot = query.get();
+                List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+
+                for (QueryDocumentSnapshot document : documents) {
+                    GroupFordetail groupData = document.toObject(GroupFordetail.class);
+                    groups.add(groupData);
+                    lastsearchgroup = groups;
+                }
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -58,4 +92,182 @@ public class JoinGroup {
 
         return groups;
     }
+
+
+    private List<Map<String, Object>> getSubjectID() {
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> subjectid = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = db.collection("subject").get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                subjectid.add(document.getData());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return subjectid;
+    }
+    public List<GroupFordetail> getlastsearch(HttpSession session)  {
+        session.setAttribute("lastsearchgroup", lastsearchgroup);
+        return lastsearchgroup;
+    }
+
+    @PostMapping("/sortGroupBySelection")
+    public String sortGroupBySelection(@RequestParam String sortOption, Model model, HttpSession session) {
+        getlastsearch(session);
+        sortGroupByGroupNameATOZ ATOZ = new sortGroupByGroupNameATOZ();
+        sortGroupByGroupNameZTOA ZTOA = new sortGroupByGroupNameZTOA();
+        SortGroupByJoinedMembers JNM = new SortGroupByJoinedMembers();
+        List<GroupFordetail> result;
+
+        switch (sortOption) {
+            case "joinedMembers":
+                JNM.setGroup(session);
+                result = JNM.sortGroup();
+                break;
+            case "groupNameAtoZ":
+                ATOZ.setGroup(session);
+                result = ATOZ.sortGroup();
+                break; 
+            case "groupNameZtoA":
+                ZTOA.setGroup(session);
+                result = ZTOA.sortGroup();
+                break; 
+            // add more cases as needed
+            default:
+                result = getlastsearch(session); // default case if the value doesn't match any known options
+        }
+        model.addAttribute("groups", result);
+        return "/joingroup"; // return the name of your view
+    }
+
+
+// SEARCH GROUP DETAIL BY DOC_ID SECTION
+
+    public List<GroupFordetail> searchDocumentById(String documentId) {
+        System.out.println("Searching document with ID: " + documentId);
+        List<GroupFordetail> groupFordetailList = new ArrayList<>();
+        Firestore db = firebaseInitializer.getDb();
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = db.collection("group").whereEqualTo("documentId", documentId).get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                GroupFordetail groupFordetail = document.toObject(GroupFordetail.class);
+                groupFordetail.setDocumentId(document.getId());
+                groupFordetailList.add(groupFordetail);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Found " + groupFordetailList.size() + " documents");
+        return groupFordetailList;
+    }
+    @PostMapping("/joinGroup")
+    @ResponseBody
+    public String joinGroup(@RequestParam String documentId, HttpSession session) {
+        Firestore db = firebaseInitializer.getDb();
+        System.out.println("Joining group with ID: " + documentId);
+        try {
+            if(session.getAttribute("documentId") == null) {
+                return "Please login first";
+            }
+            else {
+                DocumentSnapshot requestSnapshot = db.collection("group").document(documentId).collection("request").document(session.getAttribute("documentId").toString()).get().get();
+                if(requestSnapshot.exists()) {
+                    return "You have already sent a request to join this group";
+                }
+                DocumentSnapshot memberSnapshot = db.collection("group").document(documentId).collection("member").document(session.getAttribute("documentId").toString()).get().get();
+                if(memberSnapshot.exists()) {
+                    return "You are already a member of this group";
+                }
+                DocumentSnapshot groupSnapshot = db.collection("group").document(documentId).get().get();
+                if(groupSnapshot.get("groupOwner").equals(session.getAttribute("username"))) {
+                    return "You are the owner of this group";
+                }
+                db.collection("group").document(documentId).collection("request").document(session.getAttribute("documentId").toString()).set(
+                            Map.of(
+                                    "user", db.document("useraccount/" + session.getAttribute("documentId")),
+                                    "role", "member")
+                    );
+                return "success";
+                // Rest of your code
+            }
+        } catch (Exception e) {
+            return "Error to join group: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/loadstatus")
+    @ResponseBody
+    public String joingroup(@RequestParam String documentId, HttpSession session) {
+        Firestore db = firebaseInitializer.getDb();
+        System.out.println("Joining group with ID: " + documentId);
+        try {
+            if (session.getAttribute("documentId") == null) {
+                return "Please login first";
+            } else {
+                DocumentSnapshot requestSnapshot = db.collection("group").document(documentId)
+                        .collection("request").document(session.getAttribute("documentId").toString()).get().get();
+                if (requestSnapshot.exists()) {
+                    return "You have already sent a request to join this group";
+                }
+                DocumentSnapshot memberSnapshot = db.collection("group").document(documentId)
+                        .collection("member").document(session.getAttribute("documentId").toString()).get().get();
+                if (memberSnapshot.exists()) {
+                    return "You are already a member of this group";
+                }
+                DocumentSnapshot groupSnapshot = db.collection("group").document(documentId).get().get();
+                if (groupSnapshot.get("groupOwner").equals(session.getAttribute("username"))) {
+                    return "You are the owner of this group";
+                }
+                
+                // Check if the user has already joined a group with the same subject
+                // String subjectId = groupSnapshot.getString("subjectId");
+                // QuerySnapshot joinedGroupsSnapshot = db.collection("group")
+                //         .whereEqualTo("subjectId", subjectId)
+                //         .whereArrayContains("members", session.getAttribute("documentId").toString())
+                //         .get().get();
+                // if (!joinedGroupsSnapshot.isEmpty()) {
+                //     return "You can't join more than 1 group in the same subject";
+                // }
+                
+                return "success";
+                // Rest of your code
+            }
+        } catch (Exception e) {
+            return "Error to join group: " + e.getMessage();
+        }
+    }
+    @PostMapping("/cancelRequest")
+    @ResponseBody
+    public String cancelRequest(@RequestParam String documentId, HttpSession session) {
+        Firestore db = firebaseInitializer.getDb();
+        System.out.println("Canceling request to join group with ID: " + documentId);
+        try {
+            if (session.getAttribute("documentId") == null) {
+                return "Please login first";
+            } else {
+                // Check if the user has already sent a request
+                DocumentSnapshot requestSnapshot = db.collection("group").document(documentId)
+                        .collection("request").document(session.getAttribute("documentId").toString()).get().get();
+
+                if (requestSnapshot.exists()) {
+                    // Delete the request
+                    db.collection("group").document(documentId).collection("request")
+                            .document(session.getAttribute("documentId").toString()).delete();
+
+                    return "success";
+                } else {
+                    return "You haven't sent a request to join this group";
+                }
+            }
+        } catch (Exception e) {
+            return "Error canceling join request: " + e.getMessage();
+        }
+    }
+
 }
+
+
+

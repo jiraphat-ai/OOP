@@ -14,10 +14,20 @@
     <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
     <link href="/styles.css" rel="stylesheet"  type="text/css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <title>My Group</title>
     <style>
-
+        .btn-group {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .btn-group .btn {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 14px;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -26,7 +36,39 @@
     <div class="sidebar col-3"></div>
     <!-- ใส่คอนเท้นหลัก บริเวณด้านซ้าย -->
     <div class="col-9 main-content">
-
+        <p class="text-center" style="font-size: x-large; font-weight: bolder;">My Group</p><hr>
+        <button class="table" onclick="getGroupDetail(this)" th:each="group : ${groupList}" style="border-radius: 10px;">
+            <a  class="nav-link link-dark">
+                <div class="row" >
+                    <div class="col">
+                        <h3>Subject ID <span th:text="${group.subject.subjectID}"></span></h3>
+                    </div>
+                    <div class="col">
+                        <h3>Subject Name <span th:text="${group.subject.subjectName}"></span></h3>
+                    </div>
+                    <div class="col">
+                        <h3>Members  <span th:text="${group.joinedMember}+'/'+${group.maxMember}"> </span></h3>
+                    </div>
+                </div>
+                <br>
+            
+                <div class="row" >
+                    <div class="col">
+                        Tag :
+                        <div th:each="tag : ${group.tag}" >
+                            <span th:text="${tag}"></span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <strong>Group Name : <span th:text="${group.groupName}"></span></strong>
+                    </div>
+                    <div class="col">
+                        <strong>Owner : <span  th:text="${group.groupOwner}"></span></strong>
+                        <input type="hidden" class="doc_id" th:value="${group.documentId}">
+                    </div>
+                </div>
+            </a>
+        </button>
     </div>
 </div>
 <script src="assets/plugins/global/plugins.bundle.js"></script>
@@ -63,6 +105,20 @@
             }
         });
     }
+    function getGroupDetail(element){
+        var docId = $(element).find(".doc_id").val();
+        console.log("docId: " + docId)
+        $.ajax({
+            url: "/groupdetail",
+            type: "GET",
+            data: {documentId: docId},
+            success: function (data) {
+                //get data specific detail
+                $(".main-content").html(data);
+            }
+        });
+    }
+
 </script>
 </body>
 
