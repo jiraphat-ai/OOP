@@ -5,13 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import java.text.ParseException;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -185,19 +183,35 @@ public class ScrumBoardController extends CustomControl {
         return tasks;
     }
 
-    @PostMapping("changeState")
-    public String changeTaskStatus(@RequestParam String status, @RequestParam String taskdoc_Id ,@RequestParam String documentId) throws InterruptedException, ExecutionException {
-        Firestore db = firebaseInitializer.getDb();
+@PostMapping("changeState")
+public ResponseEntity<Map<String, String>> changeTaskStatus(@RequestParam String status, @RequestParam String taskdoc_Id ,@RequestParam String documentId) throws InterruptedException, ExecutionException {
+    Firestore db = firebaseInitializer.getDb();
 
-        // Update the task status in the tasks collection
-        DocumentReference taskRef = db.collection("group").document(documentId).collection("tasks").document(taskdoc_Id);
-        ApiFuture<WriteResult> updateResult = taskRef.update("status", status);
+    // Update the task status in the tasks collection
+    DocumentReference taskRef = db.collection("group").document(documentId).collection("tasks").document(taskdoc_Id);
+    ApiFuture<WriteResult> updateResult = taskRef.update("status", status);
 
-        // Wait for the update to complete
-        updateResult.get();
+    // Wait for the update to complete
+    updateResult.get();
 
-        return "Task status updated successfully";
-    }
+    Map<String, String> response = new HashMap<>();
+    response.put("message", "Task status updated successfully");
+
+    return new ResponseEntity<>(response, HttpStatus.OK);
+}
+@PostMapping("/deleteTask")
+public ResponseEntity<Map<String, String>> deleteTask(@RequestParam String taskdoc_Id, @RequestParam String documentId) throws InterruptedException, ExecutionException {
+    Firestore db = firebaseInitializer.getDb();
+    DocumentReference taskRef = db.collection("group").document(documentId).collection("tasks").document(taskdoc_Id);
+    ApiFuture<WriteResult> deleteResult = taskRef.delete();
+    deleteResult.get();
+
+    Map<String, String> response = new HashMap<>();
+    response.put("message", "Task deleted successfully");
+
+    return new ResponseEntity<>(response, HttpStatus.OK);
+}
+
     
 
 }

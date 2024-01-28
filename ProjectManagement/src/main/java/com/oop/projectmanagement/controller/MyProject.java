@@ -21,9 +21,8 @@ public class MyProject {
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
-String documentId;
+    String documentId;
     @GetMapping("/myproject")
-
     public String getUserinfo(HttpSession session , Model model) throws ExecutionException, InterruptedException {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");

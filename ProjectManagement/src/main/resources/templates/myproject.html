@@ -98,6 +98,14 @@
     $(document).ready(function() {
         getSideBar()
     });
+    $(document).ready(function() {
+    let documentId = localStorage.getItem('documentId');
+    if (documentId) {
+        getScrumboardreload(documentId);
+        // Clear the documentId from localStorage
+        localStorage.removeItem('documentId');
+    }
+});
 
 
     function getSideBar(){
@@ -131,14 +139,18 @@
             }
         });
     }
-
-
-    
-
-        
-  
-       
-
+     function getScrumboardreload(documentId){
+    console.log("docId: " + documentId)
+    $.ajax({
+        url: "/groupscrumbord",
+        type: "GET",
+        data: {documentId: documentId},
+        success: function (data) {
+            //get data specific detail
+            $(".main-content").html(data);
+        }
+    });
+}
 
 
 </script>
