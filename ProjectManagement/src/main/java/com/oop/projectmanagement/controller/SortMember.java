@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-abstract public class sortMember {
+abstract public class SortMember {
 
     abstract public List<Map<String, Object>> sortMember();
 

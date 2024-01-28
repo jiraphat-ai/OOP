@@ -32,12 +32,10 @@
             <span class="float-end"></span>
             <div class ="headertest">
                 <div class="create-task-btn">
-                    <button data-bs-toggle="modal" data-bs-target="#modal_create"  >Create Task
-                    
-                    </button> 
+                    <button data-bs-toggle="modal" data-bs-target="#modal_create">Create Task</button>
                 </div>
                 <div class="navigation-btn">
-                    <button data-bs-toggle="modal" data-bs-target="#modal_detail">Group</button> 
+                    <button data-bs-toggle="modal" data-bs-target="#modal_detail">Group</button>
                 </div>
             </div>
 
@@ -46,14 +44,14 @@
                     <h2>To Do</h2>
                     <div class="row" id="todotask">
 
-                    </div>     
+                    </div>
                 </div>
             <div class="column" id="doing" > <!-- Updated -->
                     <h2>Doing</h2>
-                    <div class="row" id="todotask">
+                    <div class="row" id="doingtask">
 
                     </div>
-                    
+
             </div>
             <div class="column" id="checking" > <!-- Updated -->
                     <h2>Checking</h2>
@@ -78,7 +76,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="modal-title"><span th:text="${group.groupName}"></span></h2>
-    
+
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
                         <span class="svg-icon svg-icon-2x"></span>
@@ -87,22 +85,22 @@
                 </div>
                 <div class="modal-body" id="detail_body">
                     <table class="detail-table" id="groupdetailtable">
-                        <div class="row"> 
+                        <div class="row">
                             <!-- 50:50 col -->
-                            <div class="col"> 
+                            <div class="col">
                                 <h3>
                                     Subject ID : <span th:text="${group.subject.subjectID}"></span>
                                 </h3>
                                 <h3>
                                     Section : <span th:text="${group.section}"></span>
-                                    
+
                                 </h3>
                                 <h3>
                                     Member :<span th:text="${group.maxMember}"></span>
                                 </h3>
                                 <h3>
                                     Group Owner : <span th:text="${group.groupOwner}"></span>
-                                </h3>    
+                                </h3>
                                 <h3>
                                     Tag : <div th:each="tag : ${group.tag}">
                                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${tag}"></span></div>
@@ -366,7 +364,7 @@ $(document).ready(function() {
                                   '<p>' + task.deadline + '</p>' +
                                   '<p>' + task.member + '</p>' +
                                   '</button>';
-                $('#checkingtask').append(taskElement);
+                $('#doingtask').append(taskElement);
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -388,7 +386,7 @@ function changestatetoDone(){
         type: "POST",
         data: { status: "Done",
         taskdoc_Id : taskdoc_Id,
-        documentId : documentId  
+        documentId : documentId 
     },
         success: function(tasks) {
             console.log("Returned tasks: ", tasks); // Log the returned tasks
