@@ -1,23 +1,18 @@
 package com.oop.projectmanagement.model;
 
-import javax.servlet.http.HttpSession;
-
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-
 import com.google.cloud.Timestamp;
 
-public class User {
+public class Member {
     private String username;
     private String first_name;
     private String last_name;
     private String password;
     private String user_type;
 
-//    private String documentId;
+    private String documentId;
 
     // no-arg constructor
-    public User() {}
+    public Member() {}
 
     // getters and setters
     public String getUsername() {
@@ -68,12 +63,12 @@ public class User {
         return Timestamp.now();
     }
 
-//    public void setDocumentId(String documentId) {
-//        this.documentId = documentId;
-//    }
-//
-//    public String getDocumentId() {
-//        return documentId;
-//    }
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
 
 }

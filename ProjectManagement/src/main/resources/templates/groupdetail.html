@@ -14,7 +14,7 @@
             <hr>
             <div class="row">
                 <div class="col-9">
-                    <p style="font-size: larger;"><strong>Subject ID:</strong> <span th:text="${group.subjectID} + ' ' + ${group.subject.subjectName}"></span></p>
+                    <p style="font-size: larger;"><strong>Subject ID:</strong> <span th:text="${group['subjectID']} + ' ' + ${group.subject.subjectName}"></span></p>
                 </div>
                 <div class="col-3">
                     <p style="font-size: larger;"><strong>Section:</strong><span th:text="${group.section}"></span></p>
@@ -35,11 +35,13 @@
                 <div class="col">
                     <div class="row mb-5">
                         <div class="col">
-                            <p style="font-size: larger;"><strong>Group Member:</strong><br>
-                                <span th:each="member, iterStat :${group.members}">
-                                    <span th:text="${iterStat.index + 1} + ' ' + ${member.firstName} + ' ' + ${member.lastName} + ' ' + ${member.username}"></span>
+                            <div style="font-size: larger;"><strong>Group Member:</strong><br>
+                                <div th:each="member, iterStat :${group.members}">
+                                    <span onclick="memberClick(this)" th:text="${iterStat.index + 1} + ' ' + ${member.firstName} + ' ' + ${member.lastName} + ' ' + ${member.username}">
+                                    </span>
+                                    <div class="d-none member_doc_id" th:text="${member.documentId}" ></div>
                                     <br/>
-                                </span></p>
+                                </div></p>
                         </div>
                     </div>
                 </div>
@@ -92,11 +94,86 @@
   </div>
 
 
+<div class="modal animation-slide-in-down" id="modalSetrole" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel2">Modal 2</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="role" class="form-label">Role</label>
+                <select class="form-select" id="role" data-control="select2" data-placeholder="Select an option">
+
+                    <option>projectmanager</option>
+                    <option>member</option>
+                    <option>owner</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button id="saveRole" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/plugins/global/plugins.bundle.js"></script>
+<script src="assets/js/scripts.bundle.js"></script>
+<!--end::Global Javascript Bundle-->
+<!--begin::Page Vendors Javascript(used by this page)-->
+<script src="assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+<!--end::Page Vendors Javascript-->
+<!--begin::Page Custom Javascript(used by this page)-->
+<script src="assets/js/custom/documentation/documentation.js"></script>
+
 <script>
     var filename = window.location.pathname.split("/").pop();
     $(document).ready(function () {
         getSideBar();
+
     });
+
+    function memberClick (element){
+        let documentId = $(element).next().text();
+        let groupId = $('#docId').text();
+        let text = $(element).text();
+        $('#exampleModalToggleLabel2').text(text + documentId);
+        console.log(documentId);
+        //open modal
+        $('#modalSetrole').modal('show');
+        $("#saveRole").click(
+           function (){
+               let role = $('#role').val();
+               $.ajax({
+                   type: 'POST',
+                   url: '/setRole',
+                   data: {
+                       documentId: documentId,
+                       groupId: groupId,
+                       role: role
+                   },
+                   success: function (response) {
+                       console.log(response);
+                       // Handle success, for example, show a message or refresh the page
+                       swal.fire({
+                           title: response,
+                           text: "Role set "+role,
+                           icon: "success",
+                           button: "OK",
+                       }).then((result) => {
+                           if (result.isConfirmed) {
+                               //reload page
+                               location.reload();
+                           }
+                       });
+                   },
+                   error: function (error) {
+                       console.error(error);
+                       // Handle error, show an alert or log the error
+                   },
+               });
+           }
+        )
+    }
 
     function getSideBar() {
         console.log("filename: " + filename);
@@ -131,6 +208,8 @@
 
         $('#editGroupModal').modal('show'); // Open the "Edit Group" modal
     }
+
+
 
     function saveEditedGroup() {
         let documentId = $('#docId').text(); // Get the document ID from the HTML

@@ -31,7 +31,7 @@ public class GroupDetail extends CustomControl {
         String lastName = (String) session.getAttribute("lastName");
         System.out.println("documentId " + documentId);
         GroupFordetail group = getGroupDetail(documentId);
-
+        model.addAttribute("tags", getTags());
         model.addAttribute("group", group);
         // Now you can use the username, firstName, and lastName
         return "groupdetail";
@@ -76,5 +76,20 @@ public class GroupDetail extends CustomControl {
                             return "Error editing group: " + e.getMessage();
                         }
                     }
+
+    @PostMapping("/setRole")
+    @ResponseBody
+    public String setRole(@RequestParam String documentId ,@RequestParam String groupId, @RequestParam String role) {
+        Firestore firestore = firebaseInitializer.getDb();
+        DocumentReference groupRef = firestore.collection("group").document(groupId);
+        try {
+            // Update the group document with the new information
+            groupRef.collection("member").document(documentId).update("role", role);
+            return "Role set successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error setting role: " + e.getMessage();
+        }
+    }
 }
 

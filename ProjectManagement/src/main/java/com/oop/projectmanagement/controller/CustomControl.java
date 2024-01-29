@@ -3,14 +3,12 @@ package com.oop.projectmanagement.controller;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.oop.projectmanagement.FirebaseInitializer;
-import com.oop.projectmanagement.model.Group;
-import com.oop.projectmanagement.model.GroupFordetail;
-import com.oop.projectmanagement.model.Subject;
-import com.oop.projectmanagement.model.User;
+import com.oop.projectmanagement.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -39,9 +37,9 @@ public class CustomControl {
             return null;
         }
     }
-    public ArrayList<User> getAllUsersFromMembers(String docId ) {
+    public ArrayList<Member> getAllUsersFromMembers(String docId ) {
          db = firebaseInitializer.getDb();
-        ArrayList<User> userList = new ArrayList<>();
+        ArrayList<Member> userList = new ArrayList<>();
         try {
             ApiFuture<QuerySnapshot> future = db.collection("group")
                     .document(docId)
@@ -56,7 +54,9 @@ public class CustomControl {
                 try {
                     DocumentSnapshot userDoc = userFuture.get();
                     if (userDoc.exists()) {
-                        User user = userDoc.toObject(User.class);
+                        Member user = userDoc.toObject(Member.class);
+                        //set document id
+                        user.setDocumentId(document.getId());
                         userList.add(user);
                         assert user != null;
                         System.out.println("user " + user.getFirstName() + " " + user.getLastName());
@@ -108,5 +108,18 @@ public class CustomControl {
             }
        return documentId;
    }
-
+    protected List<Map<String, Object>> getTags() {
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> tags = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = db.collection("tags").get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                tags.add(document.getData());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return tags;
+    }
 }

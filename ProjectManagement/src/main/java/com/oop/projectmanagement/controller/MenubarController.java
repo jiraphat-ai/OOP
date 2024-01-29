@@ -105,7 +105,7 @@ public class MenubarController extends CustomControl {
                 Map<String, Object> member = new HashMap<>();
                 member.put("user", userRef);
                 member.put("role", "member");
-                db.collection("group").document(group_id).collection("member").add(member);
+                db.collection("group").document(group_id).collection("member").document(request_id).set(member);
             }
             //delete request in sub-collection request
             db.collection("group").document(group_id).collection("request").document(request_id).delete();

@@ -116,7 +116,7 @@ public class Group extends CustomControl {
         this.documentId = documentId;
     }
 
-    public ArrayList<User> getMembers() {
+    public ArrayList<Member> getMembers() {
         return this.documentId != null ? getAllUsersFromMembers(this.documentId) : null;
     }
 
