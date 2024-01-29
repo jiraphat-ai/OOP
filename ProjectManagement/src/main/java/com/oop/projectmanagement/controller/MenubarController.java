@@ -119,4 +119,54 @@ public class MenubarController extends CustomControl {
             return e.getMessage();
         }
     }
+
+    public void notifyManagers(String group_id, String message) {
+        try {
+            ApiFuture<QuerySnapshot> query = db.collection("group").document(group_id).collection("member").get();
+            QuerySnapshot querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+
+            // For each member, check if they are a manager
+            for (QueryDocumentSnapshot document : documents) {
+                if (document.getString("role").equals("Manager")) {
+                    // If they are a manager, create a new notification for them
+                    Map<String, Object> notification = new HashMap<>();
+                    notification.put("message", message);
+                    notification.put("timestamp", FieldValue.serverTimestamp());
+
+                    db.collection("notifications").add(notification);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping("/rejecttask")
+    @ResponseBody
+    public String rejectTask(@RequestParam("group_id") String group_id, @RequestParam("task_id") String task_id) {
+        // Update status of the task to "doing"
+        db = firebaseInitializer.getDb();
+        DocumentReference taskRef = db.collection("groups").document(group_id).collection("tasks").document(task_id);
+        taskRef.update("status", "doing");
+
+        // Notify managers
+        notifyManagers(group_id, "Task " + task_id + " was rejected.");
+
+        return "success";
+    }
+
+    @PostMapping("/accepttask")
+    @ResponseBody
+    public String acceptTask(@RequestParam("group_id") String group_id, @RequestParam("task_id") String task_id) {
+        // Update status of the task to "done"
+        db = firebaseInitializer.getDb();
+        DocumentReference taskRef = db.collection("groups").document(group_id).collection("tasks").document(task_id);
+        taskRef.update("status", "done");
+
+        // Notify managers
+        notifyManagers(group_id, "Task " + task_id + " was accepted.");
+
+        return "success";
+    }
 }
