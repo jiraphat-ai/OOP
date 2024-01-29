@@ -57,6 +57,8 @@ public class CustomControl {
                         Member user = userDoc.toObject(Member.class);
                         //set document id
                         user.setDocumentId(document.getId());
+                        //set role
+                        user.setRole((String) document.get("role"));
                         userList.add(user);
                         assert user != null;
                         System.out.println("user " + user.getFirstName() + " " + user.getLastName());

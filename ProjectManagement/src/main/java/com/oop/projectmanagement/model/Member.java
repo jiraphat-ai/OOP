@@ -10,6 +10,7 @@ public class Member {
     private String user_type;
 
     private String documentId;
+    private String role;
 
     // no-arg constructor
     public Member() {}
@@ -69,6 +70,16 @@ public class Member {
 
     public String getDocumentId() {
         return documentId;
+    }
+
+    // Getter for role
+    public String getRole() {
+        return role;
+    }
+
+    // Setter for role
+    public void setRole(String role) {
+        this.role = role;
     }
 
 }

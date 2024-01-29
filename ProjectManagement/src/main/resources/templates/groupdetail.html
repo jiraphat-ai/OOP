@@ -37,7 +37,8 @@
                         <div class="col">
                             <div style="font-size: larger;"><strong>Group Member:</strong><br>
                                 <div th:each="member, iterStat :${group.members}">
-                                    <span onclick="memberClick(this)" th:text="${iterStat.index + 1} + ' ' + ${member.firstName} + ' ' + ${member.lastName} + ' ' + ${member.username}">
+                                    <span onclick="memberClick(this)" th:text="${member.firstName + ' ' + member.lastName + ' ' + member.username + ' (' + (member.role)+')'}">
+                                
                                     </span>
                                     <div class="d-none member_doc_id" th:text="${member.documentId}" ></div>
                                     <br/>
@@ -107,11 +108,12 @@
 
                     <option>projectmanager</option>
                     <option>member</option>
-                    <option>owner</option>
                 </select>
+                <div class="col"></div>
             </div>
             <div class="modal-footer">
-                <button id="saveRole" class="btn btn-primary">Save</button>
+                <button id="saveRole" class="btn btn-primary">Set role</button>
+                <button id="deletemember" class="btn btn-danger">delete member from group</button>
             </div>
         </div>
     </div>
@@ -136,7 +138,7 @@
         let documentId = $(element).next().text();
         let groupId = $('#docId').text();
         let text = $(element).text();
-        $('#exampleModalToggleLabel2').text(text + documentId);
+        $('#exampleModalToggleLabel2').text("Set role for "+text);
         console.log(documentId);
         //open modal
         $('#modalSetrole').modal('show');
@@ -170,9 +172,42 @@
                        console.error(error);
                        // Handle error, show an alert or log the error
                    },
+                   //delete member from group
+                   
                });
            }
         )
+        $("#deletemember").click(
+                          function (){
+                            $.ajax({
+                                 type: 'POST',
+                                 url: '/deleteMember',
+                                 data: {
+                                      documentId: documentId,
+                                      groupId: groupId,
+                                 },
+                                 success: function (response) {
+                                      console.log(response);
+                                      // Handle success, for example, show a message or refresh the page
+                                      swal.fire({
+                                        title: response,
+                                        text: "Member deleted",
+                                        icon: "success",
+                                        button: "OK",
+                                      }).then((result) => {
+                                        if (result.isConfirmed) {
+                                             //reload page
+                                             location.reload();
+                                        }
+                                      });
+                                 },
+                                 error: function (error) {
+                                      console.error(error);
+                                      // Handle error, show an alert or log the error
+                                 },
+                            });
+                          }
+                     )
     }
 
     function getSideBar() {

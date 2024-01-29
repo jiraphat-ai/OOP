@@ -91,5 +91,19 @@ public class GroupDetail extends CustomControl {
             return "Error setting role: " + e.getMessage();
         }
     }
+    @PostMapping("/deleteMember")
+    @ResponseBody
+    public String deleteMember(@RequestParam String documentId ,@RequestParam String groupId) {
+        Firestore firestore = firebaseInitializer.getDb();
+        DocumentReference groupRef = firestore.collection("group").document(groupId);
+        try {
+            // Update the group document with the new information
+            groupRef.collection("member").document(documentId).delete();
+            return "Member deleted successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error deleting member: " + e.getMessage();
+        }
+    }
 }
 
