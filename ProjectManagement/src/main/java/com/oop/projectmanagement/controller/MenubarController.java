@@ -120,6 +120,7 @@ public class MenubarController extends CustomControl {
         }
     }
 
+    // Manager notification
     public ArrayList<Notification> getTaskNotifications(HttpSession session) throws ExecutionException, InterruptedException {
         ArrayList<Notification> notificationList = new ArrayList<>();
         db = firebaseInitializer.getDb();
