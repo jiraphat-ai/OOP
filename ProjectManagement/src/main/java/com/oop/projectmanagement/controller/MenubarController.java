@@ -120,26 +120,30 @@ public class MenubarController extends CustomControl {
         }
     }
 
-    public void notifyManagers(String group_id, String message) {
-        try {
-            ApiFuture<QuerySnapshot> query = db.collection("group").document(group_id).collection("member").get();
-            QuerySnapshot querySnapshot = query.get();
-            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-
-            // For each member, check if they are a manager
-            for (QueryDocumentSnapshot document : documents) {
-                if (document.getString("role").equals("Manager")) {
-                    // If they are a manager, create a new notification for them
-                    Map<String, Object> notification = new HashMap<>();
-                    notification.put("message", message);
-                    notification.put("timestamp", FieldValue.serverTimestamp());
-
-                    db.collection("notifications").add(notification);
-                }
+    public ArrayList<Notification> getTaskNotifications(HttpSession session) throws ExecutionException, InterruptedException {
+        ArrayList<Notification> notificationList = new ArrayList<>();
+        db = firebaseInitializer.getDb();
+        ApiFuture<QuerySnapshot> future = db.collection("group").whereEqualTo("Manager", session.getAttribute("username")).get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        for (QueryDocumentSnapshot document : documents) {
+            ApiFuture<QuerySnapshot> future2 = db.collection("group").document(document.getId()).collection("tasks").whereEqualTo("status", "checking").get();
+            List<QueryDocumentSnapshot> documents2 = future2.get().getDocuments();
+            for (QueryDocumentSnapshot document2 : documents2) {
+                DocumentReference userRef = (DocumentReference) document2.get("users");
+                Notification notification = new Notification();
+                notification.setSubject_id(document.getString("subjectID"));
+                notification.setUsername(getDocumentFeildByDocRef(userRef, "username"));
+                notification.setRequest_id(document2.getId());
+                notification.setGroup_id(document.getId());
+                notificationList.add(notification);
             }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
         }
+        return notificationList;
+    }
+
+    public void updateTaskStatus(String groupId, String taskId, String status) {
+        DocumentReference taskRef = db.collection("group").document(groupId).collection("tasks").document(taskId);
+        taskRef.update("status", status);
     }
 
     @PostMapping("/rejecttask")
@@ -147,12 +151,8 @@ public class MenubarController extends CustomControl {
     public String rejectTask(@RequestParam("group_id") String group_id, @RequestParam("task_id") String task_id) {
         // Update status of the task to "doing"
         db = firebaseInitializer.getDb();
-        DocumentReference taskRef = db.collection("groups").document(group_id).collection("tasks").document(task_id);
+        DocumentReference taskRef = db.collection("group").document(group_id).collection("tasks").document(task_id);
         taskRef.update("status", "doing");
-
-        // Notify managers
-        notifyManagers(group_id, "Task " + task_id + " was rejected.");
-
         return "success";
     }
 
@@ -161,12 +161,9 @@ public class MenubarController extends CustomControl {
     public String acceptTask(@RequestParam("group_id") String group_id, @RequestParam("task_id") String task_id) {
         // Update status of the task to "done"
         db = firebaseInitializer.getDb();
-        DocumentReference taskRef = db.collection("groups").document(group_id).collection("tasks").document(task_id);
+        DocumentReference taskRef = db.collection("group").document(group_id).collection("tasks").document(task_id);
         taskRef.update("status", "done");
-
-        // Notify managers
-        notifyManagers(group_id, "Task " + task_id + " was accepted.");
-
         return "success";
     }
+
 }

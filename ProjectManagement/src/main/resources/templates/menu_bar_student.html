@@ -109,6 +109,41 @@
         </div>
     </div>
 </div>
+
+<!-- Notification Modal -->
+<div class="modal fade" tabindex="-1" id="notificationModal">
+    <div id="notificationModalContent"></div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal header... -->
+            <div class="modal-body">
+                <!-- Notification items loop -->
+                <div th:each="noti : ${notificationList}">
+                    <div class="notification-item">
+                        <div class="row">
+                            <div class="col-9">
+                                <p class="notification-text">
+                                    <strong th:text="${noti.username}"></strong>
+                                    <span>has requested to join the group</span>
+                                    <strong th:text="${noti.subject_id}"></strong>
+                                    <p class="request_id" th:text=${noti.request_id}></p>
+                                    <p class="group_id" th:text=${noti.group_id}></p>
+                                </p>
+                            </div>
+                            <div class="col-3 text-end">
+                                <!-- Accept and Reject buttons with onclick events -->
+                                <button class="btn btn-primary" onclick="acceptRequest(this)">Accept</button>
+                                <button class="btn btn-danger" onclick="rejectRequest(this)">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal footer... -->
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -177,5 +212,24 @@
         console.log('Request rejected'); 
     }
 
+      // Function to handle accepting a request
+      function acceptRequest(element) {
+        var request_id = $(element).parent().parent().find('.request_id').text();
+        var group_id = $(element).parent().parent().find('.group_id').text();
+        console.log(request_id, group_id);
+        // AJAX request to your acceptrequest endpoint
+        // Handle success and error responses accordingly
+        // Reload the page or update the UI as needed
+    }
+
+    // Function to handle rejecting a request
+    function rejectRequest(element) {
+        var request_id = $(element).parent().parent().find('.request_id').text();
+        var group_id = $(element).parent().parent().find('.group_id').text();
+        console.log(request_id, group_id);
+        // AJAX request to your rejectrequest endpoint
+        // Handle success and error responses accordingly
+        // Delete the notification item from the UI or update the UI as needed
+    }
 
 </script>
