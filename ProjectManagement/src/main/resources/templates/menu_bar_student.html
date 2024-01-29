@@ -102,6 +102,25 @@
                     </div>
                 </div>
             </div>
+            <div th:each="noti : ${taskNotificationList}">
+                <div class="notification-item">
+                    <div class="row">
+                        <div class="col-9">
+                            <p class="notification-text">
+                                <strong th:text="${noti.username}"></strong>
+                                <span>has a task pending in the group</span>
+                                <strong th:text="${noti.subject_id}"></strong>
+                                <p class="task_id" th:text=${noti.request_id}></p>
+                                <p class="group_id" th:text=${noti.group_id}></p>
+                            </p>
+                        </div>
+                        <div class="col-3 text-end">
+                            <button class="btn btn-primary" onclick="acceptTask(this)">Accept</button>
+                            <button class="btn btn-danger" onclick="rejectTask(this)">Reject</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -175,5 +194,23 @@
             }
         });
         console.log('Request rejected'); 
+    }
+
+    function acceptTask(element) {
+        var task_id = $(element).siblings('.task_id').text();
+        var group_id = $(element).siblings('.group_id').text();
+        $.post("/accepttask", { group_id: group_id, task_id: task_id }, function(data) {
+            alert("Task accepted");
+            location.reload();
+        });
+    }
+
+    function rejectTask(element) {
+        var task_id = $(element).siblings('.task_id').text();
+        var group_id = $(element).siblings('.group_id').text();
+        $.post("/rejecttask", { group_id: group_id, task_id: task_id }, function(data) {
+            alert("Task rejected");
+            location.reload();
+        });
     }
 </script>
