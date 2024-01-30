@@ -53,7 +53,7 @@ public class ScrumBoardController extends CustomControl {
     }
 
     @GetMapping("/groupscrumbord")
-    public String getUserinfo(HttpSession session, @RequestParam String documentId, Model model)
+    public String getScrumboard(HttpSession session, @RequestParam String documentId, Model model)
             throws ExecutionException, InterruptedException {
         Firestore db = firebaseInitializer.getDb();
         
@@ -74,7 +74,8 @@ public class ScrumBoardController extends CustomControl {
         model.addAttribute("members", members);
         // Now you can use the username, firstName, and lastName
         return "scrum_board";
-        } else {
+        } else 
+         {
         username = (String) session.getAttribute("username");
         firstName = (String) session.getAttribute("firstName");
         lastName = (String) session.getAttribute("lastName");
@@ -85,8 +86,8 @@ public class ScrumBoardController extends CustomControl {
         model.addAttribute("members", members);
             // Now you can use the username, firstName, and lastName
         return "memberscrum_board";
-    
-        }
+            }
+        
     }
     @PostMapping("/createTask")
     @ResponseBody
@@ -228,22 +229,6 @@ public ResponseEntity<Map<String, String>> deleteTask(@RequestParam String taskd
 
     return new ResponseEntity<>(response, HttpStatus.OK);
 }
-@GetMapping("/getMemberProfile")
-public void getMemberProfile(@RequestParam String username, Model model) throws InterruptedException, ExecutionException {
-    Firestore db = firebaseInitializer.getDb();
-    CollectionReference userAccounts = db.collection("useraccount");
-    Query query = userAccounts.whereEqualTo("username", username);
-    ApiFuture<QuerySnapshot> querySnapshot = query.get();
-    User userprofile = null;
-    for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
-        if (document.exists()) {
-            userprofile = document.toObject(User.class);
-            break;
-        }
-    }
-    model.addAttribute("memberprofile", userprofile);
-}
-
 
 
 
