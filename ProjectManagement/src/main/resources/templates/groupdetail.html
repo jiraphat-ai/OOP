@@ -37,7 +37,7 @@
                         <div class="col">
                             <div style="font-size: larger;"><strong>Group Member:</strong><br>
                                 <div th:each="member, iterStat :${group.members}">
-                                    <span onclick="memberClick(this)" th:text="${member.firstName + ' ' + member.lastName + ' ' + member.username + ' (' + (member.role)+')'}">
+                                    <span id="clickmember" onclick="memberClick(this)" th:text="${member.firstName + ' ' + member.lastName + ' ' + member.username + ' (' + (member.role)+')'}">
                                 
                                     </span>
                                     <div class="d-none member_doc_id" th:text="${member.documentId}" ></div>
@@ -106,7 +106,7 @@
                 <label for="role" class="form-label">Role</label>
                 <select class="form-select" id="role" data-control="select2" data-placeholder="Select an option">
 
-                    <option>projectmanager</option>
+                    <option>manager</option>
                     <option>member</option>
                 </select>
                 <div class="col"></div>
@@ -131,6 +131,7 @@
     var filename = window.location.pathname.split("/").pop();
     $(document).ready(function () {
         getSideBar();
+
 
     });
 

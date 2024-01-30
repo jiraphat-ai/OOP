@@ -115,6 +115,13 @@
             success: function (data) {
                 //get data specific detail
                 $(".main-content").html(data);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Please set manager before start your project',
+                    text: 'Click on member name to set manager',
+                    showConfirmButton: true,
+                    allowOutsideClick: true
+                });
             }
         });
     }

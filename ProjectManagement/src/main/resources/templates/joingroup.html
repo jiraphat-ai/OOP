@@ -246,6 +246,7 @@
                 $("#detail_body").find("button").each(function(){
                     $(this).hide();
                     loadstatus();
+                    $("#clickmember").attr("onclick", "");
                 });
                 $("#joinGroup").click(function () {
                     joinGroupAlert();
