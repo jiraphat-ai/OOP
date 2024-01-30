@@ -41,7 +41,7 @@
                     <form action="/searchgroup" method="get">
                         <div class="form-grid">
                             <label for="subjectId"><b>Subject ID</b></label>
-                            <label for="section"><b>Section:</b></label>
+                            <label for="section"><b>Term:</b></label>
                             <label for="tag"><b>Skills</b></label>
                             <div></div> 
                             <!-- Empty div for the submit button -->
@@ -53,13 +53,10 @@
                               th:text="${ID['subjectID']} + ' ' + ${ID['subjectName']}"
                             ></option>
                           </select>
-                          <select id="section" name="#">
-                            <option value="0" selected>0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                          </select>
+                          <div class="mb-3">
+                            <input type="text" class="form-control" id="term" name="term"
+                                placeholder="Enter term" disabled>
+                        </div>
                             <div >
                                 <table  class="checkbox-group" id="tag">
                                     <tr>
@@ -163,7 +160,7 @@
 
     var filename = window.location.pathname.split("/").pop();
     $(document).ready(function() {
-
+        getTerm();
         getSideBar()
 
     });
@@ -194,7 +191,7 @@
     event.preventDefault();
 
     let subjectId = $('#subjectID').val();
-    let section = $('#section').val();
+    let section = $('#term').val();
     let tag = [];
     $('#tag input:checked').each(function() {
         tag.push($(this).val());
@@ -249,6 +246,7 @@
                 $("#detail_body").find("button").each(function(){
                     $(this).hide();
                     loadstatus();
+                    $("#clickmember").attr("onclick", "");
                 });
                 $("#joinGroup").click(function () {
                     joinGroupAlert();
@@ -393,6 +391,22 @@ function joinGroup(documentId) {
             }
         });
     }
+
+    function getTerm() {
+            $.ajax({
+                url: "/getTerm",
+                type: "GET",
+                success: function (response) {
+                    console.log(response);
+                    $('#currentTerm').text(response);
+                    $('#term').val(response);
+                },
+                error: function (xhr) {
+                    console.log(xhr);
+                    alert('Error adding new term: ' + xhr.responseText);
+                }
+            });
+        }
     
 </script>
 </body>

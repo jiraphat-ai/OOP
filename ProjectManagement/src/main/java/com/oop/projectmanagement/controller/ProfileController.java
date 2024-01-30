@@ -119,19 +119,6 @@ public class ProfileController extends CustomControl{
     }
     
     
-        private List<Map<String, Object>> getTags() {
-        Firestore db = firebaseInitializer.getDb();
-        List<Map<String, Object>> tags = new ArrayList<>();
-        try {
-            ApiFuture<QuerySnapshot> querySnapshot = db.collection("tags").get();
-            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
-                tags.add(document.getData());
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return tags;
-    }
+
 
 }

@@ -23,9 +23,9 @@ public class JoinGroupTest {
 	@Test
 	public void cancelRequest() throws Exception {
 		this.mockMvc.perform(post("/cancelRequest")
-				.param("documentId", "abc"))
+			.param("documentId", "abc"))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-			.andExpect(jsonPath("$.<key>").value("<value>"));
+			.andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8"))
+			.andExpect(jsonPath("$.id").value("abc"));
 	}
 }

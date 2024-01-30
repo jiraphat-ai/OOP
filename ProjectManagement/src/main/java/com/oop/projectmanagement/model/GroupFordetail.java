@@ -13,7 +13,7 @@ public class GroupFordetail extends CustomControl {
     private DocumentReference subjectRef;
 
     private String group_name;
-    private Integer section;
+    private String section;
     private String group_description;
     private Integer max_member;
     private ArrayList<String> tag;
@@ -66,11 +66,11 @@ public class GroupFordetail extends CustomControl {
         this.group_name = group_name;
     }
 
-    public Integer getSection() {
+    public String getSection() {
         return section;
     }
 
-    public void setSection(Integer section) {
+    public void setSection(String section) {
         this.section = section;
     }
 
@@ -117,7 +117,7 @@ public class GroupFordetail extends CustomControl {
         this.documentId = documentId;
     }
 
-    public ArrayList<User> getMembers() {
+    public ArrayList<Member> getMembers() {
         return this.documentId != null ? getAllUsersFromMembers(this.documentId) : null;
     }
 
