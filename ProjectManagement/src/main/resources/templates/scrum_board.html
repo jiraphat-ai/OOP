@@ -587,10 +587,9 @@ function deleteTask(){
     },
     success: function(response) {
             alert(response.message);
-            if(response.message === "Task status updated successfully") {
                 localStorage.setItem('documentId', documentId);
                 location.reload();
-            }
+            
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
