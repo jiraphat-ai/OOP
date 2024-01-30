@@ -1,5 +1,6 @@
 package com.oop.projectmanagement.controller;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.oop.projectmanagement.model.GroupFordetail;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
@@ -29,15 +33,17 @@ public class GroupDetail extends CustomControl {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
+        String facebook = (String) session.getAttribute("facebook");
+        String instagram = (String) session.getAttribute("instagram");
         System.out.println("documentId " + documentId);
         GroupFordetail group = getGroupDetail(documentId);
 
+        model.addAttribute("tags", getTags());
         model.addAttribute("group", group);
         // Now you can use the username, firstName, and lastName
         return "groupdetail";
 
     }
- 
 
 
 
@@ -76,5 +82,20 @@ public class GroupDetail extends CustomControl {
                             return "Error editing group: " + e.getMessage();
                         }
                     }
+
+    private List<Map<String, Object>> getTags() {
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> tags = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = db.collection("tags").get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                tags.add(document.getData());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return tags;
+    }
 }
 

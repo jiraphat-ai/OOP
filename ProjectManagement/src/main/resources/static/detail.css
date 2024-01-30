@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Sunflower:wght@300;500;700&display=swap');
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.social-icon {
+    aspect-ratio: 5;
+    width: 25px;
+    height: 25px;
+}
+
+.modal-content {
+    font-size: 15px;
+}
+
+
+

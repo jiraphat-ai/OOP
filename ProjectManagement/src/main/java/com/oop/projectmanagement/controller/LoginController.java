@@ -44,12 +44,16 @@ public class LoginController {
                 String userType = document.getString("userType");
                 String firstName = document.getString("firstName");
                 String lastName = document.getString("lastName");
+                String facebook = document.getString("facebook");
+                String instagram = document.getString("instagram");
                 if (username.equals(storedUsername) && password.equals(storedPassword)) {
                     if ("student".equals(userType)) {
                         model.addAttribute("message", "Login successful. User type: " + userType);
                         session.setAttribute("username", username);
                         session.setAttribute("firstName", firstName);
                         session.setAttribute("lastName", lastName);
+                        session.setAttribute("facebook", facebook);
+                        session.setAttribute("instagram", instagram);
                         session.setAttribute("documentId", document.getId());
                         System.out.println("documentId: " + document.getId());
                         return "redirect:/homestudent";

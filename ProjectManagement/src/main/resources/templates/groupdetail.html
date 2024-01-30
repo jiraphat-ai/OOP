@@ -1,3 +1,5 @@
+<link href="/detail.css" rel="stylesheet"  type="text/css">
+
 <div class="main-content" style="border-radius: 10px;">
         <p class="text-center" style="font-size: x-large; font-weight: bolder;">
             <span th:text="${group.groupName}"></span>
@@ -40,6 +42,7 @@
                                     <span th:text="${iterStat.index + 1} + ' ' + ${member.firstName} + ' ' + ${member.lastName} + ' ' + ${member.username}"></span>
                                     <br/>
                                 </span></p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userProfileModal">More Detail</button>
                         </div>
                     </div>
                 </div>
@@ -90,6 +93,50 @@
       </div>
     </div>
   </div>
+
+    <!-- Modal Detail -->
+    <div class="modal fade" id="userProfileModal" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userProfileModalLabel">Member Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div>
+                        <label for="firstName" class="form-label">Gruop Member: </label>
+                        <span id="firstName" th:each="member, iterStat :${group.members}">
+                                    <span th:text="${iterStat.index + 1} + '.' + ${member.firstName} + ' ' + ${member.lastName} + ' ' + ${member.username}"></span>
+                        </span>
+                    </div>
+
+                        <div>
+                        <label for="facebook" class="form-label">Facebook:</label>
+                        <span id="facebook" th:each="member, iterStat :${group.members}">
+                            <a th:href="${member.facebook}" target="_blank" rel="noopener noreferrer" class="icon-wrap" name="facebookName" placeholder="Facebook">
+                                <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png" alt="facebook" th:text ="' '+ ${member.firstName} +' ' ">
+                            </a>
+                        </span>
+                        </div>
+                        <div>
+                        <label for="instagram" class="form-label">Instagram:</label>
+                        <span id="instagram" th:each="member, iterStat :${group.members}">
+                            <span th:text="${tag}"></span>
+                            <a th:href="${member.instagram}" target="_blank" rel="noopener noreferrer" class="icon-wrap" name="instagramName" placeholder="Instagram">
+                                <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="instagram" th:text ="' '+ ${member.firstName} +' ' ">
+                            </a>
+                        </span>
+                        </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 <script>
@@ -190,6 +237,23 @@
             },
         });
     }
+
+    function showUserProfileModal(userData) {
+    var userProfileModal = document.getElementById('userProfileModal');
+    var firstName = document.getElementById('firstName');
+    var facebook = document.getElementById('facebook');
+    var instagram = document.getElementById('instagram');
+    var tags = document.getElementById('tags');
+
+    firstName.textContent = member.firstName;
+    facebookName.textContent = userData.facebook;
+    instagramName.textContent = userData.instagram;
+    tags.textContent = userData.tags.join(', ');
+
+    var modal = new bootstrap.Modal(userProfileModal);
+    modal.show();
+}
+
 </script>
 </body>
 

@@ -16,6 +16,9 @@ public class User extends CustomControl{
     private String last_name;
     private String password;
     private String user_type;
+    private String facebook;
+    private String instagram;
+    private String tag;
 
 
     // no-arg constructor
@@ -70,6 +73,10 @@ public class User extends CustomControl{
         return Timestamp.now();
     }
 
+    public void setFacebook(String facebook) { this.facebook = facebook;}
+    public String getFacebook() { return facebook; }
+    public void setInstagram(String instagram) { this.instagram = instagram;}
+    public String getInstagram() { return instagram; }
 
 
 }
