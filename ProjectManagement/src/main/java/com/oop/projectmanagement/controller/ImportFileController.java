@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
-
+import java.util.HashMap;
 import com.oop.projectmanagement.model.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -97,6 +97,7 @@ public class ImportFileController {
     @PostMapping("/deleteSubject")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteSubject(@RequestBody Map<String, String> user) {
+        HashMap<String, String> myHashMap = new HashMap<>();
         Firestore db = firebaseInitializer.getDb();
         String username = user.get("username");
 
