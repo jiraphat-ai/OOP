@@ -25,9 +25,6 @@
         <span th:text="${group.groupName}"></span>
             <span class="float-end"></span>
             <div class ="headertest">
-                <div class="create-task-btn">
-                    <button data-bs-toggle="modal" data-bs-target="#modal_create">Create Task</button>
-                </div>
                 <div class="navigation-btn">
                     <button data-bs-toggle="modal" data-bs-target="#modal_detail">Group</button>
                 </div>
@@ -130,48 +127,23 @@
     <!-- task form -->
   
   <!-- Create task Modal -->
-  <div class="modal fade" id="modal_create" tabindex="-2" aria-labelledby="modal_create" aria-hidden="true">
+  <div class="modal fade" id="modal_docId" tabindex="-2" aria-labelledby="modal_docId" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modal_createLabel">Create Task</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="createTaskForm" class="form-container">  
-          
-            <label for="taskName"><b>Task Name</b></label>
-            <input type="text" placeholder="Enter Task Name" id="taskName" required>
-          
-          
-            <label for="member"><b>Member</b></label>
-            <select class="form-select form-select-solid" id="mutiselect" data-control="select2" required aria-label="select member"  data-allow-clear="true" multiple="multiple" >
-                <div th:each="memlist : ${members}">
-                    <option th:text="${memlist['username']+' '+ memlist['firstName']+' '+ memlist['lastName'] }" th:value="${memlist['username']}"></option>
-                </div>
-            </select>
-            
-           
-            <label for="deadline"><b>Deadline</b></label>
-            <input type="datetime-local" id="deadline" >
-          
-            
-            <label for="description"><b>Description</b></label>
-            <textarea placeholder="Enter Task Description" id="description"></textarea>
-            
+          <form id="createTaskForm" class="form-container"> 
             <input type="hidden" id="doc_id" th:value="${group['documentId']}"></input>
-               
         </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
-          <button type="button" class="btn btn-primary" onclick="saveTask()" >Create task</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- group detail modal to do  -->
+  <!-- group detail modal to do  row -->
   <div class="modal fade" id="modal_taskdetail" tabindex="-1" aria-labelledby="modal_taskdetail" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -227,9 +199,6 @@
         
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" onclick="changestatetoToDo()" >To Do</button>
-          <button type="button" class="btn btn-primary" onclick="changestatetoDone()" >Done</button>
-
         </div>
       </div>
     </div>
@@ -248,7 +217,6 @@
         </div>
         <div class="modal-footer">
             <!-- ใส่Todoเฉยๆ -->
-          <!-- <button type="button" class="btn btn-primary" onclick="changestatetoToDo()" >To Do</button> -->
         </div>
       </div>
     </div>
@@ -287,42 +255,13 @@ function getSideBar() {
     });
 
 }
-
-
-
-    function saveTask() {
-        let taskName = $('#taskName').val(); //
-        let member = $('#mutiselect').val(); //
-        let description = $('#description').val(); //
-        let documentId = $('#doc_id').val(); //
-        let deadline = $('#deadline').val(); //
-        console.log("dead: " + deadline)
-        let task = {
-            taskName: taskName,
-            member: member,
-            deadline: deadline,
-            description: description,
-            documentId : documentId
-        };
-        console.log("task: " + task)
-        $.ajax({
-            url: "/createTask",
-            type: "POST",
-            data: JSON.stringify(task),
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                console.log("data: " + data)
-            }
-        });
-    }
 function getTaskDetail(taskName, deadline, member, description) {
     $('#modal_taskdetail .modal-body').html(
         '<h3>Task Name: ' + taskName + '</h3>' +
         '<p>Deadline: ' + deadline + '</p>' +
         '<p>Member: ' + member + '</p>' +
         '<p>Description: ' + description + '</p>' +
-        '<input type="hidden" id="taskdoc_id" th:value="${task.documentId}">' +
-        '<button type="button" class="btn btn-danger" onclick="deleteTask()" >Delete Task </button>'
+        '<input type="hidden" id="taskdoc_id" th:value="${task.documentId}">' 
     );
 }
 function getTaskDetaildoing(taskName, deadline, member, description) {
@@ -331,8 +270,7 @@ function getTaskDetaildoing(taskName, deadline, member, description) {
         '<p>Deadline: ' + deadline + '</p>' +
         '<p>Member: ' + member + '</p>' +
         '<p>Description: ' + description + '</p>' +
-        '<input type="hidden" id="taskdoc_id" th:value="${task.documentId}">' +
-        '<button type="button" class="btn btn-danger" onclick="deleteTask()" >Delete Task </button>'
+        '<input type="hidden" id="taskdoc_id" th:value="${task.documentId}">'
         
     );
 }
@@ -342,8 +280,7 @@ function getTaskDetailchecking(taskName, deadline, member, description) {
         '<p>Deadline: ' + deadline + '</p>' +
         '<p>Member: ' + member + '</p>' +
         '<p>Description: ' + description + '</p>' +
-        '<input type="hidden" id="taskdoc_id" th:value="${task.documentId}">' +
-        '<button type="button" class="btn btn-danger" onclick="deleteTask()" >Delete Task </button>'
+        '<input type="hidden" id="taskdoc_id" th:value="${task.documentId}">' 
     );
 }
 function getTaskDetaildone(taskName, deadline, member, description) {
@@ -352,8 +289,7 @@ function getTaskDetaildone(taskName, deadline, member, description) {
         '<p>Deadline: ' + deadline + '</p>' +
         '<p>Member: ' + member + '</p>' +
         '<p>Description: ' + description + '</p>' +
-        '<input type="hidden" id="taskdoc_id" th:value="${task.documentId}">' +
-        '<button type="button" class="btn btn-danger" onclick="deleteTask()" >Delete Task </button>'
+        '<input type="hidden" id="taskdoc_id" th:value="${task.documentId}">' 
     );
 }
 
@@ -473,12 +409,15 @@ function changestatetoDone(){
         taskdoc_Id : taskdoc_Id,
         documentId : documentId 
     },
-        success: function(tasks) {
-            console.log("Returned tasks: ", tasks); // Log the returned tasks
-            localStorage.setItem('documentId', documentId);
-            location.reload(); // Reload the page
-            alert('Change Task to Done success.');
-            $('#modal_taskdetail').modal('hide');
+    success: function(response) {
+            if (response.message === "It's not your task,Not allow to change status") {
+                alert(response.message);
+            } else {
+                localStorage.setItem('documentId', documentId);
+                location.reload();
+                alert(response.message);
+                $('#modal_taskdetail').modal('hide');
+            }
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
@@ -497,12 +436,15 @@ function changestatetoDoing(){
         taskdoc_Id : taskdoc_Id,
         documentId : documentId  
     },
-        success: function(tasks) {
-            // console.log("Returned tasks: ", tasks); // Log the returned tasks
-            localStorage.setItem('documentId', documentId);
-            location.reload(); // Reload the page
-            alert(tasks.message);
-            $('#modal_taskdetail').modal('hide');
+    success: function(response) {
+            if (response.message === "It's not your task,Not allow to change status") {
+                alert(response.message);
+            } else {
+                localStorage.setItem('documentId', documentId);
+                location.reload();
+                alert(response.message);
+                $('#modal_taskdetail').modal('hide');
+            }
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
@@ -521,15 +463,18 @@ function changestatetoChecking(){
         taskdoc_Id : taskdoc_Id,
         documentId : documentId  
     },
-        success: function(tasks) {
-            console.log("Returned tasks: ", tasks); // Log the returned tasks
-            localStorage.setItem('documentId', documentId);
-            location.reload(); // Reload the page
-            alert(tasks.message);
-            $('#modal_taskdetail').modal('hide');
+    success: function(response) {
+            if (response.message === "It's not your task,Not allow to change status") {
+                alert(response.message);
+            } else {
+                localStorage.setItem('documentId', documentId);
+                location.reload();
+                alert(response.message);
+                $('#modal_taskdetail').modal('hide');
+            }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
+        error: function(jqXHR) {
+                console.log("AJAX error: ", jqXHR.status, jqXHR.statusText);
         }
     });
 }
@@ -545,42 +490,22 @@ function changestatetoToDo(){
         taskdoc_Id : taskdoc_Id,
         documentId : documentId  
     },
-        success: function(tasks) {
-            console.log("Returned tasks: ", tasks); // Log the returned tasks
-            localStorage.setItem('documentId', documentId);
-            location.reload(); // Reload the page
-            alert(tasks.message);
-            $('#modal_taskdetail').modal('hide');
+    success: function(response) {
+            if (response.message === "It's not your task,Not allow to change status") {
+                alert(response.message);
+            } else {
+                localStorage.setItem('documentId', documentId);
+                location.reload();
+                alert(response.message);
+                $('#modal_taskdetail').modal('hide');
+            }
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
         }
     });
 }
-function deleteTask(){
-    let taskdoc_Id = $('#taskdoc_id').val();
-    let documentId = $('#doc_id').val(); //
-    console.log("doc_id: " + documentId)
-    console.log("taskdoc_id: " + taskdoc_Id)
-    $.ajax({
-        url: "/deleteTask",
-        type: "POST",
-        data: { 
-        taskdoc_Id : taskdoc_Id,
-        documentId : documentId  
-    },
-        success: function(tasks) {
-            console.log("Returned tasks: ", tasks); // Log the returned tasks
-            localStorage.setItem('documentId', documentId);
-            location.reload(); // Reload the page
-            alert('Delete Task success.');
-            $('#modal_taskdetail').modal('hide');
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
-        }
-    });
-}
+
 
 
 
