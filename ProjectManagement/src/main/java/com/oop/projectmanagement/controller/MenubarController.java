@@ -45,9 +45,13 @@ public class MenubarController extends CustomControl {
         
         //loop for show data in notificationList
         for (int i = 0; i < notificationList2.size(); i++) {
-            System.out.println("notificationList2 " + notificationList2.get(i).getSubject_id());
-            System.out.println("notificationList2 " + notificationList2.get(i).getUsername());
+            System.out.println("notificationList " + notificationList2.get(i).getUsername());
+            System.out.println("notificationList " + notificationList2.get(i).getSubject_id());
+            System.out.println("notificationList " + notificationList2.get(i).getRequest_id());
+            System.out.println("notificationList " + notificationList2.get(i).getGroup_id());
         }
+
+        //
         model.addAttribute("notificationList", notificationList2);
 
     
@@ -75,6 +79,8 @@ public class MenubarController extends CustomControl {
                 notification.setRequest_id(document2.getId());
                 notification.setGroup_id(document.getId());
                 notificationList.add(notification);
+                System.out.println("notificationList " + notification.getRequest_id());
+                System.out.println("notificationList " + notification.getGroup_id());
             }
         }
        
@@ -97,6 +103,7 @@ public class MenubarController extends CustomControl {
         try {
             //copy data in sub-collection request to sub-collection member
             db = firebaseInitializer.getDb();
+            System.out.println("group_id " + group_id);
             ApiFuture<QuerySnapshot> future = db.collection("group").document(group_id).collection("request").get();
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
             for (QueryDocumentSnapshot document : documents) {
@@ -137,6 +144,9 @@ public class MenubarController extends CustomControl {
                 notification.setRequest_id(document2.getId());
                 notification.setGroup_id(document.getId());
                 notificationList.add(notification);
+                System.out.println("notificationList " + notification.getRequest_id());
+                System.out.println("notificationList " + notification.getGroup_id());
+
             }
         }
         return notificationList;

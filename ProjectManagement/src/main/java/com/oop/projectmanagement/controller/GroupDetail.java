@@ -99,6 +99,8 @@ public class GroupDetail extends CustomControl {
         try {
             // Update the group document with the new information
             groupRef.collection("member").document(documentId).delete();
+            //update member count
+            groupRef.update("joinedMember", FieldValue.increment(-1));
             return "Member deleted successfully";
         } catch (Exception e) {
             e.printStackTrace();

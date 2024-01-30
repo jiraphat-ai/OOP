@@ -1,5 +1,6 @@
 package com.oop.projectmanagement.controller;
 
+import com.oop.projectmanagement.model.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,7 +67,7 @@ public class ScrumBoardController extends CustomControl {
         GroupFordetail group = getGroupDetail(documentId);
         model.addAttribute("groupDoc", documentId);
         model.addAttribute("group", group);
-        ArrayList<User> members = group.getMembers();
+        ArrayList<Member> members = group.getMembers();
         model.addAttribute("members", members);
         // Now you can use the username, firstName, and lastName
         return "scrum_board";
@@ -78,7 +79,7 @@ public class ScrumBoardController extends CustomControl {
         GroupFordetail group = getGroupDetail(documentId);
         model.addAttribute("groupDoc", documentId);
         model.addAttribute("group", group);
-        ArrayList<User> members = group.getMembers();
+        ArrayList<Member> members = group.getMembers();
         model.addAttribute("members", members);
             // Now you can use the username, firstName, and lastName
         return "memberscrum_board";
