@@ -45,22 +45,20 @@ public class JoinGroup extends CustomControl {
 
 
   @GetMapping("/searchgroup")
-public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") int section, @RequestParam(value = "tag", required = false) String[] tag, Model model) {
+public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") String section, @RequestParam(value = "tag", required = false) String[] tag, Model model) {
     List<String> tagList = tag != null ? Arrays.asList(tag) : null; // Convert the array to a list
     List<GroupFordetail> groups = getGroupsBySubjectId(subjectID, section, tagList);
     model.addAttribute("groups", groups);
     return "/joingroup"; // return the name of the view that will display the groups
 }
-    public List<GroupFordetail> getGroupsBySubjectId(String subjectID, int section, List<String> tag) {
+    public List<GroupFordetail> getGroupsBySubjectId(String subjectID, String section, List<String> tag) {
         Firestore db = firebaseInitializer.getDb();
         List<GroupFordetail> groups = new ArrayList<>();
 
         try {
             Query query = db.collection("group").whereEqualTo("subjectID", subjectID);
-
-            if (section != 0) {
                 query = query.whereEqualTo("section", section);
-            }
+            
 
             if (tag != null && !tag.isEmpty()) {
                 List<QuerySnapshot> snapshots = new ArrayList<>();
@@ -185,6 +183,18 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
                 if(groupSnapshot.get("groupOwner").equals(session.getAttribute("username"))) {
                     return "You are the owner of this group";
                 }
+                 
+                
+                 //check all group is member aleary sent request same subject
+                 ApiFuture<QuerySnapshot> querySnapshot = db.collection("group").whereEqualTo("subjectID", groupSnapshot.get("subjectID")).get();
+                 List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+                 for (QueryDocumentSnapshot document : documents) {
+                     //check all group is member aleary sent request same subject
+                     DocumentReference docRef3 = db.collection("group").document(document.getId()).collection("request").document(session.getAttribute("documentId").toString());
+                     if(docRef3.get().get().exists()){
+                         return "You have already sent a request to subject in another group";
+                     }
+                 }
                 db.collection("group").document(documentId).collection("request").document(session.getAttribute("documentId").toString()).set(
                             Map.of(
                                     "user", db.document("useraccount/" + session.getAttribute("documentId")),
