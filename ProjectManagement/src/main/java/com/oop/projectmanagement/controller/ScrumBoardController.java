@@ -18,9 +18,11 @@ import javax.servlet.http.HttpSession;
 
 import com.google.api.Http;
 import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
@@ -58,11 +60,12 @@ public class ScrumBoardController extends CustomControl {
         DocumentReference docRef = db.collection("group").document(documentId).collection("member").document(uid);
         ApiFuture<DocumentSnapshot> future = docRef.get();
         String role = future.get().getString("role");
+        System.out.println(role);
         if (role.equals("manager")) {
         username = (String) session.getAttribute("username");
         firstName = (String) session.getAttribute("firstName");
         lastName = (String) session.getAttribute("lastName");
-        System.out.println("documentId " + documentId);
+
         GroupFordetail group = getGroupDetail(documentId);
         model.addAttribute("groupDoc", documentId);
         model.addAttribute("group", group);
@@ -74,7 +77,6 @@ public class ScrumBoardController extends CustomControl {
         username = (String) session.getAttribute("username");
         firstName = (String) session.getAttribute("firstName");
         lastName = (String) session.getAttribute("lastName");
-        System.out.println("documentId " + documentId);
         GroupFordetail group = getGroupDetail(documentId);
         model.addAttribute("groupDoc", documentId);
         model.addAttribute("group", group);
@@ -83,10 +85,7 @@ public class ScrumBoardController extends CustomControl {
             // Now you can use the username, firstName, and lastName
         return "memberscrum_board";
     
-           
         }
-
-        
     }
     @PostMapping("/createTask")
     @ResponseBody
@@ -200,7 +199,7 @@ public ResponseEntity<Map<String, String>> changeTaskStatus(@RequestParam String
         Map<String, String> response = new HashMap<>();
         response.put("message", "It's not your task,Not allow to change status");
         return new ResponseEntity<>(response, HttpStatus.OK);
-        
+
     }
 
 }
@@ -208,15 +207,45 @@ public ResponseEntity<Map<String, String>> changeTaskStatus(@RequestParam String
 public ResponseEntity<Map<String, String>> deleteTask(@RequestParam String taskdoc_Id, @RequestParam String documentId) throws InterruptedException, ExecutionException {
     Firestore db = firebaseInitializer.getDb();
     DocumentReference taskRef = db.collection("group").document(documentId).collection("tasks").document(taskdoc_Id);
+
+    // Delete all documents in all subcollections of the task
+    Iterable<CollectionReference> subcollections = taskRef.listCollections();
+    for (CollectionReference subcollection : subcollections) {
+        ApiFuture<QuerySnapshot> querySnapshotApiFuture = subcollection.get();
+        List<QueryDocumentSnapshot> documents = querySnapshotApiFuture.get().getDocuments();
+        for (QueryDocumentSnapshot document : documents) {
+            document.getReference().delete();
+        }
+    }
+
+    // Delete the task itself
     ApiFuture<WriteResult> deleteResult = taskRef.delete();
     deleteResult.get();
 
     Map<String, String> response = new HashMap<>();
-    response.put("message", "Task deleted successfully");
+    response.put("message", "Task and all its subcollections deleted successfully");
 
     return new ResponseEntity<>(response, HttpStatus.OK);
 }
+@GetMapping("/getMemberProfile")
+public void getMemberProfile(@RequestParam String username, Model model) throws InterruptedException, ExecutionException {
+    Firestore db = firebaseInitializer.getDb();
+    CollectionReference userAccounts = db.collection("useraccount");
+    Query query = userAccounts.whereEqualTo("username", username);
+    ApiFuture<QuerySnapshot> querySnapshot = query.get();
+    User userprofile = null;
+    for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+        if (document.exists()) {
+            userprofile = document.toObject(User.class);
+            break;
+        }
+    }
+    model.addAttribute("memberprofile", userprofile);
+}
 
-    
+
+
+
+
 
 }
