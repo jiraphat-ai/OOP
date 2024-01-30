@@ -45,22 +45,20 @@ public class JoinGroup extends CustomControl {
 
 
   @GetMapping("/searchgroup")
-public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") int section, @RequestParam(value = "tag", required = false) String[] tag, Model model) {
+public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestParam("section") String section, @RequestParam(value = "tag", required = false) String[] tag, Model model) {
     List<String> tagList = tag != null ? Arrays.asList(tag) : null; // Convert the array to a list
     List<GroupFordetail> groups = getGroupsBySubjectId(subjectID, section, tagList);
     model.addAttribute("groups", groups);
     return "/joingroup"; // return the name of the view that will display the groups
 }
-    public List<GroupFordetail> getGroupsBySubjectId(String subjectID, int section, List<String> tag) {
+    public List<GroupFordetail> getGroupsBySubjectId(String subjectID, String section, List<String> tag) {
         Firestore db = firebaseInitializer.getDb();
         List<GroupFordetail> groups = new ArrayList<>();
 
         try {
             Query query = db.collection("group").whereEqualTo("subjectID", subjectID);
-
-            if (section != 0) {
                 query = query.whereEqualTo("section", section);
-            }
+            
 
             if (tag != null && !tag.isEmpty()) {
                 List<QuerySnapshot> snapshots = new ArrayList<>();
