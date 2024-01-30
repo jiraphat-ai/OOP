@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
+
+import com.google.api.Http;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -50,6 +52,13 @@ public class ScrumBoardController extends CustomControl {
     @GetMapping("/groupscrumbord")
     public String getUserinfo(HttpSession session, @RequestParam String documentId, Model model)
             throws ExecutionException, InterruptedException {
+        Firestore db = firebaseInitializer.getDb();
+        
+        String uid = (String) session.getAttribute("documentId");
+        DocumentReference docRef = db.collection("group").document(documentId).collection("member").document(uid);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        String role = future.get().getString("role");
+        if (role.equals("manager")) {
         username = (String) session.getAttribute("username");
         firstName = (String) session.getAttribute("firstName");
         lastName = (String) session.getAttribute("lastName");
@@ -61,34 +70,24 @@ public class ScrumBoardController extends CustomControl {
         model.addAttribute("members", members);
         // Now you can use the username, firstName, and lastName
         return "scrum_board";
+        } else {
+        username = (String) session.getAttribute("username");
+        firstName = (String) session.getAttribute("firstName");
+        lastName = (String) session.getAttribute("lastName");
+        System.out.println("documentId " + documentId);
+        GroupFordetail group = getGroupDetail(documentId);
+        model.addAttribute("groupDoc", documentId);
+        model.addAttribute("group", group);
+        ArrayList<User> members = group.getMembers();
+        model.addAttribute("members", members);
+            // Now you can use the username, firstName, and lastName
+        return "memberscrum_board";
+    
+           
+        }
 
+        
     }
-    // @PostMapping("/createTask")
-    // @ResponseBody
-    // public String createTask(@RequestBody Task task ){
-    // System.out.println(task.getTaskName());
-    // System.out.println(task.getMember());
-    // System.out.println(task.getDeadline());
-    // System.out.println(task.getDescription());
-    // System.out.println(task.getDocumentId());
-
-    // Firestore db = firebaseInitializer.getDb();
-
-    // // Create a new document in the tasks collection
-    // Map<String, Object> taskData = new HashMap<>();
-    // taskData.put("taskName", task.getTaskName());
-    // taskData.put("member", task.getMember());
-    // taskData.put("deadline", task.getDeadline());
-    // taskData.put("description", task.getDescription());
-    // taskData.put("status", "To Do"); // Assuming the status is "To Do" when a
-    // task is created
-
-    // // Add the new task to the tasks collection
-    // ApiFuture<DocumentReference> addedDocRef =
-    // db.collection("group").document(task.getDocumentId()).collection("tasks").add(taskData);
-
-    // return "scrum_board";
-    // }
     @PostMapping("/createTask")
     @ResponseBody
     public String createTask(@RequestBody Task task) throws ParseException, InterruptedException, ExecutionException {
@@ -155,18 +154,6 @@ public class ScrumBoardController extends CustomControl {
         return document.getId();
     }
 
-    // public Timestamp convertStringToTimestamp(String deadline) {
-    // try {
-    // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-    // Date parsedDate = dateFormat.parse(deadline);
-    // return new Timestamp(parsedDate.getTime());
-    // } catch (Exception e) {
-    // // Exception handling for parse exceptions
-    // e.printStackTrace();
-    // return null;
-    // }
-    // }
-
     @GetMapping("/getTasks")
     @ResponseBody
     public List<Task> getTasks(@RequestParam String status, @RequestParam String doc_Id)
@@ -184,20 +171,38 @@ public class ScrumBoardController extends CustomControl {
     }
 
 @PostMapping("changeState")
-public ResponseEntity<Map<String, String>> changeTaskStatus(@RequestParam String status, @RequestParam String taskdoc_Id ,@RequestParam String documentId) throws InterruptedException, ExecutionException {
+public ResponseEntity<Map<String, String>> changeTaskStatus(@RequestParam String status, @RequestParam String taskdoc_Id ,@RequestParam String documentId,HttpSession session) throws InterruptedException, ExecutionException {
     Firestore db = firebaseInitializer.getDb();
 
     // Update the task status in the tasks collection
-    DocumentReference taskRef = db.collection("group").document(documentId).collection("tasks").document(taskdoc_Id);
-    ApiFuture<WriteResult> updateResult = taskRef.update("status", status);
 
-    // Wait for the update to complete
-    updateResult.get();
 
-    Map<String, String> response = new HashMap<>();
-    response.put("message", "Task status updated successfully");
+    String uid = (String) session.getAttribute("documentId");
+    String username = (String) session.getAttribute("username");
+    DocumentReference docRef = db.collection("group").document(documentId).collection("member").document(uid);
+    ApiFuture<DocumentSnapshot> future = docRef.get();
 
-    return new ResponseEntity<>(response, HttpStatus.OK);
+    // Retrieve the task from the Firestore database
+    DocumentReference memRef = db.collection("group").document(documentId).collection("tasks").document(taskdoc_Id);
+    ApiFuture<DocumentSnapshot> memfuture = memRef.get();
+    DocumentSnapshot document = memfuture.get();
+    List<String> members = (List<String>) document.get("member");
+    String role = future.get().getString("role");
+    if ((role.equals("manager")) || (members.contains(username))  ) {
+        DocumentReference taskRef = db.collection("group").document(documentId).collection("tasks").document(taskdoc_Id);
+        ApiFuture<WriteResult> updateResult = taskRef.update("status", status);
+        updateResult.get();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Task status updated successfully");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    } else {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "It's not your task,Not allow to change status");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+        
+    }
+
 }
 @PostMapping("/deleteTask")
 public ResponseEntity<Map<String, String>> deleteTask(@RequestParam String taskdoc_Id, @RequestParam String documentId) throws InterruptedException, ExecutionException {
