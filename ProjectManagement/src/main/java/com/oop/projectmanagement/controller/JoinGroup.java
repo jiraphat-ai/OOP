@@ -185,6 +185,18 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
                 if(groupSnapshot.get("groupOwner").equals(session.getAttribute("username"))) {
                     return "You are the owner of this group";
                 }
+                 
+                
+                 //check all group is member aleary sent request same subject
+                 ApiFuture<QuerySnapshot> querySnapshot = db.collection("group").whereEqualTo("subjectID", groupSnapshot.get("subjectID")).get();
+                 List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+                 for (QueryDocumentSnapshot document : documents) {
+                     //check all group is member aleary sent request same subject
+                     DocumentReference docRef3 = db.collection("group").document(document.getId()).collection("request").document(session.getAttribute("documentId").toString());
+                     if(docRef3.get().get().exists()){
+                         return "You have already sent a request to subject in another group";
+                     }
+                 }
                 db.collection("group").document(documentId).collection("request").document(session.getAttribute("documentId").toString()).set(
                             Map.of(
                                     "user", db.document("useraccount/" + session.getAttribute("documentId")),
