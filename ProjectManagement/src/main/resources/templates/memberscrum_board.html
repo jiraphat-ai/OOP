@@ -25,9 +25,6 @@
         <span th:text="${group.groupName}"></span>
             <span class="float-end"></span>
             <div class ="headertest">
-                <div class="create-task-btn">
-                    <button data-bs-toggle="modal" data-bs-target="#modal_create">Create Task</button>
-                </div>
                 <div class="navigation-btn">
                     <button data-bs-toggle="modal" data-bs-target="#modal_detail">Group</button>
                 </div>
@@ -109,17 +106,16 @@
                                 <h3>
                                     Group Member &nbsp; <span th:text="${group.joinedMember}+'/'+${group.maxMember}"></span>
                                 </h3>
-                              
+
                                <div th:each="member : ${members}">
-                                <!-- <button type="button" data-bs-target="#modal_memberprofile" data-bs-toggle="modal" class="btn btn-light getprofile" th:value="${member['username']}" onclick="getMemberProfile()"> -->
+                                    <h3>
                                         <span th:text="${member.username}"></span>
                                      <span th:text="${member.firstName}"></span>
                                        <span th:text="${member.lastName}"></span>
-                                <!-- </button> -->
-                                 </h3>
-                            
-                                </div>
+                                       <span th:text="${member.bio}"></span>
 
+                                 </h3>
+                                </div>
                             </div>
                         </div>
                     </table>
@@ -130,51 +126,25 @@
         </div>
     </div>
     <!-- task form -->
-
-
+  
   <!-- Create task Modal -->
-  <div class="modal fade" id="modal_create" tabindex="-2" aria-labelledby="modal_create" aria-hidden="true">
+  <div class="modal fade" id="modal_docId" tabindex="-2" aria-labelledby="modal_docId" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modal_createLabel">Create Task</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="createTaskForm" class="form-container">  
-          
-            <label for="taskName"><b>Task Name</b></label>
-            <input type="text" placeholder="Enter Task Name" id="taskName" required>
-          
-          
-            <label for="member"><b>Member</b></label>
-            <select class="form-select form-select-solid" id="mutiselect" data-control="select2" required aria-label="select member"  data-allow-clear="true" multiple="multiple" >
-                <div th:each="memlist : ${members}">
-                    <option th:text="${memlist['username']+' '+ memlist['firstName']+' '+ memlist['lastName'] }" th:value="${memlist['username']}"></option>
-                </div>
-            </select>
-            
-           
-            <label for="deadline"><b>Deadline</b></label>
-            <input type="datetime-local" id="deadline" >
-          
-            
-            <label for="description"><b>Description</b></label>
-            <textarea placeholder="Enter Task Description" id="description"></textarea>
-            
+          <form id="createTaskForm" class="form-container"> 
             <input type="hidden" id="doc_id" th:value="${group['documentId']}"></input>
-               
         </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
-          <button type="button" class="btn btn-primary" onclick="saveTask()" >Create task</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- group detail modal to do  -->
+  <!-- group detail modal to do  row -->
   <div class="modal fade" id="modal_taskdetail" tabindex="-1" aria-labelledby="modal_taskdetail" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -210,7 +180,7 @@
         
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" onclick="changestatetoToDo()" id="changestatetoToDo">To Do</button>
+          <button type="button" class="btn btn-primary" onclick="changestatetoToDo()" id="changestatetoToDo" >To Do</button>
           <button type="button" class="btn btn-primary" onclick="changestatetoChecking()" id="changestatetoChecking">Checking</button>
 
         </div>
@@ -230,9 +200,6 @@
         
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" onclick="changestatetoToDo()"id="changestatetoToDo" >To Do</button>
-          <button type="button" class="btn btn-primary" onclick="changestatetoDone()" id="changestatetoDone">Done</button>
-
         </div>
       </div>
     </div>
@@ -251,7 +218,6 @@
         </div>
         <div class="modal-footer">
             <!-- ใส่Todoเฉยๆ -->
-          <!-- <button type="button" class="btn btn-primary" onclick="changestatetoToDo()" >To Do</button> -->
         </div>
       </div>
     </div>
@@ -290,44 +256,13 @@ function getSideBar() {
     });
 
 }
-
-
-
-    function saveTask() {
-        let taskName = $('#taskName').val(); //
-        let member = $('#mutiselect').val(); //
-        let description = $('#description').val(); //
-        let documentId = $('#doc_id').val(); //
-        let deadline = $('#deadline').val(); //
-        console.log("dead: " + deadline)
-        let task = {
-            taskName: taskName,
-            member: member,
-            deadline: deadline,
-            description: description,
-            documentId : documentId
-        };
-        console.log("task: " + task)
-        $.ajax({
-            url: "/createTask",
-            type: "POST",
-            data: JSON.stringify(task),
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                console.log("data: " + data)
-                localStorage.setItem('documentId', documentId);
-            location.reload(); // Reload the page
-            }
-        });
-    }
 function getTaskDetail(taskName, deadline, member, description , documentId) {
     console.log('taskId in getTaskDetail: ', documentId); // Add this line
     $('#modal_taskdetail .modal-body').html(
         '<h3>Task Name: ' + taskName + '</h3>' +
         '<p>Deadline: ' + deadline + '</p>' +
         '<p>Member: ' + member + '</p>' +
-        '<p>Description: ' + description + '</p>'  +
-        '<button type="button" class="btn btn-danger" onclick="deleteTask()" >Delete Task </button>'
+        '<p>Description: ' + description + '</p>'
     );
     $('#changestatetoDoing').data('task-id', documentId);
     $('.btn-danger').data('task-id', documentId);
@@ -338,8 +273,7 @@ function getTaskDetaildoing(taskName, deadline, member, description, documentId)
         '<h3>Task Name: ' + taskName + '</h3>' +
         '<p>Deadline: ' + deadline + '</p>' +
         '<p>Member: ' + member + '</p>' +
-        '<p>Description: ' + description + '</p>' +
-        '<button type="button" class="btn btn-danger" onclick="deleteTask()" >Delete Task </button>'
+        '<p>Description: ' + description + '</p>'
         
     );
     $('#changestatetoChecking').data('task-id', documentId);
@@ -352,8 +286,7 @@ function getTaskDetailchecking(taskName, deadline, member, description, document
         '<h3>Task Name: ' + taskName + '</h3>' +
         '<p>Deadline: ' + deadline + '</p>' +
         '<p>Member: ' + member + '</p>' +
-        '<p>Description: ' + description + '</p>'  +
-        '<button type="button" class="btn btn-danger" onclick="deleteTask()" >Delete Task </button>'
+        '<p>Description: ' + description + '</p>' 
     );
     $('#changestatetoDone').data('task-id', documentId);
     $('#changestatetoToDo').data('task-id', documentId);
@@ -365,8 +298,7 @@ function getTaskDetaildone(taskName, deadline, member, description, documentId) 
         '<h3>Task Name: ' + taskName + '</h3>' +
         '<p>Deadline: ' + deadline + '</p>' +
         '<p>Member: ' + member + '</p>' +
-        '<p>Description: ' + description + '</p>'  +
-        '<button type="button" class="btn btn-danger" onclick="deleteTask()" >Delete Task </button>'
+        '<p>Description: ' + description + '</p>' 
     );
     $('.btn-danger').data('task-id', documentId);
 }
@@ -470,9 +402,7 @@ $(document).ready(function() {
         }
     });
 });
-
 // Change task status 
-
 
 function changestatetoDone(){
     let taskdoc_Id = $('#changestatetoDone').data('task-id');
@@ -570,51 +500,7 @@ function changestatetoToDo(){
         }
     });
 }
-function deleteTask(){
 
-    let taskdoc_Id = $('.btn-danger').data('task-id');
-    let documentId = $('#doc_id').val(); //
-    console.log("doc_id: " + documentId)
-    console.log("taskdoc_id: " + taskdoc_Id)
-    $.ajax({
-        url: "/deleteTask",
-        type: "POST",
-        data: { 
-        taskdoc_Id : taskdoc_Id,
-        documentId : documentId  
-    },
-    success: function(response) {
-            alert(response.message);
-            if(response.message === "Task status updated successfully") {
-                localStorage.setItem('documentId', documentId);
-                location.reload();
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
-        }
-    });
-}
-// function getMemberProfile(){
-//     let username = $('.getprofile').val();
-//     console.log("username: " + username)
-
-//     $.ajax({
-//         url: "/getMemberProfile",
-//         type: "GET",
-//         data: { 
-//         username : username,
-//     },
-//         success: function(memberprofile) {
-//             console.log("Returned memberprofile: ", memberprofile); // Log the returned tasks
-
-   
-//         },
-//         error: function(jqXHR, textStatus, errorThrown) {
-//             console.log("AJAX error: ", textStatus, errorThrown); // Log any AJAX errors
-//         }
-//     });
-// }
 
 
 </script>

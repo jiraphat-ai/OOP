@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
-
+import java.util.HashMap;
 import com.oop.projectmanagement.model.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -94,9 +94,11 @@ public class ImportFileController {
         return "redirect:/createsubject";
     }
 
+
     @PostMapping("/deleteSubject")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteSubject(@RequestBody Map<String, String> user) {
+        HashMap<String, String> myHashMap = new HashMap<>();
         Firestore db = firebaseInitializer.getDb();
         String username = user.get("username");
 
@@ -118,5 +120,40 @@ public class ImportFileController {
             return new ResponseEntity<>(Map.of("success", false, "message", "Error deleting user"),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/addNewTerm")
+    @ResponseBody
+    public String UpdateTerm (@RequestParam("term") String term) {
+        Firestore db = firebaseInitializer.getDb();
+        try {
+            // add to firebase firestore
+            DocumentReference docRef = db.collection("term").document("term");
+            docRef.update("term", term);
+            System.out.println("Data added successfully");
+            return "success";
+        } catch (Exception e) {
+            // Handle any exceptions that occur during the process
+            e.printStackTrace();
+            return e.getMessage();
+            // You can add custom error handling logic here
+        }
+        
+    }
+    
+    @GetMapping("/getTerm") 
+    @ResponseBody
+    public String getTerm() {
+        Firestore db = firebaseInitializer.getDb();
+        String term = "";
+        try {
+            ApiFuture<QuerySnapshot> query = db.collection("term").get();
+            QuerySnapshot querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+            term = documents.get(0).get("term").toString();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return term;
     }
 }

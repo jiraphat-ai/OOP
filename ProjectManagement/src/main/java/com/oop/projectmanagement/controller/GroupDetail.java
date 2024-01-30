@@ -1,6 +1,5 @@
 package com.oop.projectmanagement.controller;
 
-import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.oop.projectmanagement.model.GroupFordetail;
 import org.springframework.stereotype.Controller;
@@ -8,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
@@ -33,17 +29,15 @@ public class GroupDetail extends CustomControl {
         String username = (String) session.getAttribute("username");
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
-        String facebook = (String) session.getAttribute("facebook");
-        String instagram = (String) session.getAttribute("instagram");
         System.out.println("documentId " + documentId);
         GroupFordetail group = getGroupDetail(documentId);
-
         model.addAttribute("tags", getTags());
         model.addAttribute("group", group);
         // Now you can use the username, firstName, and lastName
         return "groupdetail";
 
     }
+ 
 
 
 
@@ -83,19 +77,35 @@ public class GroupDetail extends CustomControl {
                         }
                     }
 
-    private List<Map<String, Object>> getTags() {
-        Firestore db = firebaseInitializer.getDb();
-        List<Map<String, Object>> tags = new ArrayList<>();
+    @PostMapping("/setRole")
+    @ResponseBody
+    public String setRole(@RequestParam String documentId ,@RequestParam String groupId, @RequestParam String role) {
+        Firestore firestore = firebaseInitializer.getDb();
+        DocumentReference groupRef = firestore.collection("group").document(groupId);
         try {
-            ApiFuture<QuerySnapshot> querySnapshot = db.collection("tags").get();
-            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
-                tags.add(document.getData());
-            }
-        } catch (InterruptedException | ExecutionException e) {
+            // Update the group document with the new information
+            groupRef.collection("member").document(documentId).update("role", role);
+            return "Role set successfully";
+        } catch (Exception e) {
             e.printStackTrace();
+            return "Error setting role: " + e.getMessage();
         }
-        return tags;
+    }
+    @PostMapping("/deleteMember")
+    @ResponseBody
+    public String deleteMember(@RequestParam String documentId ,@RequestParam String groupId) {
+        Firestore firestore = firebaseInitializer.getDb();
+        DocumentReference groupRef = firestore.collection("group").document(groupId);
+        try {
+            // Update the group document with the new information
+            groupRef.collection("member").document(documentId).delete();
+            //update member count
+            groupRef.update("joinedMember", FieldValue.increment(-1));
+            return "Member deleted successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error deleting member: " + e.getMessage();
+        }
     }
 }
 

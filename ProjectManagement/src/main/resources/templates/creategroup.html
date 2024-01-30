@@ -42,8 +42,8 @@
             </div>
 
                 <div class="col-2">
-                    <label for="section" class="form-label">Section</label>
-                    <input type="number" class="form-control number" min=1 max=10 id="section" name="groupName" required>
+                    <label for="section" class="form-label">Term</label>
+                    <input type="Text" class="form-control" id="term" name="groupName" disabled>
                 </div>
                 <div class="col">
                     <label for="groupName" class="form-label">Group Name</label>
@@ -86,7 +86,8 @@
 <script>
     var filename = window.location.pathname.split("/").pop();
     $(document).ready(function() {
-        getSideBar()
+        getSideBar();
+        getTerm();
     });
 
 
@@ -125,7 +126,7 @@
         event.preventDefault();
 
         let subjectId = $('#subjectID').val();
-        let section = $('#section').val();
+        let section = $('#term').val();
         let member = $('#member').val();
         let groupName = $('#groupName').val();
         let groupDescription = $('#groupDescription').val();
@@ -156,6 +157,22 @@
         });
 
     }
+
+    function getTerm() {
+            $.ajax({
+                url: "/getTerm",
+                type: "GET",
+                success: function (response) {
+                    console.log(response);
+                    $('#currentTerm').text(response);
+                    $('#term').val(response);
+                },
+                error: function (xhr) {
+                    console.log(xhr);
+                    alert('Error adding new term: ' + xhr.responseText);
+                }
+            });
+        }
 
 </script>
 </body>
