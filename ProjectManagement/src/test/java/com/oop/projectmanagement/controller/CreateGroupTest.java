@@ -1,5 +1,6 @@
 package com.oop.projectmanagement.controller;
 
+import com.google.api.core.ApiFutures;
 import com.google.cloud.firestore.*;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.oop.projectmanagement.model.Group;
@@ -46,7 +47,7 @@ public class CreateGroupTest {
         Group group = new Group();
         group.setSubjectID("testSubjectId");
 
-        String result = createGroup.createGroup(session, group);
+        String result = createGroup.createGroup(group, session);
 
         assertEquals("Group created successfully", result);
     }
