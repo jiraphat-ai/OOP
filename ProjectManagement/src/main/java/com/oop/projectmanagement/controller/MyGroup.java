@@ -1,7 +1,9 @@
 package com.oop.projectmanagement.controller;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.model.GroupFordetail;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ public class MyGroup extends CustomControl{
 
     public ArrayList<GroupFordetail> getUserGroupsByUsername(String username) throws ExecutionException, InterruptedException {
         Firestore db = firebaseInitializer.getDb();
+        ApiFuture<QuerySnapshot> future = db.collection("group").whereEqualTo("groupOwner", username).get();
         ArrayList<GroupFordetail> userGroups = new ArrayList<>();
         db.collection("group").whereEqualTo("groupOwner", username).get().get().getDocuments().forEach((QueryDocumentSnapshot document) -> {
             GroupFordetail group = document.toObject(GroupFordetail.class);

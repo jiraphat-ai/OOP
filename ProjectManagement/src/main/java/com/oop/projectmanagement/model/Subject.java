@@ -2,6 +2,7 @@ package com.oop.projectmanagement.model;
 public class Subject {
     private String subjectID;
     private String subject_name;
+    
 
     // no-arg constructor
     public Subject() {}
