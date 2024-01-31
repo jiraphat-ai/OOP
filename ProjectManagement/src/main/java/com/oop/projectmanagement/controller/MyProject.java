@@ -56,14 +56,10 @@ public class MyProject {
             }
         }
     }
-    System.out.println("userGroups " + userGroups);
+
     return userGroups;
 }
-    
+
 
 
 }
-
-
-
-

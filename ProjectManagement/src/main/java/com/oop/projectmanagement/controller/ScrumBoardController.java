@@ -19,9 +19,11 @@ import javax.servlet.http.HttpSession;
 
 import com.google.api.Http;
 import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
@@ -51,7 +53,7 @@ public class ScrumBoardController extends CustomControl {
     }
 
     @GetMapping("/groupscrumbord")
-    public String getUserinfo(HttpSession session, @RequestParam String documentId, Model model)
+    public String getScrumboard(HttpSession session, @RequestParam String documentId, Model model)
             throws ExecutionException, InterruptedException {
         Firestore db = firebaseInitializer.getDb();
         
@@ -59,11 +61,12 @@ public class ScrumBoardController extends CustomControl {
         DocumentReference docRef = db.collection("group").document(documentId).collection("member").document(uid);
         ApiFuture<DocumentSnapshot> future = docRef.get();
         String role = future.get().getString("role");
+        System.out.println(role);
         if (role.equals("manager")) {
         username = (String) session.getAttribute("username");
         firstName = (String) session.getAttribute("firstName");
         lastName = (String) session.getAttribute("lastName");
-        System.out.println("documentId " + documentId);
+
         GroupFordetail group = getGroupDetail(documentId);
         model.addAttribute("groupDoc", documentId);
         model.addAttribute("group", group);
@@ -71,11 +74,11 @@ public class ScrumBoardController extends CustomControl {
         model.addAttribute("members", members);
         // Now you can use the username, firstName, and lastName
         return "scrum_board";
-        } else {
+        } else 
+         {
         username = (String) session.getAttribute("username");
         firstName = (String) session.getAttribute("firstName");
         lastName = (String) session.getAttribute("lastName");
-        System.out.println("documentId " + documentId);
         GroupFordetail group = getGroupDetail(documentId);
         model.addAttribute("groupDoc", documentId);
         model.addAttribute("group", group);
@@ -83,10 +86,7 @@ public class ScrumBoardController extends CustomControl {
         model.addAttribute("members", members);
             // Now you can use the username, firstName, and lastName
         return "memberscrum_board";
-    
-           
-        }
-
+            }
         
     }
     @PostMapping("/createTask")
@@ -201,7 +201,7 @@ public ResponseEntity<Map<String, String>> changeTaskStatus(@RequestParam String
         Map<String, String> response = new HashMap<>();
         response.put("message", "It's not your task,Not allow to change status");
         return new ResponseEntity<>(response, HttpStatus.OK);
-        
+
     }
 
 }
@@ -209,6 +209,18 @@ public ResponseEntity<Map<String, String>> changeTaskStatus(@RequestParam String
 public ResponseEntity<Map<String, String>> deleteTask(@RequestParam String taskdoc_Id, @RequestParam String documentId) throws InterruptedException, ExecutionException {
     Firestore db = firebaseInitializer.getDb();
     DocumentReference taskRef = db.collection("group").document(documentId).collection("tasks").document(taskdoc_Id);
+
+    // Delete all documents in all subcollections of the task
+    Iterable<CollectionReference> subcollections = taskRef.listCollections();
+    for (CollectionReference subcollection : subcollections) {
+        ApiFuture<QuerySnapshot> querySnapshotApiFuture = subcollection.get();
+        List<QueryDocumentSnapshot> documents = querySnapshotApiFuture.get().getDocuments();
+        for (QueryDocumentSnapshot document : documents) {
+            document.getReference().delete();
+        }
+    }
+
+    // Delete the task itself
     ApiFuture<WriteResult> deleteResult = taskRef.delete();
     deleteResult.get();
 
@@ -218,6 +230,8 @@ public ResponseEntity<Map<String, String>> deleteTask(@RequestParam String taskd
     return new ResponseEntity<>(response, HttpStatus.OK);
 }
 
-    
+
+
+
 
 }
