@@ -87,13 +87,15 @@
 // 		assertEquals(expected, actual);
 // 	}
 
-// 	@Test
-// 	public void getGroupsBySubjectId() {
-// 		String subjectID = "abc";
-// 		int section = 123;
-// 		List<String> tag = new ArrayList<>();
-// 		List<GroupFordetail> expected = new ArrayList<>();
-// 		List<GroupFordetail> actual = joinGroup.getGroupsBySubjectId(subjectID, section, tag);
+
+	@Test
+	public void getGroupsBySubjectId() {
+		String subjectID = "abc";
+		String section = "abc";
+		List<String> tag = new ArrayList<>();
+		List<GroupFordetail> expected = new ArrayList<>();
+		List<GroupFordetail> actual = joinGroup.getGroupsBySubjectId(subjectID, section, tag);
+
 
 // 		assertEquals(expected, actual);
 // 	}

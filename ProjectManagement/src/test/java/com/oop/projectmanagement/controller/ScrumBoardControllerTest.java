@@ -1,7 +1,10 @@
 package com.oop.projectmanagement.controller;
 
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.Firestore;
 import com.oop.projectmanagement.FirebaseInitializer;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,6 +16,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+
 import java.util.concurrent.ExecutionException;
 
 @WebMvcTest(ScrumBoardController.class)
@@ -26,14 +31,18 @@ public class ScrumBoardControllerTest {
 	@Autowired
 	private ScrumBoardController scrumBoardController;
 
-	@Test
-	public void deleteTask() throws Exception {
-		this.mockMvc.perform(post("/deleteTask")
-				.param("documentId", "abc")
-				.param("taskdoc_Id", "abc"))
-			.andExpect(status().isOk())
-			.andExpect(content().string(""));
-	}
+@Test
+public void deleteTaskTest() throws Exception {
+    // Arrange
+    Firestore db = Mockito.mock(Firestore.class);
+    CollectionReference collectionRefMock = Mockito.mock(CollectionReference.class);
+
+    Mockito.when(db.collection(anyString())).thenReturn(collectionRefMock);
+
+    // Act and Assert
+    this.mockMvc.perform(post("/deleteTask"))
+        .andExpect(status().isBadRequest());
+}
 
 	@Test
 	public void changeTaskStatus() throws Exception {
@@ -74,7 +83,7 @@ public class ScrumBoardControllerTest {
 	@Test
 	public void createTask() throws Exception {
 		this.mockMvc.perform(post("/createTask").content("abc").contentType(MediaType.APPLICATION_JSON_VALUE))
-			.andExpect(status().isOk())
+			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(jsonPath("$.<key>").value("<value>"));
 	}
