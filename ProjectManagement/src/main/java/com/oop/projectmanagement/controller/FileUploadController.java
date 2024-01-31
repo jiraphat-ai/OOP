@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.cloud.firestore.Firestore;
@@ -43,6 +44,12 @@ public class FileUploadController {
             //save users to firestore
             Firestore db = firebaseInitializer.getDb();
             for (User user : users) {
+                //set facebook and instagram and bio to null
+                user.setFacebook(null);
+                user.setInstagram(null);
+                user.setBio(null);
+                ArrayList<String> tag = new ArrayList<String>();
+                user.setTag(tag);
                 db.collection("useraccount").add(user);
             }
             //read each user
