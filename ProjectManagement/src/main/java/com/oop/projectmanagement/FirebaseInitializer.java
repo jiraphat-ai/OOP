@@ -34,5 +34,10 @@ public class FirebaseInitializer {
         return FirestoreClient.getFirestore();
     }
 
+    public Object someMethod() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'someMethod'");
+    }
+
 
 }

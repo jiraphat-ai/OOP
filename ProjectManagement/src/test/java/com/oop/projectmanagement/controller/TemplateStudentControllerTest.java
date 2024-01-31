@@ -24,7 +24,14 @@ public class TemplateStudentControllerTest {
 	public void getBar() throws Exception {
 		this.mockMvc.perform(get("/template_student"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("template_student"))            
-			.andExpect(content().string(containsString("<!DOCTYPE html>")));  
+			.andExpect(view().name("template_student"))
+			.andExpect(content().string(containsString("<!DOCTYPE html>")));
 	}
+
+	@Test
+	public void getBarTODO() throws Exception {
+		this.mockMvc.perform(get("/template_student"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("template_student"));	
+		}
 }

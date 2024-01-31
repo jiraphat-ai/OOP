@@ -4,13 +4,17 @@ import com.google.api.core.ApiFutures;
 import com.google.cloud.firestore.*;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.oop.projectmanagement.model.Group;
+import samples.newmocking.SomeDependency;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.springframework.mock.web.MockHttpSession;
-
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
-
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,6 +47,9 @@ public class CreateGroupTest {
 
     @Mock
     private CollectionReference collectionReference;
+
+    @MockBean
+    private SomeDependency someDependency;
 
     @Autowired
     private MockMvc mockMvc;
@@ -77,4 +84,12 @@ public class CreateGroupTest {
             .andExpect(jsonPath("$.<key>").value("<value>"));
     }
 
+    @Test
+    public void testGetSubjectID() throws Exception {
+        CreateGroup createGroup = new CreateGroup();
+        Method method = CreateGroup.class.getDeclaredMethod("getSubjectID");
+        method.setAccessible(true);
+        List<Map<String, Object>> result = (List<Map<String, Object>>) method.invoke(createGroup);
+        // assertions...
+    }
 }

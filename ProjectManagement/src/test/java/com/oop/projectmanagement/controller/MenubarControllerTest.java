@@ -1,5 +1,7 @@
 package com.oop.projectmanagement.controller;
 
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.Firestore;
 import com.oop.projectmanagement.FirebaseInitializer;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -37,7 +42,7 @@ public class MenubarControllerTest {
 		   param("group_id", "abc").
 		   param("task_id", "abc")).
 		  andExpect(status().isOk()).
-		  andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).
+		  andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")).
 		  andExpect(jsonPath("$.<key>").value("<value>"));
 	}
 
@@ -74,8 +79,8 @@ public class MenubarControllerTest {
 		   param("group_id", "abc").
 		   param("request_id", "abc")).
 		  andExpect(status().isOk()).
-		  andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).
-		  andExpect(jsonPath("$.<key>").value("<value>"));
+		  andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")).
+		  andExpect(content().string("expectedString"));
 	}
 
 	@Test

@@ -19,6 +19,7 @@ import com.oop.projectmanagement.FirebaseInitializer;
 @Controller
 public class JoinGroup extends CustomControl {
     public List<GroupFordetail> lastsearchgroup;
+    
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
@@ -54,7 +55,10 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
     public List<GroupFordetail> getGroupsBySubjectId(String subjectID, String section, List<String> tag) {
         Firestore db = firebaseInitializer.getDb();
         List<GroupFordetail> groups = new ArrayList<>();
-
+        if (db == null) {
+            // Handle the case where db is null.
+            return new ArrayList<>();
+        }
         try {
             Query query = db.collection("group").whereEqualTo("subjectID", subjectID);
                 query = query.whereEqualTo("section", section);
@@ -108,6 +112,9 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
     }
     public List<GroupFordetail> getlastsearch(HttpSession session)  {
         session.setAttribute("lastsearchgroup", lastsearchgroup);
+        if (lastsearchgroup== null) {
+            return new ArrayList<>();
+        }
         return lastsearchgroup;
     }
 

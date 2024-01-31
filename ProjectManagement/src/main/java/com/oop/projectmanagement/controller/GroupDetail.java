@@ -23,7 +23,8 @@ public class GroupDetail extends CustomControl {
 
     @Autowired
     private FirebaseInitializer firebaseInitializer;
-
+ 
+    
     @GetMapping("/groupdetail")
     public String getUserinfo(HttpSession session , @RequestParam String documentId, Model model) throws ExecutionException, InterruptedException {
         String username = (String) session.getAttribute("username");
