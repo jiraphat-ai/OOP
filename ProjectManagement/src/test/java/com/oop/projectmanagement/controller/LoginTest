@@ -1,0 +1,47 @@
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.ui.Model;
+import javax.servlet.http.HttpSession;
+import com.google.cloud.firestore.*;
+import com.google.api.core.ApiFuture;
+import java.util.Arrays;
+import at.tugraz.ist.symflower.Symflower;
+import at.tugraz.ist.symflower.instrumentation.InstrumentationConfig;
+import at.tugraz.ist.symflower.instrumentation.MethodInstrumenter;
+import at.tugraz.ist.symflower.instrumentation.cfg.MethodCFG;
+import at.tugraz.ist.symflower.instrumentation.cfg.ProgramCFG;
+import at.tugraz.ist.symflower.instrumentation.cfg.ProgramCFGBuilder;
+import at.tugraz.ist.symflower.instrumentation.cfg.ProgramCFGPrinter;
+import at.tugraz.ist.symflower.instrumentation.cfg.ProgramCFGSerializer;
+
+class LoginControllerTest {
+    @SpringBootTest
+    @Test
+    void testLoginSuccessStudent() {
+        // Create mock objects
+        Firestore db = mock(Firestore.class);
+        DocumentSnapshot document = mock(DocumentSnapshot.class);
+        Model model = mock(Model.class);
+        HttpSession session = mock(HttpSession.class);
+
+        // Set up the mock behavior
+        when(document.getString("username")).thenReturn("validUsername");
+        when(document.getString("password")).thenReturn("validPassword");
+        when(document.getString("userType")).thenReturn("student");
+        when(document.getString("firstName")).thenReturn("John");
+        when(document.getString("lastName")).thenReturn("Doe");
+
+        // Create the controller and set the db
+        LoginController controller = new LoginController();
+        controller.setDb(db); // You'll need to add a setter for db in your controller
+
+        // Call the login method
+        String result = controller.login("validUsername", "validPassword", model, session);
+
+        // Verify the result and the interactions with the mock objects
+        assertEquals("redirect:/homestudent", result);
+        verify(session).setAttribute("username", "validUsername");
+        verify(session).setAttribute("firstName", "John");
+        verify(session).setAttribute("lastName", "Doe");
+    }
+}

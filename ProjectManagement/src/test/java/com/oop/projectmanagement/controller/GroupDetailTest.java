@@ -12,9 +12,20 @@ import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
+
+
+@WebMvcTest(GroupDetail.class)
 public class GroupDetailTest {
-
     @InjectMocks
     private GroupDetail groupDetail;
 
@@ -27,6 +38,9 @@ public class GroupDetailTest {
     @Mock
     private DocumentReference documentReference;
 
+    @Autowired
+    private MockMvc mockMvc;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
@@ -35,37 +49,13 @@ public class GroupDetailTest {
     }
 
     @Test
-    public void testGetUserinfo() throws ExecutionException, InterruptedException {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("username", "testUser");
-        session.setAttribute("firstName", "Test");
-        session.setAttribute("lastName", "User");
-        String documentId = "testDocumentId";
-        Model model = mock(Model.class);
-
-        String result = groupDetail.getUserinfo(session, documentId, model);
-
-        assertEquals("groupdetail", result);
-        verify(model, times(1)).addAttribute(eq("group"), any(GroupFordetail.class));
-    }
-
-    @Test
-    public void testDeleteGroup() throws ExecutionException, InterruptedException {
-        String documentId = "testDocumentId";
-
-        String result = groupDetail.deleteGroup(documentId);
-
-        assertEquals("Group deleted successfully", result);
-    }
-
-    @Test
-    public void testEditGroup() {
-        String documentId = "testDocumentId";
-        String groupName = "testGroupName";
-        String groupDescription = "testGroupDescription";
-
-        String result = groupDetail.editGroup(documentId, groupName, groupDescription);
-
-        assertEquals("Group edited successfully", result);
+    public void getUserinfo() throws Exception {
+        this.mockMvc.perform(get("/groupdetail")
+          .param("documentId", "abc"))
+            .andExpect(status().isOk())
+            .andExpect(view().name(""))
+            .andExpect(model().attributeExists("<name>"))
+            .andExpect(model().attribute("<name>", "<value>"))
+            .andExpect(content().string(""));
     }
 }

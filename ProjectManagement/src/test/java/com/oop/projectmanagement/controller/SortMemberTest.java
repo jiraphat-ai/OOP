@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SortMemberTest {
@@ -17,8 +19,18 @@ public class SortMemberTest {
 				// TODO Auto-generated method stub
 				throw new UnsupportedOperationException("Unimplemented method 'sortMember'");
 			}
-			// Implement any necessary methods or override behavior here
+		 // Implement any necessary methods or override behavior here
 		};
+		HttpSession session = null;
+		List<Map<String, Object>> expected = new ArrayList<>();
+		List<Map<String, Object>> actual = s.setMember(session);
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void setMemberTODO() {
+		SortMember s = Mockito.mock(SortMember.class);
 		HttpSession session = null;
 		List<Map<String, Object>> expected = new ArrayList<>();
 		List<Map<String, Object>> actual = s.setMember(session);

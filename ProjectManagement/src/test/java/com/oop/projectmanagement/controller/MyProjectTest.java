@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-@WebMvcTest(MyGroup.class)
-public class MyGroupTest {
+@WebMvcTest(MyProject.class)
+public class MyProjectTest {
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -25,25 +25,24 @@ public class MyGroupTest {
 	private FirebaseInitializer firebaseInitializer;
 
 	@Autowired
-	private MyGroup myGroup;
+	private MyProject myProject;
 
 	@Test
 	public void getUserGroupsByUsername() throws InterruptedException, ExecutionException {
-		String username = "abc";
+		String documentId = "abc";
 		ArrayList<GroupFordetail> expected = null;
-		ArrayList<GroupFordetail> actual = myGroup.getUserGroupsByUsername(username);
+		ArrayList<GroupFordetail> actual = myProject.getUserGroupsByUsername(documentId);
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void getUserinfo() throws Exception {
-		this.mockMvc.perform(get("/mygroup"))
+		this.mockMvc.perform(get("/myproject"))
 			.andExpect(status().isOk())
 			.andExpect(view().name(""))
 			.andExpect(model().attributeExists("<name>"))
 			.andExpect(model().attribute("<name>", "<value>"))
 			.andExpect(content().string(""));
 	}
-
 }
