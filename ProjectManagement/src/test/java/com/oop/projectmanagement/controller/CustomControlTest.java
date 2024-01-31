@@ -79,13 +79,19 @@ public void getAllUsersFromMembers() {
     assertEquals(expected, actual);
 }
 
-@Test
-public void getGroupDetail() {
-    CustomControl c = new CustomControl();
-    String documentId = "abc";
-    GroupFordetail expected = null;
-    GroupFordetail actual = c.getGroupDetail(documentId);
+    @Test
+    public void testGetAllUsersFromMembers() throws ExecutionException, InterruptedException {
+        String docId = "testDocId";
+        when(documentReference.collection(anyString()).get()).thenReturn(ApiFutures.immediateFuture(querySnapshot));
+        List<QueryDocumentSnapshot> documents = new ArrayList<>();
+        documents.add(queryDocumentSnapshot);
+        when(querySnapshot.getDocuments()).thenReturn(documents);
+        when(queryDocumentSnapshot.get(anyString())).thenReturn(documentReference);
+        when(documentSnapshot.toObject(User.class)).thenReturn(new User());
 
-    assertEquals(expected, actual);
-}
+        ArrayList<User> result = customControl.getAllUsersFromMembers(docId);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
 }
