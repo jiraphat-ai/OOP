@@ -225,7 +225,7 @@ public ResponseEntity<Map<String, String>> deleteTask(@RequestParam String taskd
     deleteResult.get();
 
     Map<String, String> response = new HashMap<>();
-    response.put("message", "Task and all its subcollections deleted successfully");
+    response.put("message", "Task deleted successfully");
 
     return new ResponseEntity<>(response, HttpStatus.OK);
 }
