@@ -90,7 +90,7 @@ public class JoinGroupTest {
 	@Test
 	public void getGroupsBySubjectId() {
 		String subjectID = "abc";
-		int section = 123;
+		String section = "abc";
 		List<String> tag = new ArrayList<>();
 		List<GroupFordetail> expected = new ArrayList<>();
 		List<GroupFordetail> actual = joinGroup.getGroupsBySubjectId(subjectID, section, tag);

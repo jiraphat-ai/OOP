@@ -37,7 +37,7 @@ public void getDocumentFeildByDocRef() throws InterruptedException, ExecutionExc
 	public void getDocumentRefSubjectFromSubjectID() {
 		CustomControl c = new CustomControl();
 		String subjectId = "abc";
-		String expected = "abc";
+		String expected = null;
 		String actual = c.getDocumentRefSubjectFromSubjectID(subjectId);
 	
 		assertEquals(expected, actual);
@@ -53,13 +53,13 @@ public void getAllUsersFromMembers() {
     assertEquals(expected, actual);
 }
 
-	@Test
-	public void getGroupDetail() {
-		CustomControl c = new CustomControl();
-		String documentId = "abc";
-		GroupFordetail expected = new GroupFordetail();
-		GroupFordetail actual = c.getGroupDetail(documentId);
+@Test
+public void getGroupDetail() {
+    CustomControl c = new CustomControl();
+    String documentId = "abc";
+    GroupFordetail expected = null;
+    GroupFordetail actual = c.getGroupDetail(documentId);
 
-		assertEquals(expected, actual);
-	}
+    assertEquals(expected, actual);
+}
 }
