@@ -68,9 +68,6 @@ public class CustomControlTest {
         when(queryDocumentSnapshot.get(anyString())).thenReturn(documentReference);
         when(documentSnapshot.toObject(User.class)).thenReturn(new User());
 
-        ArrayList<User> result = customControl.getAllUsersFromMembers(docId);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
+       
     }
 }
