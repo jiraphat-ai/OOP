@@ -30,7 +30,7 @@ public class ProfileController extends CustomControl{
 
 
     @GetMapping("/profile")
-    public String getUserinfo(HttpSession session, Model model) {
+    public String getUserinfo(HttpSession session, Model model) throws InterruptedException, ExecutionException{
         model.addAttribute("tags", getTags());
         Firestore db = firebaseInitializer.getDb();
         String username = (String) session.getAttribute("username");

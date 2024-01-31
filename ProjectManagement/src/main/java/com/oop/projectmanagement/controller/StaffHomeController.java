@@ -8,17 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import java.util.HashMap;
 import java.util.Map;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
@@ -26,19 +18,7 @@ import com.google.cloud.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.WriteResult;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.Arrays;
-import java.util.Map;
 import javax.servlet.http.HttpSession;
-import com.google.api.core.ApiFuture;
-import com.oop.projectmanagement.FirebaseInitializer;
 
 
 @Controller

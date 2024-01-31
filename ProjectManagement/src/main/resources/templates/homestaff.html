@@ -387,6 +387,10 @@
                                 const firstName = document.getElementById('firstName').value;
                                 const lastName = document.getElementById('lastName').value;
                                 const userType = document.getElementById('userType').value;
+                                const bio ="null";
+                                const facebook ="null";
+                                const instagram ="null";
+                                const tag ="null";
 
                                 const formData = new FormData();
                                 formData.append('username', username);
@@ -394,18 +398,15 @@
                                 formData.append('firstName', firstName);
                                 formData.append('lastName', lastName);
                                 formData.append('userType', userType);
-
+                                formData.append('bio', bio);
+                                formData.append('facebook', facebook);
+                                formData.append('instagram', instagram);
+                                formData.append('tag', tag);
+                             
                                 fetch('/addUser', {
                                     method: 'POST',
                                     body: formData,
-                                })
-                                    .then(response => {
-                                        if (!response.ok) {
-                                            throw new Error('Network response was not ok');
-                                        }
-                                        return response.json();
-                                    })
-                                    .then(data => {
+                                }).then(data => {
                                         if (data.success) {
                                             alert('User added successfully');
                                             location.reload(); // Refresh the page after adding a user

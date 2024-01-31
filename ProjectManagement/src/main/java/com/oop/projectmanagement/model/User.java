@@ -1,5 +1,7 @@
 package com.oop.projectmanagement.model;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.ui.Model;
@@ -13,6 +15,10 @@ public class User {
     private String last_name;
     private String password;
     private String user_type;
+    private String bio;
+    private String instagram;
+    private String facebook;
+     private ArrayList<String> tag;
 
 //    private String documentId;
 
@@ -75,5 +81,35 @@ public class User {
 //    public String getDocumentId() {
 //        return documentId;
 //    }
-
+    
+        public void setBio(String bio) {
+            this.bio = bio;
+        }
+    
+        public String getBio() {
+            return bio;
+        }
+    
+        public void setInstagram(String instagram) {
+            this.instagram = instagram;
+        }
+    
+        public String getInstagram() {
+            return instagram;
+        }
+    
+        public void setFacebook(String facebook) {
+            this.facebook = facebook;
+        }
+    
+        public String getFacebook() {
+            return facebook;
+        }
+        public void setTag(ArrayList<String> tag) {
+            this.tag = tag;
+        }
+    
+        public ArrayList<String> getTag() {
+            return tag;
+        }
 }
