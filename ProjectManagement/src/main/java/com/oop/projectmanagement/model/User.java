@@ -7,12 +7,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.google.cloud.Timestamp;
 
+import java.util.ArrayList;
+
 public class User {
     private String username;
     private String first_name;
     private String last_name;
     private String password;
     private String user_type;
+    private String facebook;
+    private String bio;
+    private String instagram;
+    private ArrayList<String> tag;
 
 //    private String documentId;
 
@@ -68,12 +74,36 @@ public class User {
         return Timestamp.now();
     }
 
-//    public void setDocumentId(String documentId) {
-//        this.documentId = documentId;
-//    }
-//
-//    public String getDocumentId() {
-//        return documentId;
-//    }
+    public void setFacebook(String facebook) {
+        this.facebook = facebook;
+    }
+
+    public String getFacebook() {
+        return facebook;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setInstagram(String instagram) {
+        this.instagram = instagram;
+    }
+
+    public String getInstagram() {
+        return instagram;
+    }
+
+    public void setTag(ArrayList<String> tag) {
+        this.tag = tag;
+    }
+
+    public ArrayList<String> getTag() {
+        return tag;
+    }
 
 }
