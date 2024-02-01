@@ -204,8 +204,8 @@
     }
 
     function acceptTask(element) {
-        var task_id = $(element).siblings('.task_id').text();
-        var group_id = $(element).siblings('.group_id').text();
+        var task_id = $(element).parent().parent().find('.task_id').text();
+        var group_id = $(element).parent().parent().find('.group_id').text();
 
         $.ajax({
             url: "/accepttask",
@@ -234,8 +234,8 @@
     }
 
     function rejectTask(element) {
-        var task_id = $(element).siblings('.task_id').text();
-        var group_id = $(element).siblings('.group_id').text();
+        var task_id = $(element).parent().parent().find('.task_id').text();
+        var group_id = $(element).parent().parent().find('.group_id').text();
 
         $.ajax({
             url: "/rejecttask",
