@@ -16,7 +16,6 @@ body {
     padding-top: 20px;
 
 }
-
 .profile {
     display: flex;
     align-items: center;
@@ -141,18 +140,21 @@ body {
     background-color: #007B9A;
 }
 .badge {
+    position: relative;
+    /* คุณอาจจะต้องปรับค่าต่อไปนี้ให้เหมาะสมกับขนาดของ badge ของคุณ */
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 18px;
+}
+
+.text-badge {
     position: absolute;
-    top: -10px;
-    right: -8px;
-    padding: 5px;
-    width: 18px; /* Set width and height to the same value */
-    height: 18px; /* Set width and height to the same value */
-    display: inline-block; /* Allow width and height to be set */
-    text-align: center; /* Center the badge text */
-    line-height: 20px; /* Vertically center the badge text */
-    border-radius: 50%; /* This makes the badge round */
-    background-color: red;
-    color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
 }
 .main-content {
     padding: 20px;

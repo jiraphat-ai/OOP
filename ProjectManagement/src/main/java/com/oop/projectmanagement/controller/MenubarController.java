@@ -43,16 +43,9 @@ public class MenubarController extends CustomControl {
         //show data in notificationList
         ArrayList<Notification> notificationList2 = getRequest(session);
         
-        //loop for show data in notificationList
-        for (int i = 0; i < notificationList2.size(); i++) {
-            System.out.println("notificationList " + notificationList2.get(i).getUsername());
-            System.out.println("notificationList " + notificationList2.get(i).getSubject_id());
-            System.out.println("notificationList " + notificationList2.get(i).getRequest_id());
-            System.out.println("notificationList " + notificationList2.get(i).getGroup_id());
-        }
-
-        //
+        Integer count_noti = notificationList2.size();
         model.addAttribute("notificationList", notificationList2);
+        model.addAttribute("count_noti", count_noti);
 
     
         return "menu_bar_student";
