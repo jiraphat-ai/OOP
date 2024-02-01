@@ -118,8 +118,8 @@
                             </p>
                         </div>
                         <div class="col-3 text-end">
-<!--                            <button class="btn btn-primary" onclick="acceptTask(this)">Accept</button>-->
-<!--                            <button class="btn btn-danger" onclick="rejectTask(this)">Reject</button>-->
+                            <button class="btn btn-primary" onclick="acceptTask(this)">Accept</button>
+                            <button class="btn btn-danger" onclick="rejectTask(this)">Reject</button>
                         </div>
                     </div>
                 </div>
@@ -132,6 +132,9 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
 
 
@@ -203,18 +206,60 @@
     function acceptTask(element) {
         var task_id = $(element).siblings('.task_id').text();
         var group_id = $(element).siblings('.group_id').text();
-        $.post("/accepttask", { group_id: group_id, task_id: task_id }, function(data) {
-            alert("Task accepted");
-            location.reload();
+
+        $.ajax({
+            url: "/accepttask",
+            type: "POST",
+            data: {
+                group_id: group_id,
+                task_id: task_id
+            },
+            success: function (response) {
+                swal.fire({
+                    title: "Success",
+                    text: "Task accepted",
+                    icon: "success",
+                    button: "OK",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //reload page
+                        location.reload();
+                    }
+                });
+            },
+            error: function (response) {
+                console.log(response);
+            }
         });
     }
 
     function rejectTask(element) {
         var task_id = $(element).siblings('.task_id').text();
         var group_id = $(element).siblings('.group_id').text();
-        $.post("/rejecttask", { group_id: group_id, task_id: task_id }, function(data) {
-            alert("Task rejected");
-            location.reload();
+
+        $.ajax({
+            url: "/rejecttask",
+            type: "POST",
+            data: {
+                group_id: group_id,
+                task_id: task_id
+            },
+            success: function (response) {
+                swal.fire({
+                    title: "Success",
+                    text: "Task rejected",
+                    icon: "success",
+                    button: "OK",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //reload page
+                        location.reload();
+                    }
+                });
+            },
+            error: function (response) {
+                console.log(response);
+            }
         });
     }
 </script>

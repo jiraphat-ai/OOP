@@ -25,6 +25,7 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.oop.projectmanagement.model.Notification;
+import com.oop.projectmanagement.model.GroupFordetail;
 
 @Controller
 public class MenubarController extends CustomControl {
@@ -168,17 +169,21 @@ public class MenubarController extends CustomControl {
     
 
     public void updateTaskStatus(String groupId, String taskId, String status) {
-        DocumentReference taskRef = db.collection("group").document(groupId).collection("tasks").document(taskId);
-        taskRef.update("status", status);
+        if (groupId != null && !groupId.isEmpty() && taskId != null && !taskId.isEmpty()) {
+            DocumentReference taskRef = db.collection("group").document(groupId).collection("tasks").document(taskId);
+            taskRef.update("status", status);
+        } else {
+            System.out.println("Invalid groupId or taskId");
+        }
     }
+    
 
     @PostMapping("/rejecttask")
     @ResponseBody
     public String rejectTask(@RequestParam("group_id") String group_id, @RequestParam("task_id") String task_id) {
         // Update status of the task to "doing"
         db = firebaseInitializer.getDb();
-        DocumentReference taskRef = db.collection("group").document(group_id).collection("tasks").document(task_id);
-        taskRef.update("status", "doing");
+        updateTaskStatus(group_id, task_id, "doing");
         return "success";
     }
 
@@ -187,8 +192,7 @@ public class MenubarController extends CustomControl {
     public String acceptTask(@RequestParam("group_id") String group_id, @RequestParam("task_id") String task_id) {
         // Update status of the task to "done"
         db = firebaseInitializer.getDb();
-        DocumentReference taskRef = db.collection("group").document(group_id).collection("tasks").document(task_id);
-        taskRef.update("status", "done");
+        updateTaskStatus(group_id, task_id, "done");
         return "success";
     }
 
