@@ -110,21 +110,20 @@
                     <div class="row">
                         <div class="col-9">
                             <p class="notification-text">
-                                <strong th:text="${noti.username}"></strong>
+                                <strong th:text="${noti.taskName}"></strong>
                                 <span>has a task pending in the group</span>
-                                <strong th:text="${noti.subject_id}"></strong>
+                                <strong th:text="${noti.status}"></strong>
                                 <p class="task_id" th:text="${noti.request_id}"></p>
                                 <p class="group_id" th:text="${noti.group_id}"></p>
                             </p>
                         </div>
                         <div class="col-3 text-end">
-                            <button class="btn btn-primary" onclick="acceptTask(this)">Accept</button>
-                            <button class="btn btn-danger" onclick="rejectTask(this)">Reject</button>
+<!--                            <button class="btn btn-primary" onclick="acceptTask(this)">Accept</button>-->
+<!--                            <button class="btn btn-danger" onclick="rejectTask(this)">Reject</button>-->
                         </div>
                     </div>
                 </div>
             </div>
-            
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>

@@ -3,6 +3,7 @@ package com.oop.projectmanagement.controller;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Firestore;
 import com.oop.projectmanagement.FirebaseInitializer;
+import com.oop.projectmanagement.model.NotificationTask;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -68,7 +69,7 @@ public class MenubarControllerTest {
 	public void getTaskNotifications() throws InterruptedException, ExecutionException {
 		HttpSession session = null;
 		ArrayList<Notification> expected = null;
-		ArrayList<Notification> actual = menubarController.getTaskNotifications(session);
+		ArrayList<NotificationTask> actual = menubarController.getTaskNotifications(session);
 
 		assertEquals(expected, actual);
 	}

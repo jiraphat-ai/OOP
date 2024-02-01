@@ -1,11 +1,11 @@
 package com.oop.projectmanagement.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import javax.print.Doc;
 import javax.servlet.http.HttpSession;
+
+import com.oop.projectmanagement.model.NotificationTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +42,11 @@ public class MenubarController extends CustomControl {
         // Now you can use the username, firstName, and lastName
         //show data in notificationList
         ArrayList<Notification> notificationList2 = getRequest(session);
-        
-        Integer count_noti = notificationList2.size();
+        ArrayList<NotificationTask> taskNotificationList = getTaskNotifications(session);
+        //loop for show data in notificationList3
+        System.out.println("userId " + session.getAttribute("documentId"));
+        model.addAttribute("taskNotificationList", taskNotificationList);
+        Integer count_noti = notificationList2.size() + taskNotificationList.size();
         model.addAttribute("notificationList", notificationList2);
         model.addAttribute("count_noti", count_noti);
 
@@ -121,37 +124,45 @@ public class MenubarController extends CustomControl {
     }
 
     // Manager notification
-    public ArrayList<Notification> getTaskNotifications(HttpSession session) throws ExecutionException, InterruptedException {
-        ArrayList<Notification> notificationList = new ArrayList<>();
-        db = firebaseInitializer.getDb();
-        
-        ApiFuture<QuerySnapshot> future = db.collection("group").whereEqualTo("Manager", session.getAttribute("username")).get();
+    public ArrayList<NotificationTask> getTaskNotifications(HttpSession session) throws ExecutionException, InterruptedException {
+        ArrayList<NotificationTask> notificationList = new ArrayList<>();
+        Firestore db = firebaseInitializer.getDb();
+        //get all group
+        ApiFuture<QuerySnapshot> future = db.collection("group").get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-        
         for (QueryDocumentSnapshot document : documents) {
-            String groupId = document.getId();
-            
-            ApiFuture<QuerySnapshot> taskFuture = db.collection("group").document(groupId)
-                    .collection("tasks")
-                    .whereEqualTo("status", "checking")
-                    .get();
-    
-            List<QueryDocumentSnapshot> taskDocuments = taskFuture.get().getDocuments();
-    
-            for (QueryDocumentSnapshot taskDocument : taskDocuments) {
-                DocumentReference userRef = (DocumentReference) taskDocument.get("users");
-                Notification notification = new Notification();
-                notification.setSubject_id(document.getString("subjectID"));
-                notification.setUsername(getDocumentFeildByDocRef(userRef, "username"));
-                notification.setRequest_id(taskDocument.getId());
-                notification.setGroup_id(groupId);
-                notificationList.add(notification);
-                
-                System.out.println("notificationList " + notification.getRequest_id());
-                System.out.println("notificationList " + notification.getGroup_id());
+            //check user in sub-collection member with docmentid is manager or not
+            DocumentReference userRef = db.collection("group").document(document.getId()).collection("member").document((String) session.getAttribute("documentId"));
+            ApiFuture<DocumentSnapshot> future2 = userRef.get();
+            DocumentSnapshot document2 = future2.get();
+            //if useref != null and role = manager
+            if(document2.exists())
+              if(Objects.equals(document2.getString("role"), "manager")){
+                //get all task in group
+                ApiFuture<QuerySnapshot> future3 = db.collection("group").document(document.getId()).collection("tasks").get();
+                List<QueryDocumentSnapshot> documents3 = future3.get().getDocuments();
+                for (QueryDocumentSnapshot document3 : documents3) {
+                    //get all task that status = "pending"
+                    if(Objects.equals(document3.getString("status").toLowerCase(), "checking")){
+                        NotificationTask notification = new NotificationTask();
+                        notification.setTaskName(document3.getString("taskName"));
+                        notification.setStatus(document3.getString("status"));
+                        notification.setRequest_id(document3.getId());
+                        notification.setGroup_id(document.getId());
+                        notificationList.add(notification);
+                    }
+                }
             }
+
+            //get all task in group
         }
-    
+
+        //show data in notificationList
+        for (NotificationTask notification : notificationList) {
+            System.out.println("notificationList " + notification.getRequest_id());
+            System.out.println("notificationList " + notification.getGroup_id());
+        }
+
         return notificationList;
     }
     
