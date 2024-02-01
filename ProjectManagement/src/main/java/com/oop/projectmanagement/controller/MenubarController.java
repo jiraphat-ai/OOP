@@ -124,26 +124,37 @@ public class MenubarController extends CustomControl {
     public ArrayList<Notification> getTaskNotifications(HttpSession session) throws ExecutionException, InterruptedException {
         ArrayList<Notification> notificationList = new ArrayList<>();
         db = firebaseInitializer.getDb();
+        
         ApiFuture<QuerySnapshot> future = db.collection("group").whereEqualTo("Manager", session.getAttribute("username")).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        
         for (QueryDocumentSnapshot document : documents) {
-            ApiFuture<QuerySnapshot> future2 = db.collection("group").document(document.getId()).collection("tasks").whereEqualTo("status", "checking").get();
-            List<QueryDocumentSnapshot> documents2 = future2.get().getDocuments();
-            for (QueryDocumentSnapshot document2 : documents2) {
-                DocumentReference userRef = (DocumentReference) document2.get("users");
+            String groupId = document.getId();
+            
+            ApiFuture<QuerySnapshot> taskFuture = db.collection("group").document(groupId)
+                    .collection("tasks")
+                    .whereEqualTo("status", "checking")
+                    .get();
+    
+            List<QueryDocumentSnapshot> taskDocuments = taskFuture.get().getDocuments();
+    
+            for (QueryDocumentSnapshot taskDocument : taskDocuments) {
+                DocumentReference userRef = (DocumentReference) taskDocument.get("users");
                 Notification notification = new Notification();
                 notification.setSubject_id(document.getString("subjectID"));
                 notification.setUsername(getDocumentFeildByDocRef(userRef, "username"));
-                notification.setRequest_id(document2.getId());
-                notification.setGroup_id(document.getId());
+                notification.setRequest_id(taskDocument.getId());
+                notification.setGroup_id(groupId);
                 notificationList.add(notification);
+                
                 System.out.println("notificationList " + notification.getRequest_id());
                 System.out.println("notificationList " + notification.getGroup_id());
-
             }
         }
+    
         return notificationList;
     }
+    
 
     public void updateTaskStatus(String groupId, String taskId, String status) {
         DocumentReference taskRef = db.collection("group").document(groupId).collection("tasks").document(taskId);
