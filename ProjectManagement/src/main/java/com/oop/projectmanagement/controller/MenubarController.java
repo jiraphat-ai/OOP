@@ -192,7 +192,7 @@ public class MenubarController extends CustomControl {
     public String acceptTask(@RequestParam("group_id") String group_id, @RequestParam("task_id") String task_id) {
         // Update status of the task to "done"
         db = firebaseInitializer.getDb();
-        updateTaskStatus(group_id, task_id, "done");
+        updateTaskStatus(group_id, task_id, "Done");
         return "success";
     }
 
