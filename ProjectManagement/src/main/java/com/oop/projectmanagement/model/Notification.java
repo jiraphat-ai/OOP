@@ -32,9 +32,7 @@ public class Notification extends CustomControl {
         this.subject_id = subjectID;
     }
 
-    public String getRequest_id() {
-        return request_id;
-    }
+    public String getRequest_id() { return request_id; }
 
     public void setRequest_id(String requestID) {
         this.request_id = requestID;

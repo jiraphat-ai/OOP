@@ -79,4 +79,14 @@ public void getAllUsersFromMembers() {
     assertEquals(expected, actual);
 }
 
+	@Test
+	public void getAllUsersFromRequest() {
+		CustomControl c = new CustomControl();
+		String docId = "abc";
+		ArrayList<User> expected = new ArrayList<>();
+		ArrayList<Member> actual = c.getAllUsersFromMembers(docId);
+
+		assertEquals(expected, actual);
+	}
+
 }

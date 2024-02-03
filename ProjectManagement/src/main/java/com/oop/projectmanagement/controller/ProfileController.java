@@ -30,10 +30,12 @@ public class ProfileController extends CustomControl{
 
 
     @GetMapping("/profile")
-    public String getUserinfo(HttpSession session, Model model) throws InterruptedException, ExecutionException{
+    public String getUserinfo(HttpSession session, Model model,@RequestParam(required = false) String username) throws InterruptedException, ExecutionException{
         model.addAttribute("tags", getTags());
         Firestore db = firebaseInitializer.getDb();
-        String username = (String) session.getAttribute("username");
+        if(username == null){
+            username = (String) session.getAttribute("username");
+        }
         Query documentRef = db.collection("useraccount").whereEqualTo("username", username);
 
         try {

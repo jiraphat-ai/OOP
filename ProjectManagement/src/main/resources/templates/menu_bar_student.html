@@ -90,7 +90,8 @@
                     <div class="notification-item">
                         <div class="row"><div class="col-9">
                         <p class="notification-text">
-                            <strong th:text="${noti.username}"></strong>
+                            <a th:href="'/profile?username='+${noti.username}"><strong th:text="${noti.username}"></strong></a>
+
                             <span>has requested to join the group</span>
                             <strong th:text="${noti.subject_id}"></strong>
 
