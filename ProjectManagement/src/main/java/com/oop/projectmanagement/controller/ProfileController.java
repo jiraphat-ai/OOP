@@ -15,7 +15,6 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.google.cloud.firestore.QuerySnapshot;
 import java.util.concurrent.ExecutionException;
@@ -30,7 +29,7 @@ public class ProfileController extends CustomControl{
 
 
     @GetMapping("/profile")
-    public String getUserinfo(HttpSession session, Model model,@RequestParam(required = false) String username) throws InterruptedException, ExecutionException{
+    public String getUserProfile(HttpSession session, Model model,@RequestParam(required = false) String username) throws InterruptedException, ExecutionException{
         model.addAttribute("tags", getTags());
         Firestore db = firebaseInitializer.getDb();
         if(username == null){
@@ -79,6 +78,57 @@ public class ProfileController extends CustomControl{
         }
 
         return "profile";
+    }
+    @GetMapping("/viewprofile")
+    public String viewUserProfile(HttpSession session, Model model,@RequestParam(required = false) String username) throws InterruptedException, ExecutionException{
+        model.addAttribute("tags", getTags());
+        Firestore db = firebaseInitializer.getDb();
+        if(username == null){
+            username = (String) session.getAttribute("username");
+        }
+        Query documentRef = db.collection("useraccount").whereEqualTo("username", username);
+
+        try {
+            ApiFuture<QuerySnapshot> documentSnapshotFuture = documentRef.get();
+            QuerySnapshot document = documentSnapshotFuture.get();
+            DocumentSnapshot documentSnapshot = document.getDocuments().get(0);
+
+            // Get all the data in the document
+            Map<String, Object> userData = documentSnapshot.getData();
+
+            // Add the data to the model
+            model.addAttribute("userData", userData);
+            List<String> userTags = (List<String>) userData.get("tag");
+            model.addAttribute("userTags", userTags);
+
+            // Add the missing fields if they don't exist
+            boolean updateNeeded = false;
+            if (!userData.containsKey("bio")) {
+                userData.put("bio", null);
+                updateNeeded = true;
+            }
+            if (!userData.containsKey("instagram")) {
+                userData.put("instagram", null);
+                updateNeeded = true;
+            }
+            if (!userData.containsKey("facebook")) {
+                userData.put("facebook", null);
+                updateNeeded = true;
+            }
+            if (!userData.containsKey("tag")) {
+                userData.put("tag", new ArrayList<String>());
+                updateNeeded = true;
+            }
+            // If any fields were missing, update the document in Firebase
+            if (updateNeeded) {
+                documentSnapshot.getReference().set(userData);
+            }
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return "viewprofile";
     }
 
 

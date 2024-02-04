@@ -239,15 +239,7 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
                     return "You are the owner of this group";
                 }
                 
-                // Check if the user has already joined a group with the same subject
-                // String subjectId = groupSnapshot.getString("subjectId");
-                // QuerySnapshot joinedGroupsSnapshot = db.collection("group")
-                //         .whereEqualTo("subjectId", subjectId)
-                //         .whereArrayContains("members", session.getAttribute("documentId").toString())
-                //         .get().get();
-                // if (!joinedGroupsSnapshot.isEmpty()) {
-                //     return "You can't join more than 1 group in the same subject";
-                // }
+
                 
                 return "success";
                 // Rest of your code

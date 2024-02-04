@@ -31,39 +31,6 @@ public class StudentHomeController {
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
-
-
-
-    // @GetMapping("/homestudent")
-    // public String getUserinfo(HttpSession session,Model model) throws InterruptedException, ExecutionException  {
-    //     String username = (String) session.getAttribute("username");
-    //     String firstName = (String) session.getAttribute("firstName");
-    //     String lastName = (String) session.getAttribute("lastName");
-    //     return "homestudent";
-    // }
-
-
-// public String getUserTask(HttpSession session, Model model)throws InterruptedException, ExecutionException  {
-//     String username = (String) session.getAttribute("username");
-//     List<Task> taskList = new ArrayList<Task>();
-//     Firestore db = firebaseInitializer.getDb();
-//         CollectionReference groupCollectionReference = db.collection("group");
-//         ApiFuture<QuerySnapshot> groupFuture = groupCollectionReference.get();
-
-//         for (DocumentSnapshot groupDocument : groupFuture.get().getDocuments()) {
-//             CollectionReference tasksCollectionReference = groupDocument.getReference().collection("tasks");
-//             ApiFuture<QuerySnapshot> tasksFuture = tasksCollectionReference.get();
-
-//             for (DocumentSnapshot taskDocument : tasksFuture.get().getDocuments()) {
-//                 Task task = taskDocument.toObject(Task.class);
-//                 taskList.add(task);
-
-//             }
-//         }
-//         model.addAttribute("taskList", taskList);
-
-//         return "homestudent";
-//     }
 @GetMapping("/homestudent")
     public String getUserinfo(HttpSession session,Model model) throws InterruptedException, ExecutionException  {
 

@@ -40,7 +40,7 @@
                                     <span id="clickmember" onclick="memberClick(this)" th:text="${member.firstName + ' ' + member.lastName + ' ' + member.username + ' (' + (member.role)+')'}">
                                     </span>
                                     <div class="d-none member_doc_id" th:text="${member.documentId}" ></div>
-                                    <a th:href="'/profile?username='+${member.username}">Detail</a>
+                                    <a th:href="'/viewprofile?username='+${member.username}">Detail</a>
                                     <br/>
                                 </div></p>
                         </div>

@@ -2,18 +2,13 @@ package com.oop.projectmanagement.controller;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import javax.print.Doc;
 import javax.servlet.http.HttpSession;
-
 import com.oop.projectmanagement.model.NotificationTask;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.api.core.ApiFuture;
@@ -25,7 +20,6 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.oop.projectmanagement.FirebaseInitializer;
 import com.oop.projectmanagement.model.Notification;
-import com.oop.projectmanagement.model.GroupFordetail;
 
 @Controller
 public class MenubarController extends CustomControl {
