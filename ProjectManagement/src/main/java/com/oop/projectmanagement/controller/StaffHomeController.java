@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import java.util.Map;
 import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.oop.projectmanagement.FirebaseInitializer;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpSession;
+import com.google.cloud.firestore.Query;
 
 
 @Controller
@@ -159,6 +161,42 @@ public ResponseEntity<Map<String, Object>> resetPassword(
             e.printStackTrace();
             return new ResponseEntity<>(Map.of("success", false, "message", "Error deleting user"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+  @PostMapping("/searchUser")
+    @ResponseBody
+    public List<Map<String, Object>> searchUser(@RequestBody Map<String, String> searchData) {
+        String username = searchData.get("username");
+        String name = searchData.get("name");
+
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        try {
+            CollectionReference userCollection = db.collection("useraccount");
+
+            Query query = userCollection;
+
+            // ตรวจสอบว่ามีการส่งค่ามาหรือไม่ และทำการ filter ข้อมูลตามเงื่อนไข
+            if (username != null && !username.isEmpty()) {
+                query = query.whereEqualTo("username", username);
+            }
+            if (name != null && !name.isEmpty()) {
+                query = query.whereEqualTo("firstName", name);
+            }
+
+            // ทำการ query ข้อมูลจาก Firestore
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+
+            // นำข้อมูลมาเก็บใน List<Map<String, Object>> สำหรับส่งกลับไปยัง HTML
+            for (QueryDocumentSnapshot document : documents) {
+                result.add(document.getData());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 }
