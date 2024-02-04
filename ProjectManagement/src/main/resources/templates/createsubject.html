@@ -308,14 +308,18 @@
         /*<![CDATA[*/
         $(document).ready(function () {
             // Check if the table exists
-            if ($('.table').length) {
+
                 // Initialize DataTable
                 $('.table').DataTable({
+                        //delete the search box
+                        "bFilter": false,
+                        "bInfo": false,
+                        "bLengthChange": false,
+                        "bPaginate": false,
+                        "bSort": false
 
                 });
-            } else {
-                console.error('Table #user-table does not exist');
-            }
+
         });
         function deleteSubject(username) {
             fetch('/deleteSubject', {
@@ -411,25 +415,39 @@
         }
 
         function searchSubjects() {
-            // Get the values from the input fields
-            var subjectID = document.getElementById('subjectIDInput').value.trim().toLowerCase();
-            var subjectName = document.getElementById('subjectNameInput').value.trim().toLowerCase();
-
-            // Get all rows in the table
-            var rows = document.querySelectorAll('tbody tr');
-
-            // Loop through each row and check if it matches the search criteria
-            rows.forEach(function (row) {
-                var rowSubjectID = row.querySelector('td:nth-child(1)').innerText.trim().toLowerCase();
-                var rowSubjectName = row.querySelector('td:nth-child(2)').innerText.trim().toLowerCase();
-
-                // Check if the row matches the search criteria
-                var matchSubjectID = rowSubjectID.includes(subjectID);
-                var matchSubjectName = rowSubjectName.includes(subjectName);
-
-                // Show/hide the row based on the search criteria
-                row.style.display = (matchSubjectID && matchSubjectName) ? '' : 'none';
+           $.ajax({
+                url: "/searchSubjects",
+                type: "POST",
+                data: {
+                    subjectID: document.getElementById('subjectIDInput').value,
+                    subjectName: document.getElementById('subjectNameInput').value
+                },
+                success: function (response) {
+                    console.log(response);
+                    var tbody = document.querySelector('.table tbody');
+                    tbody.innerHTML = '';
+                    response.forEach(subject => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${subject.subjectID}</td>
+                                <td>${subject.subjectName}</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteSubjectModal"
+                                        onclick="setUsernameForDeleteUserModal(this)">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                },
+                error: function (xhr) {
+                    console.log(xhr);
+                    alert('Error searching subjects: ' + xhr.responseText);
+                }
             });
+
         }
     </script>
 
