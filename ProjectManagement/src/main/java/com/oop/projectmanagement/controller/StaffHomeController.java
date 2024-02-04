@@ -1,7 +1,6 @@
 package com.oop.projectmanagement.controller;
 
 import com.oop.projectmanagement.model.User;
-import com.oop.projectmanagement.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -109,35 +108,35 @@ public class StaffHomeController {
         return "redirect:/homestaff";
     }
 
-@PostMapping("/resetPassword")
-@ResponseBody
-public ResponseEntity<Map<String, Object>> resetPassword(
-        @RequestParam("username") String username,
-        @RequestParam("newPassword") String newPassword) {
+// @PostMapping("/resetPassword")
+// @ResponseBody
+// public ResponseEntity<Map<String, Object>> resetPassword(
+//         @RequestParam("username") String username,
+//         @RequestParam("newPassword") String newPassword) {
 
-    Firestore db = firebaseInitializer.getDb();
-    //test merge
+//     Firestore db = firebaseInitializer.getDb();
+//     //test merge
 
-    try {
-        // Check if the user exists
-        ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
-        QuerySnapshot querySnapshot = query.get();
-        if (querySnapshot.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+//     try {
+//         // Check if the user exists
+//         ApiFuture<QuerySnapshot> query = db.collection("useraccount").whereEqualTo("username", username).get();
+//         QuerySnapshot querySnapshot = query.get();
+//         if (querySnapshot.isEmpty()) {
+//             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//         }
 
-        // Update the password for the user
-        DocumentReference userRef = querySnapshot.getDocuments().get(0).getReference();
-        userRef.update("password", newPassword);
+//         // Update the password for the user
+//         DocumentReference userRef = querySnapshot.getDocuments().get(0).getReference();
+//         userRef.update("password", newPassword);
 
-        return new ResponseEntity<>(Map.of("success", true), HttpStatus.OK);
-    } catch (Exception e) {
-        e.printStackTrace();
-        return new ResponseEntity<>(Map.of("success", false, "message", "Error resetting password"), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//         return new ResponseEntity<>(Map.of("success", true), HttpStatus.OK);
+//     } catch (Exception e) {
+//         e.printStackTrace();
+//         return new ResponseEntity<>(Map.of("success", false, "message", "Error resetting password"), HttpStatus.INTERNAL_SERVER_ERROR);
+//     }
 
 
-}
+// }
     @PostMapping("/deleteUser")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteUser(@RequestBody Map<String, String> user) {

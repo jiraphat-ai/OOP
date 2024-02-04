@@ -140,7 +140,6 @@ public class ImportFileController {
         }
         
     }
-    
     @GetMapping("/getTerm") 
     @ResponseBody
     public String getTerm() {
