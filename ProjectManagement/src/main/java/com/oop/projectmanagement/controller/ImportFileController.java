@@ -13,11 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
@@ -154,5 +150,31 @@ public class ImportFileController {
             e.printStackTrace();
         }
         return term;
+    }
+
+    @PostMapping("/searchSubjects")
+    @ResponseBody
+    public List<Map<String, Object>> searchSubjects(@RequestParam("subjectID") String subjectID , @RequestParam("subjectName") String subjectName) {
+        Firestore db = firebaseInitializer.getDb();
+        List<Map<String, Object>> subs = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> query = db.collection("subject")
+                    .orderBy("subjectID")
+                    .startAt(subjectID)
+                    .endAt(subjectID + "~")
+                    .get();
+            QuerySnapshot querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                Map<String, Object> data = document.getData();
+                String docSubjectName = (String) data.get("subjectName");
+                if (docSubjectName != null && docSubjectName.contains(subjectName)) {
+                    subs.add(data);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return subs;
     }
 }
