@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.Map;
 
 public class sortMemberZtoA extends SortMember {
-
+        // TimSort is hybrid sorting algorithm derived from merge sort and insertion sort.
     @Override
     public List<Map<String, Object>> sortMember() {
         List<Map<String, Object>> sortedUsers = new ArrayList<>(memberSearchResult);

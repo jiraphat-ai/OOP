@@ -36,13 +36,13 @@ public class JoinGroup extends CustomControl {
 
     }
     //SHOW GROUP DETAIL SECTION
-    @GetMapping("/moreGroupFordetail")
-    public String getGroupMoreDetail(@RequestParam String documentId, Model model) {
-        //System.out.println("documentId " + documentId);
-        List<GroupFordetail> groupFordetail = searchDocumentById(documentId);
-        model.addAttribute("GroupFordetail", groupFordetail);
-        return "/GroupFordetailFragment";
-    }
+    // @GetMapping("/moreGroupFordetail")
+    // public String getGroupMoreDetail(@RequestParam String documentId, Model model) {
+    //     //System.out.println("documentId " + documentId);
+    //     List<GroupFordetail> groupFordetail = searchDocumentById(documentId);
+    //     model.addAttribute("GroupFordetail", groupFordetail);
+    //     return "/GroupFordetailFragment";
+    // }
 
 
   @GetMapping("/searchgroup")
@@ -53,7 +53,7 @@ public String searchGroup(@RequestParam("subjectID") String subjectID, @RequestP
     return "/joingroup"; // return the name of the view that will display the groups
 }
     public List<GroupFordetail> getGroupsBySubjectId(String subjectID, String section, List<String> tag) {
-        Firestore db = firebaseInitializer.getDb();
+        Firestore db = firebaseInitializer.getDb(); // เชื่อมต่อกับ firebase
         List<GroupFordetail> groups = new ArrayList<>();
         if (db == null) {
             // Handle the case where db is null.

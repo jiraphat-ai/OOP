@@ -23,6 +23,8 @@ public class User {
     private String instagram;
     private ArrayList<String> tag;
 
+    
+
 
 //    private String documentId;
 
