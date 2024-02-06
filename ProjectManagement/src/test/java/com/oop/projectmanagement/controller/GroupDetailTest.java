@@ -36,11 +36,11 @@ public class GroupDetailTest {
     private CollectionReference collectionReference;
 
 
-    @BeforeEach
-    public void setUp() {
-        // Assuming that FirebaseInitializer has a method called someMethod that returns a String
-        when(firebaseInitializer.someMethod()).thenReturn("mock value");
-    }
+    // @BeforeEach
+    // public void setUp() {
+    //     // Assuming that FirebaseInitializer has a method called someMethod that returns a String
+    //     when(firebaseInitializer.someMethod()).thenReturn("mock value");
+    // }
 
 	@Test
 	public void getUserinfo() throws Exception {

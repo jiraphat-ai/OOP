@@ -2,6 +2,8 @@ package com.oop.projectmanagement.controller;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import com.oop.projectmanagement.model.NotificationTask;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,5 +191,6 @@ public class MenubarController extends CustomControl {
         updateTaskStatus(group_id, task_id, "Done");
         return "success";
     }
+
 
 }

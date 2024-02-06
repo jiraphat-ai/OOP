@@ -20,8 +20,6 @@ public class sortMemberAtoZ extends SortMember {
                 return username1.compareToIgnoreCase(username2);
             }
         }); 
-
         return sortedUsers;
-        
     }
 }

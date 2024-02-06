@@ -1,5 +1,4 @@
 package com.oop.projectmanagement.controller;
-
 import com.oop.projectmanagement.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,17 +27,14 @@ public class StaffHomeController {
     @Autowired
     private FirebaseInitializer firebaseInitializer;
 
-    
     @GetMapping("/homestaff") // Map ONLY GET Requests
     public String getUserinfo(HttpSession session,Model model) { // Get the session
         Firestore db = firebaseInitializer.getDb(); // Get the database
         String username = (String) session.getAttribute("username"); // Get the username from the session
         String firstName = (String) session.getAttribute("firstName");
         String lastName = (String) session.getAttribute("lastName");
-        // getalluser(session);
         List<Map<String, Object>> users = new ArrayList<>();
         try {
-
             ApiFuture<QuerySnapshot> query = db.collection("useraccount").get(); // Get all the documents from the collection
             QuerySnapshot querySnapshot = query.get(); // Get the documents
             List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments(); // Get the documents as a list
@@ -78,7 +74,6 @@ public class StaffHomeController {
         sortMemberAtoZ memberAtoZ = new sortMemberAtoZ();
         sortMemberZtoA memberZtoA = new sortMemberZtoA();
         List<Map<String, Object>> result;
-
         switch (sortOption) {
             case "AtoZ":
                 memberAtoZ.setMember(session);
@@ -137,10 +132,8 @@ public class StaffHomeController {
     public List<Map<String, Object>> searchUser(@RequestBody Map<String, String> searchData) {
         String username = searchData.get("username");
         String name = searchData.get("name");
-
         Firestore db = firebaseInitializer.getDb();
         List<Map<String, Object>> result = new ArrayList<>();
-
         try {
             CollectionReference userCollection = db.collection("useraccount");
 

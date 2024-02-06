@@ -35,14 +35,7 @@ public class JoinGroup extends CustomControl {
         return "joingroup";
 
     }
-    //SHOW GROUP DETAIL SECTION
-    // @GetMapping("/moreGroupFordetail")
-    // public String getGroupMoreDetail(@RequestParam String documentId, Model model) {
-    //     //System.out.println("documentId " + documentId);
-    //     List<GroupFordetail> groupFordetail = searchDocumentById(documentId);
-    //     model.addAttribute("GroupFordetail", groupFordetail);
-    //     return "/GroupFordetailFragment";
-    // }
+
 
 
   @GetMapping("/searchgroup")
